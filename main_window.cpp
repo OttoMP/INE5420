@@ -24,6 +24,24 @@ MainWindow::MainWindow()
     main_pane.add1(b_menu);
     main_pane.add2(b_view);
 
+  // Objects Viewer Configurations
+    w_objects.add(view_objects);
+    w_objects.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    f_objects.add(w_objects);
+
+  // Create the Tree model:
+    ref_view_objects = Gtk::ListStore::create(m_Columns);
+    view_objects.set_model(ref_view_objects);
+
+  // Fill the TreeView's model
+    Gtk::TreeModel::Row row = *(ref_view_objects->append());
+    row[m_Columns.m_col_id] = 1;
+    row[m_Columns.m_col_name] = "Billy Bob";
+
+  // Add the TreeView's view columns:
+  // This number will be shown with the default numeric formatting.
+    view_objects.append_column("ID", m_Columns.m_col_id);
+    view_objects.append_column("Name", m_Columns.m_col_name);
 
   // Log Configurations
     w_log.add(text_log);

@@ -23,7 +23,22 @@ class MainWindow : public Gtk::Window {
 
       // Objects selection
         Gtk::Frame                          f_objects;
+        Gtk::ScrolledWindow                 w_objects;
+        Gtk::TreeView                       view_objects;
+        Glib::RefPtr<Gtk::ListStore>        ref_view_objects;
       // TreeView
+      //// Tree model columns:
+      class ModelColumns : public Gtk::TreeModel::ColumnRecord {
+          public:
+
+            ModelColumns()
+            { add(m_col_id); add(m_col_name);;}
+
+            Gtk::TreeModelColumn<unsigned int> m_col_id;
+            Gtk::TreeModelColumn<Glib::ustring> m_col_name;
+      };
+
+      ModelColumns m_Columns;
 
       // Button Menu
         Gtk::Box                            bt_box;
