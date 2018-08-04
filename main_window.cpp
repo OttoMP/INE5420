@@ -23,6 +23,9 @@ MainWindow::MainWindow()
     main_pane.add1(b_menu);
     main_pane.add2(b_view);
 
+  // Include canvas in viewport
+    f_view.add(canvas);
+
   // Include Move buttons
     f_window_menu.add(bt_box);
     bt_box.pack_start(*Gtk::manage(

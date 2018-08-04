@@ -21,6 +21,7 @@ class MainWindow : public Gtk::Window {
         Gtk::Box     b_menu, b_view;
         Gtk::Frame   f_objects, f_window_menu, f_view, f_log;
         Gtk::Box     bt_box;
+        Canvas       canvas;
 
 };
 
