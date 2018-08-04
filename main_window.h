@@ -17,11 +17,10 @@ class MainWindow : public Gtk::Window {
         virtual ~MainWindow();
 
     protected:
-        //Signal handlers:
-        void on_button_clicked(Glib::ustring data);
         Gtk::Paned   main_pane;
         Gtk::Box     b_menu, b_view;
         Gtk::Frame   f_objects, f_window_menu, f_view, f_log;
+        Gtk::Box     bt_box;
 
 };
 

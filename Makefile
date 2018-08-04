@@ -1,9 +1,9 @@
 CC      = g++
 
-all: basic
+all: main
 
-basic: basic.cpp
-	$(CC) basic.cpp -o basic `pkg-config gtkmm-3.0 --cflags --libs`
+main: main.cpp
+	$(CC) *.cpp *.h -o app `pkg-config gtkmm-3.0 --cflags --libs`
 
 clean:
-	rm basic
+	rm app
