@@ -17,12 +17,28 @@ class MainWindow : public Gtk::Window {
         virtual ~MainWindow();
 
     protected:
-        Gtk::Paned   main_pane;
-        Gtk::Box     b_menu, b_view;
-        Gtk::Frame   f_objects, f_window_menu, f_view, f_log;
-        Gtk::Box     bt_box;
-        Canvas       canvas;
+      // Main Window configuration
+        Gtk::Paned                          main_pane;
+        Gtk::Box                            b_menu, b_view;
 
+      // Objects selection
+        Gtk::Frame                          f_objects;
+      // TreeView
+
+      // Button Menu
+        Gtk::Box                            bt_box;
+        Gtk::Frame                          f_window_menu;
+
+      // Viewport
+        Gtk::Frame                          f_view;
+        Canvas                              canvas;
+
+      // Log
+        void fill_buffer();
+        Gtk::Frame                          f_log;
+        Gtk::ScrolledWindow                 w_log;
+        Gtk::TextView                       text_log;
+        Glib::RefPtr<Gtk::TextBuffer>       buffer_log;
 };
 
 #endif // MAIN_WINDOW_H
