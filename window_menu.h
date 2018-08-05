@@ -18,7 +18,7 @@ class WindowMenu : public Gtk::Frame {
 
         //Signal handlers:
         void on_button_clicked(Glib::ustring data);
-        void draw_line_button_clicked(Canvas& window);
+        void draw_line_button_clicked();
 };
 
 #endif //GTKMM_BUTTONBOX_H
