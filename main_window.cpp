@@ -1,5 +1,5 @@
 #include "main_window.h"
-#include "button_box.h"
+#include "window_menu.h"
 #include <iostream>
 
 MainWindow::MainWindow()
@@ -43,19 +43,14 @@ MainWindow::MainWindow()
     view_objects.append_column("ID", m_Columns.m_col_id);
     view_objects.append_column("Name", m_Columns.m_col_name);
 
-  // Log Configurations
-    w_log.add(text_log);
-    w_log.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
-    f_log.add(w_log);
-
   // Include canvas in viewport
     f_view.add(canvas);
 
   // Include Move buttons
     f_window_menu.add(bt_box);
     bt_box.pack_start(*Gtk::manage(
-              new ButtonBox(false, "Directionals", 10,
-                  Gtk::BUTTONBOX_SPREAD)),
+              new WindowMenu(false, "Directionals", 10,
+                  Gtk::BUTTONBOX_SPREAD, canvas)),
           Gtk::PACK_EXPAND_WIDGET);
 
   // Include child widgets in left area
@@ -67,12 +62,17 @@ MainWindow::MainWindow()
     b_view.pack_start(f_log, Gtk::PACK_EXPAND_WIDGET, 10);
 
 
+  // Log Configurations
+    w_log.add(text_log);
+    w_log.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    f_log.add(w_log);
+
   // Log Buffers
-  fill_buffer();
-  text_log.set_buffer(buffer_log);
+    fill_buffer();
+    text_log.set_buffer(buffer_log);
 
   // The final step is to display this newly created widget
-  show_all_children();
+    show_all_children();
 
 }
 

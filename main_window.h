@@ -7,7 +7,7 @@
 #include <gtkmm/frame.h>
 #include <gtkmm/window.h>
 
-#include "button_box.h"
+#include "window_menu.h"
 #include "canvas.h"
 
 class MainWindow : public Gtk::Window {
