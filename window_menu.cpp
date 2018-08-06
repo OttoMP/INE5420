@@ -24,6 +24,7 @@ WindowMenu::WindowMenu(bool horizontal,
 
     bbox->set_border_width(5);
 
+    set_border_width(10);
     add(*bbox);
 
   // Setting the appearance of the Button Box
