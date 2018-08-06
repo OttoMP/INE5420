@@ -1,9 +1,9 @@
 CC      = g++
-
+SOURCE_FILES = *.cpp *.h
 all: main
 
 main: main.cpp
-	$(CC) *.cpp *.h -o app `pkg-config gtkmm-3.0 --cflags --libs`
+	$(CC) $(SOURCE_FILES) `pkg-config --cflags gtk+-3.0 gtkmm-3.0` -o vpl_wexecution `pkg-config --libs gtk+-3.0 gtkmm-3.0` -rdynamic -lstdc++ -std=c++11 -lm
 
 clean:
-	rm app
+	rm vpl_wexecution
