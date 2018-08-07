@@ -12,7 +12,7 @@ class Poligono{
 private:
 	std::list<Ponto> pontos;
 	string nome;
-	double brush_size = 2;
+	double brush_size = 1;
 
 public:
 	Poligono(string nome);
