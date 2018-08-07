@@ -4,20 +4,20 @@
 class Ponto{
 
 private:
-	double x;
-	double y;
-	double z;
+	double coord[3];
 
 public:
 	Ponto(double x, double y, double z);
 
 	Ponto(double x, double y);
 
-	double GetX();
+	double getX();
 
-	double GetY();
+	double getY();
 
-	double GetZ();
-}
+	double getZ();
+
+	void calculateNewPos();
+};
 
 #endif //PONTO_H

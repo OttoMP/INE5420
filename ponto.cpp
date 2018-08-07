@@ -3,29 +3,34 @@
 
 Ponto::Ponto(double x, double y, double z)
 {
-	this.x = x;
-	this.y = y;
-	this.z = z;
+	this->coord[0] = x;
+	this->coord[1] = y;
+	this->coord[2] = z;
 }
 
 Ponto::Ponto(double x, double y)
 {
-	this.x = x;
-	this.y = y;
-	this.z = 0;
+	this->coord[0] = x;
+	this->coord[1] = y;
+	this->coord[2] = 1;
 }
 
-Ponto::GetX()
+double Ponto::getX()
 {
-	return x;
+	return this->coord[0];
 }
 
-Ponto::GetY()
+double Ponto::getY()
 {
-	return y;
+	return this->coord[1];
 } 
 
-Ponto::GetZ()
+double Ponto::getZ()
 {
-	return z;
+	return this->coord[2];
+}
+
+void Ponto::calculateNewPos()
+{
+	
 }

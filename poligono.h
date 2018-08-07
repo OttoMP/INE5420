@@ -1,28 +1,34 @@
 #ifndef POLIGONO_H
 #define POLIGONO_H
 
+#include <list>
 #include <string>
 using std::string;
 
 #include "ponto.h"
-#include "lista_enc.hpp" 
 
 class Poligono{
 
 private:
-	ListaEnc<Ponto> pontos;
+	std::list<Ponto> pontos;
 	string nome;
-	int tipo;
+	double brush_size = 2;
 
 public:
 	Poligono(string nome);
+	Poligono(string nome, std::list<Ponto> pontos);
+	
+	
 	void addPonto(Ponto p);
+	void setBrushSize(double brush);
+	//void setColor(double r, double g, double b);
 
-	ListaEnc<Reta> draw();
-
+    std::list<Ponto> draw();
+    double getBrushSize();
 	int getTipo();
+	string getNome();
 	int getSize();
 
-}
+};
 
 #endif //POLIGONO_H
