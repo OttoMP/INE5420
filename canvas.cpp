@@ -64,7 +64,7 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     {
         std::list<Ponto> pontos= pol->draw();
         cr->set_line_width(pol->getBrushSize());
-        cr->move_to(x_dislocate + pontos.front().getX(), y_dislocate + pontos.front().getY());
+        cr->move_to(x_dislocate + pontos.back().getX(), y_dislocate + pontos.back().getY());
         for (std::list<Ponto>::iterator pt = pontos.begin(); pt != pontos.end(); pt++)
             {
                 cr->line_to(x_dislocate + pt->getX(), y_dislocate + pt->getY());
