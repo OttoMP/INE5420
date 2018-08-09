@@ -9,12 +9,15 @@
 
 #include "window_menu.h"
 #include "canvas.h"
+#include "poligono.h"
+#include "dialog_add_object.h"
 
 class MainWindow : public Gtk::Window {
 
     public:
         MainWindow();
         virtual ~MainWindow();
+        Poligono transfer_poly;
 
     protected:
       // Main Window configuration
@@ -22,8 +25,14 @@ class MainWindow : public Gtk::Window {
         Gtk::Box                            b_menu, b_view;
 
       // Objects selection
+        Poligono add_object_dialog();
         void create_objects_viewer();
-        Gtk::Frame                          f_objects;
+        void on_add_objects_clicked();
+        void on_rm_objects_clicked(int ID);
+        Gtk::Button                         add_objects;
+        Gtk::Button                         rm_objects;
+        Gtk::ButtonBox                      b_add_rm_objects;
+        Gtk::Box                            b_objects;
         Gtk::ScrolledWindow                 w_objects;
         Gtk::TreeView                       view_objects;
         Glib::RefPtr<Gtk::ListStore>        ref_view_objects;

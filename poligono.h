@@ -17,9 +17,11 @@ private:
 public:
 	Poligono(string nome);
 	Poligono(string nome, std::list<Ponto> pontos);
-	
-	
+
+
 	void addPonto(Ponto p);
+	void addPonto(int coordx, int coordy);
+	void addPonto(int coordx, int coordy, int coordz);
 	void setBrushSize(double brush);
 	//void setColor(double r, double g, double b);
 
@@ -27,6 +29,7 @@ public:
     double getBrushSize();
 	int getTipo();
 	string getNome();
+    void setNome(string nome);
 	int getSize();
 
 };
