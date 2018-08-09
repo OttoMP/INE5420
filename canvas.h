@@ -13,6 +13,8 @@ class Canvas : public Gtk::DrawingArea {
         void move_down(double step);
         void move_right(double step);
         void move_left(double step);
+        double vp_transform_x(double x, double width);
+        double vp_transform_y(double y, double height);
 
     protected:
         //Override default signal handler:
