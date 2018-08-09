@@ -53,10 +53,14 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     yc = height / 2;
 
     cr->scale(scale, scale);
-    
-    
-
-    //cr->set_line_width(10.0);
+    //drawing the coordinate lines
+    cr->set_line_width(1);
+    cr->set_source_rgb(0.0, 0.0, 0.8);
+    cr->move_to(0, vp_transform_y(0, height));
+    cr->line_to(width, vp_transform_y(0, height));
+    cr->set_source_rgb(0.0, 0.4, 0.8);
+    cr->move_to(-x_dislocate, 0);
+    cr->line_to(-x_dislocate, height);
   // draw red lines out from the center of the window
     cr->set_source_rgb(0.8, 0.0, 0.0);
     
@@ -64,10 +68,10 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     {
         std::list<Ponto> pontos= pol->draw();
         cr->set_line_width(pol->getBrushSize());
-        cr->move_to(x_dislocate + pontos.back().getX(), y_dislocate + pontos.back().getY());
+        cr->move_to(vp_transform_x(pontos.back().getX(), width), vp_transform_y(pontos.back().getY(), height));
         for (std::list<Ponto>::iterator pt = pontos.begin(); pt != pontos.end(); pt++)
             {
-                cr->line_to(x_dislocate + pt->getX(), y_dislocate + pt->getY());
+                cr->line_to(vp_transform_x(pt->getX(), width), vp_transform_y(pt->getY(), height));
             }
     }
 
@@ -104,4 +108,12 @@ void Canvas::move_right(double step) {
 void Canvas::move_left(double step) {
     x_dislocate += step;
     queue_draw();
+}
+
+double Canvas::vp_transform_x(double x, double width){
+    return (x - x_dislocate) / width * width;
+}
+
+double Canvas::vp_transform_y(double y, double height){
+    return (1-(y - y_dislocate)/height) * height;
 }
