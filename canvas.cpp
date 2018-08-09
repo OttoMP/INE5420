@@ -14,36 +14,25 @@ Canvas::~Canvas()
 {
 }
 
+void Canvas::add_poligono(Poligono pol){
+    display_file.push_back(pol);
+    queue_draw();
+}
+
+void Canvas::rem_poligono(Poligono pol){
+    //display_file.remove(pol);
+    queue_draw();
+}
+
 bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 {
     Gtk::Allocation allocation = get_allocation();
     const int width = allocation.get_width();
     const int height = allocation.get_height();
 //-----------------------------------------------------------------------------------------------------    
-    std::list<Poligono> display_file;
     
-    Poligono triangulo("Triangulo");
-    triangulo.addPonto(Ponto(0,0));
-    triangulo.addPonto(Ponto(10,10));
-    triangulo.addPonto(Ponto(1,20));
-    display_file.push_back(triangulo);
     
-    Poligono ponto("Ponto");
-    ponto.addPonto(Ponto(50,50));
-    display_file.push_back(ponto);
-    
-    Poligono reta("Reta");
-    reta.addPonto(Ponto(10,50));
-    reta.addPonto(Ponto(100,100));
-    display_file.push_back(reta);
-    
-    Poligono poligono("Ponto");
-    poligono.addPonto(Ponto(20,5));
-    poligono.addPonto(Ponto(25,15));
-    poligono.addPonto(Ponto(20,30));
-    poligono.addPonto(Ponto(50,70));
-    poligono.addPonto(Ponto(17,30));
-    display_file.push_back(poligono);
+
     
     
 //-----------------------------------------------------------------------------------------------------  
