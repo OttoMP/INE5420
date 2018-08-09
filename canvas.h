@@ -2,6 +2,7 @@
 #define CANVAS_H
 
 #include <gtkmm/drawingarea.h>
+#include "poligono.h"
 
 class Canvas : public Gtk::DrawingArea {
     public:
@@ -13,6 +14,10 @@ class Canvas : public Gtk::DrawingArea {
         void move_down(double step);
         void move_right(double step);
         void move_left(double step);
+        double vp_transform_x(double x, double width);
+        double vp_transform_y(double y, double height);
+        void add_poligono(Poligono pol);
+        void rem_poligono(Poligono pol);
 
     protected:
         //Override default signal handler:
@@ -20,6 +25,7 @@ class Canvas : public Gtk::DrawingArea {
         double scale;
         double x_dislocate;
         double y_dislocate;
+        std::list<Poligono> display_file;
 };
 
 #endif //CANVAS_H

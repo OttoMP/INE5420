@@ -38,7 +38,10 @@ std::list<Ponto> Poligono::draw()
 
     if (this->getSize() > 2)
     {
-        d.push_back(this->pontos.front());
+       Ponto p((this->pontos.front().getX() + this->pontos.back().getX())/2,
+        (this->pontos.front().getY() + this->pontos.back().getY())/2);
+       d.push_back(p);
+       d.push_front(p);
     }
     else if (this->getSize() == 1)
     {
