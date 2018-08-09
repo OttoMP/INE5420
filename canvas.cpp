@@ -57,10 +57,10 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     cr->set_line_width(1);
     cr->set_source_rgb(0.0, 0.0, 0.8);
     cr->move_to(0, vp_transform_y(0, height));
-    cr->line_to(width, vp_transform_y(0, height));
+    cr->line_to(width/scale, vp_transform_y(0, height));
     cr->set_source_rgb(0.0, 0.4, 0.8);
     cr->move_to(-x_dislocate, 0);
-    cr->line_to(-x_dislocate, height);
+    cr->line_to(-x_dislocate, height/scale);
   // draw red lines out from the center of the window
     cr->set_source_rgb(0.8, 0.0, 0.0);
     
