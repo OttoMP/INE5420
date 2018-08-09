@@ -13,7 +13,7 @@ MainWindow::MainWindow()
 {
   // Main Window Configurations
     set_title("Main Window");
-    set_border_width(10);
+    set_border_width(5);
     set_default_size(800,600);
 
   // Divide Main Window in two areas
@@ -52,6 +52,7 @@ void MainWindow::fill_buffer() {
 
 void MainWindow::create_window_menu() {
   // Include Move buttons
+    f_window_menu.set_border_width(10);
     f_window_menu.add(bt_box);
     bt_box.pack_start(*Gtk::manage(
               new WindowMenu(false, "Directionals", 10,
@@ -61,8 +62,10 @@ void MainWindow::create_window_menu() {
 
 void MainWindow::create_objects_viewer() {
   // Objects Viewer Configurations
+    w_objects.set_border_width(5);
     w_objects.add(view_objects);
     w_objects.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    f_objects.set_border_width(10);
     f_objects.add(w_objects);
 
   // Create the Tree model:
@@ -82,13 +85,16 @@ void MainWindow::create_objects_viewer() {
 
 void MainWindow::create_viewport() {
   // Include canvas in viewport
+    f_view.set_border_width(10);
     f_view.add(canvas);
 }
 
 void MainWindow::create_log() {
   // Log Configurations
+    w_log.set_border_width(5);
     w_log.add(text_log);
     w_log.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+    f_log.set_border_width(10);
     f_log.add(w_log);
 
   // Log Buffers
