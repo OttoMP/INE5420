@@ -13,7 +13,7 @@ WindowMenu::WindowMenu(bool horizontal,
     button_right("RIGHT"),
     button_zoom_in("ZOOM IN"),
     button_zoom_out("ZOOM OUT"),   // creates the move buttons with its respectives labels.
-    window_ref{window}
+    window_ref(window)
 {
     Gtk::ButtonBox* bbox = nullptr;
   // Setting orientation of ButtonBox
@@ -52,7 +52,7 @@ WindowMenu::WindowMenu(bool horizontal,
     bbox->add(button_right);
     bbox->add(button_zoom_in);
     bbox->add(button_zoom_out);
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 void WindowMenu::button_up_clicked() {
     window_ref.move_up(10);
@@ -77,3 +77,31 @@ void WindowMenu::zoom_in_clicked() {
 void WindowMenu::zoom_out_clicked() {
     window_ref.zoom_out(0.1);
 }
+
+/*
+void WindowMenu::zoom_out_clicked() {
+    window_ref.zoom_out(0.1);
+    Poligono triangulo("Triangulo");
+    triangulo.add_ponto(Ponto(0,0));
+    triangulo.add_ponto(Ponto(10,10));
+    triangulo.add_ponto(Ponto(1,20));
+    window_ref.add_poligono(triangulo);
+    
+    Poligono ponto("Ponto");
+    ponto.add_ponto(Ponto(50,50));
+    window_ref.add_poligono(ponto);
+    
+    Poligono reta("Reta");
+    reta.add_ponto(Ponto(10,50));
+    reta.add_ponto(Ponto(100,100));
+    window_ref.add_poligono(reta);
+    
+    Poligono poligono("Ponto");
+    poligono.add_ponto(Ponto(20,5));
+    poligono.add_ponto(Ponto(25,15));
+    poligono.add_ponto(Ponto(20,30));
+    poligono.add_ponto(Ponto(50,70));
+    poligono.add_ponto(Ponto(17,30));
+    window_ref.add_poligono(poligono);
+}	 	  	 	    	 	    		    	    	  	 	
+*/

@@ -16,8 +16,8 @@ class Canvas : public Gtk::DrawingArea {
         void move_left(double step);
         double vp_transform_x(double x, double width);
         double vp_transform_y(double y, double height);
-        void add_poligono(Poligono pol);
-        void rem_poligono(Poligono pol);
+        int add_poligono(Poligono pol);
+        int rem_poligono(Poligono pol);
 
     protected:
         //Override default signal handler:
@@ -29,3 +29,4 @@ class Canvas : public Gtk::DrawingArea {
 };
 
 #endif //CANVAS_H
+	 	  	 	    	 	    		    	    	  	 	

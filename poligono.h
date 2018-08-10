@@ -19,16 +19,19 @@ public:
 	Poligono(string nome, std::list<Ponto> pontos);
 	
 	
-	void addPonto(Ponto p);
-	void setBrushSize(double brush);
-	//void setColor(double r, double g, double b);
+	void add_ponto(Ponto p);
+	void add_ponto(int coordx, int coordy);
+	void add_ponto(int coordx, int coordy, int coordz);
+	void set_brush_size(double brush);
+	//void set_color(double r, double g, double b);
 
     std::list<Ponto> draw();
-    double getBrushSize();
-	int getTipo();
-	string getNome();
-	int getSize();
+    double get_brush_size();
+	int get_tipo();
+	string get_nome();
+    void set_nome(string nome);
+	int get_size();
 
 };
 
-#endif //POLIGONO_H
+#endif //POLIGONO_H	 	  	 	    	 	    		    	    	  	 	

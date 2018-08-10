@@ -11,13 +11,13 @@ public:
 
 	Ponto(double x, double y);
 
-	double getX();
+	double get_x();
 
-	double getY();
+	double get_y();
 
-	double getZ();
+	double get_z();
 
-	void calculateNewPos();
+	void calc_new_pos();
 };
 
 #endif //PONTO_H
