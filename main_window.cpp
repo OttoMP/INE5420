@@ -50,7 +50,7 @@ MainWindow::MainWindow()
   // The final step is to display this newly created widget
     show_all_children();
 
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 MainWindow::~MainWindow() {}
 
@@ -90,7 +90,7 @@ void MainWindow::create_objects_viewer() {
   // This number will be shown with the default numeric formatting.
     view_objects.append_column("ID", m_Columns.m_col_id);
     view_objects.append_column("Name", m_Columns.m_col_name);
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 void MainWindow::create_viewport() {
   // Include canvas in viewport
@@ -116,17 +116,17 @@ void MainWindow::create_log() {
 
 void MainWindow::on_add_objects_clicked() {
     std::cout << "Add Object" << std::endl;
-    std::cout << transfer_poly.getNome() << std::endl;
+    std::cout << transfer_poly.get_nome() << std::endl;
     Poligono new_polygon = add_object_dialog();
-    std::cout << new_polygon.getNome() << std::endl;
-    std::cout << transfer_poly.getNome() << std::endl;
-    //canvas.add_object();
+    std::cout << new_polygon.get_nome() << std::endl;
+    std::cout << new_polygon.get_nome() << std::endl;
+    int id = canvas.add_poligono(new_polygon);
     // Fill the TreeView's model
 
     Gtk::TreeModel::Row row = *(ref_view_objects->append());
-    row[m_Columns.m_col_id] = 1;
-    row[m_Columns.m_col_name] = transfer_poly.getNome();
-}
+    row[m_Columns.m_col_id] = id;
+    row[m_Columns.m_col_name] = new_polygon.get_nome();
+}	 	  	 	    	 	    		    	    	  	 	
 
 void MainWindow::on_rm_objects_clicked(int ID) {
     std::cout << "Rm Object" << std::endl;
@@ -135,7 +135,8 @@ void MainWindow::on_rm_objects_clicked(int ID) {
 }
 
 Poligono MainWindow::add_object_dialog() {
-    AddObjectDialog dialog(this->transfer_poly);
+    Poligono new_polygon("?");
+    AddObjectDialog dialog(new_polygon);
     dialog.run();
-    return transfer_poly;
+    return new_polygon;
 }

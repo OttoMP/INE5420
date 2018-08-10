@@ -15,22 +15,22 @@ Ponto::Ponto(double x, double y)
 	this->coord[2] = 1;
 }
 
-double Ponto::getX()
+double Ponto::get_x()
 {
 	return this->coord[0];
 }
 
-double Ponto::getY()
+double Ponto::get_y()
 {
 	return this->coord[1];
 } 
 
-double Ponto::getZ()
+double Ponto::get_z()
 {
 	return this->coord[2];
 }
 
-void Ponto::calculateNewPos()
+void Ponto::calc_new_pos()
 {
 	
 }

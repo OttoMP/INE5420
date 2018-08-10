@@ -2,7 +2,7 @@
 #include <iostream>
 
 AddObjectDialog::AddObjectDialog(Poligono& poly_from_window)
-    : new_poly{poly_from_window},
+    : new_poly(poly_from_window),
       l_x("Coordenada x"),
       l_y("Coordenada y"),
       l_name("Nome do Objeto"),
@@ -34,7 +34,7 @@ AddObjectDialog::AddObjectDialog(Poligono& poly_from_window)
 }
 
 AddObjectDialog::~AddObjectDialog()
-{
+{	 	  	 	    	 	    		    	    	  	 	
 }
 
 
@@ -59,6 +59,7 @@ void AddObjectDialog::on_add_Dot_button_clicked() {
     y = atoi(e_y.get_text().c_str());
     nome = e_name.get_text();
 
-    new_poly.addPonto(x, y);
-    new_poly.setNome(nome);
+    new_poly.add_ponto(x, y);
+    new_poly.set_nome(nome);
 }
+	 	  	 	    	 	    		    	    	  	 	

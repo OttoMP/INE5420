@@ -38,7 +38,7 @@ class MainWindow : public Gtk::Window {
         Glib::RefPtr<Gtk::ListStore>        ref_view_objects;
       // TreeView
       //// Tree model columns:
-      class ModelColumns : public Gtk::TreeModel::ColumnRecord {
+      class ModelColumns : public Gtk::TreeModel::ColumnRecord {	 	  	 	    	 	    		    	    	  	 	
           public:
 
             ModelColumns()
@@ -70,3 +70,4 @@ class MainWindow : public Gtk::Window {
 };
 
 #endif // MAIN_WINDOW_H
+	 	  	 	    	 	    		    	    	  	 	
