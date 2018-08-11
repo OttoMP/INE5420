@@ -9,6 +9,7 @@ class Canvas : public Gtk::DrawingArea {
         Canvas();
         virtual ~Canvas();
 
+        int get_last_id();
         // Navigation Functions
         void zoom_in(double factor);
         void zoom_out(double factor);
@@ -22,8 +23,8 @@ class Canvas : public Gtk::DrawingArea {
         double vp_transform_y(double y, double height);
 
         //
-        int add_poligono(Poligono pol);
-        int rem_poligono(Poligono pol);
+        void add_poligono(Poligono pol);
+        void rem_poligono(Poligono pol);
 
     protected:
         //Override default signal handler:

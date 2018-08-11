@@ -11,8 +11,7 @@ MainWindow::MainWindow()
     f_log("Log"),
     bt_box(Gtk::ORIENTATION_VERTICAL),
     add_objects("New Object"),
-    rm_objects("Remove"),
-    transfer_poly("Novo Polígono")
+    rm_objects("Remove")
 {
   // Main Window Configurations
     set_title("Main Window");
@@ -50,7 +49,7 @@ MainWindow::MainWindow()
   // The final step is to display this newly created widget
     show_all_children();
 
-}	 	  	 	    	 	    		    	    	  	 	
+}
 
 MainWindow::~MainWindow() {}
 
@@ -90,7 +89,7 @@ void MainWindow::create_objects_viewer() {
   // This number will be shown with the default numeric formatting.
     view_objects.append_column("ID", m_Columns.m_col_id);
     view_objects.append_column("Name", m_Columns.m_col_name);
-}	 	  	 	    	 	    		    	    	  	 	
+}
 
 void MainWindow::create_viewport() {
   // Include canvas in viewport
@@ -116,27 +115,19 @@ void MainWindow::create_log() {
 
 void MainWindow::on_add_objects_clicked() {
     std::cout << "Add Object" << std::endl;
-    std::cout << transfer_poly.get_nome() << std::endl;
-    Poligono new_polygon = add_object_dialog();
-    std::cout << new_polygon.get_nome() << std::endl;
-    std::cout << new_polygon.get_nome() << std::endl;
-    int id = canvas.add_poligono(new_polygon);
-    // Fill the TreeView's model
+    AddObjectDialog dialog(canvas);
+    dialog.run();
 
+    int id = canvas.get_last_id(); // -1 because new object was added after dialog
+
+    // Fill the TreeView's model
     Gtk::TreeModel::Row row = *(ref_view_objects->append());
     row[m_Columns.m_col_id] = id;
-    row[m_Columns.m_col_name] = new_polygon.get_nome();
-}	 	  	 	    	 	    		    	    	  	 	
+    row[m_Columns.m_col_name] = "a new namw";
+}
 
 void MainWindow::on_rm_objects_clicked(int ID) {
     std::cout << "Rm Object" << std::endl;
     //canvas.rm_object();
 //    gtk_list_store_remove(view_objects, 0);
-}
-
-Poligono MainWindow::add_object_dialog() {
-    Poligono new_polygon("?");
-    AddObjectDialog dialog(new_polygon);
-    dialog.run();
-    return new_polygon;
 }

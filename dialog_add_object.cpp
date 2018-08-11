@@ -1,8 +1,9 @@
 #include "dialog_add_object.h"
 #include <iostream>
 
-AddObjectDialog::AddObjectDialog(Poligono& poly_from_window)
-    : new_poly(poly_from_window), // Receive reference from parameter
+AddObjectDialog::AddObjectDialog(Canvas& drawing_area)
+    : canvas{drawing_area}, // Receive reference from parameter
+      new_poly(""),
       l_x("Coordenada x"),        // Initialize Label for Entry
       l_y("Coordenada y"),
       l_name("Nome do Objeto"),
@@ -55,6 +56,8 @@ void AddObjectDialog::on_dialog_response(int response_id) {
   case Gtk::RESPONSE_CLOSE:
   case Gtk::RESPONSE_DELETE_EVENT:
     new_poly.set_nome(e_name.get_text());
+    new_poly.set_id(canvas.get_last_id()+1);
+    canvas.add_poligono(new_poly);
     hide();
     break;
   default:

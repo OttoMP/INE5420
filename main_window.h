@@ -17,7 +17,6 @@ class MainWindow : public Gtk::Window {
     public:
         MainWindow();
         virtual ~MainWindow();
-        Poligono transfer_poly;
 
     protected:
       // Main Window configuration
@@ -25,7 +24,6 @@ class MainWindow : public Gtk::Window {
         Gtk::Box                            b_menu, b_view;
 
       // Objects selection
-        Poligono add_object_dialog();
         void create_objects_viewer();
         void on_add_objects_clicked();
         void on_rm_objects_clicked(int ID);
@@ -38,7 +36,7 @@ class MainWindow : public Gtk::Window {
         Glib::RefPtr<Gtk::ListStore>        ref_view_objects;
       // TreeView
       //// Tree model columns:
-      class ModelColumns : public Gtk::TreeModel::ColumnRecord {	 	  	 	    	 	    		    	    	  	 	
+      class ModelColumns : public Gtk::TreeModel::ColumnRecord {
           public:
 
             ModelColumns()
@@ -70,4 +68,4 @@ class MainWindow : public Gtk::Window {
 };
 
 #endif // MAIN_WINDOW_H
-	 	  	 	    	 	    		    	    	  	 	
+

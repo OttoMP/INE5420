@@ -7,15 +7,17 @@
 #include <gtkmm/button.h>
 
 #include "poligono.h"
+#include "canvas.h"
 
 class AddObjectDialog : public Gtk::Dialog {
 public:
-    AddObjectDialog(Poligono& poly_from_window);
+    AddObjectDialog(Canvas& drawing_window);
     virtual ~AddObjectDialog();
 
 protected:
-  // Internal polygon that will be modified and sent to drawing area
-    Poligono& new_poly;
+  // Internal reference to the drawing area
+    Canvas& canvas;
+    Poligono new_poly;
 
   //Signal handlers:
     void on_dialog_response(int response_id);

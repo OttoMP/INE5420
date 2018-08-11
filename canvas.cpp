@@ -14,16 +14,21 @@ Canvas::~Canvas()
 {
 }
 
-int Canvas::add_poligono(Poligono pol){
-    display_file.push_back(pol);
-    queue_draw();
-    return display_file.size();
+int Canvas::get_last_id() {
+    if(display_file.empty())
+        return display_file.size();
+    else
+        return display_file.back().get_id();
 }
 
-int Canvas::rem_poligono(Poligono pol){
+void Canvas::add_poligono(Poligono pol){
+    display_file.push_back(pol);
+    queue_draw();
+}
+
+void Canvas::rem_poligono(Poligono pol){
     //display_file.remove(pol);
     queue_draw();
-    return display_file.size();
 }
 
 bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
@@ -31,13 +36,13 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     Gtk::Allocation allocation = get_allocation();
     const int width = allocation.get_width();
     const int height = allocation.get_height();
-//-----------------------------------------------------------------------------------------------------    
-    
-    
+//-----------------------------------------------------------------------------------------------------
 
-    
-    
-//-----------------------------------------------------------------------------------------------------  
+
+
+
+
+//-----------------------------------------------------------------------------------------------------
   // coordinates for the center of the window
     int xc, yc;
     xc = width / 2;
@@ -54,9 +59,9 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     cr->line_to(-x_dislocate, height/scale);
   // draw red lines out from the center of the window
     cr->set_source_rgb(0.8, 0.0, 0.0);
-    
+
     for (std::list<Poligono>::iterator pol = display_file.begin(); pol != display_file.end(); pol++)
-    {	 	  	 	    	 	    		    	    	  	 	
+    {
         std::list<Ponto> pontos= pol->draw();
         cr->set_line_width(pol->get_brush_size());
         cr->move_to(vp_transform_x(pontos.back().get_x(), width), vp_transform_y(pontos.back().get_y(), height));
@@ -94,7 +99,7 @@ void Canvas::move_down(double step) {
 void Canvas::move_right(double step) {
     x_dislocate -= step;
     queue_draw();
-}	 	  	 	    	 	    		    	    	  	 	
+}
 
 void Canvas::move_left(double step) {
     x_dislocate += step;
