@@ -1,7 +1,10 @@
 #ifndef GTKMM_BUTTONBOX_H
 #define GTKMM_BUTTONBOX_H
 
-#include <gtkmm.h>
+#include <gtkmm/button.h>
+#include <gtkmm/frame.h>
+#include <gtkmm/buttonbox.h>
+
 #include "canvas.h"
 
 class WindowMenu : public Gtk::Frame {

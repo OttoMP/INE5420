@@ -1,8 +1,10 @@
 #include "dialog_add_object.h"
 #include <iostream>
 
-AddObjectDialog::AddObjectDialog(Canvas& drawing_area)
+AddObjectDialog::AddObjectDialog(Canvas& drawing_area,
+                                 Gtk::TextView& text_log)
     : canvas{drawing_area}, // Receive reference from parameter
+      log{text_log},
       new_poly(""),
       l_x("Coordenada x"),        // Initialize Label for Entry
       l_y("Coordenada y"),
@@ -58,6 +60,10 @@ void AddObjectDialog::on_dialog_response(int response_id) {
     new_poly.set_nome(e_name.get_text());
     new_poly.set_id(canvas.get_last_id()+1);
     canvas.add_poligono(new_poly);
+    log.get_buffer()->set_text(log.get_buffer()->get_text()
+                               +"Polígono '"
+                               +new_poly.get_nome()
+                               +"' adicionado\n");
     hide();
     break;
   default:
@@ -73,5 +79,11 @@ void AddObjectDialog::on_dialog_response(int response_id) {
 void AddObjectDialog::on_add_Dot_button_clicked() {
     new_poly.add_ponto(atoi(e_x.get_text().c_str()),
                        atoi(e_y.get_text().c_str()));
+    log.get_buffer()->set_text(log.get_buffer()->get_text()
+                               +"Ponto adicionado na coordenada ("
+                               +e_x.get_text()
+                               +","
+                               +e_y.get_text()
+                               +")\n");
 }
 

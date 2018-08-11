@@ -1,11 +1,7 @@
 #ifndef MAIN_WINDOW_H
 #define MAIN_WINDOW_H
 
-#include <gtkmm/button.h>
-#include <gtkmm/paned.h>
-#include <gtkmm/box.h>
-#include <gtkmm/frame.h>
-#include <gtkmm/window.h>
+#include <gtkmm.h>
 
 #include "window_menu.h"
 #include "canvas.h"
@@ -60,7 +56,6 @@ class MainWindow : public Gtk::Window {
 
       // Log
         void create_log();
-        void fill_buffer();
         Gtk::Frame                          f_log;
         Gtk::ScrolledWindow                 w_log;
         Gtk::TextView                       text_log;

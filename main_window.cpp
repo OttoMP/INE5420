@@ -53,11 +53,6 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow() {}
 
-void MainWindow::fill_buffer() {
-  buffer_log = Gtk::TextBuffer::create();
-  buffer_log->set_text("Ready to type");
-}
-
 void MainWindow::create_window_menu() {
   // Include Move buttons
     f_window_menu.set_border_width(10);
@@ -104,10 +99,9 @@ void MainWindow::create_log() {
     w_log.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
     f_log.set_border_width(10);
     f_log.add(w_log);
+    text_log.set_editable(false);
 
-  // Log Buffers
-    fill_buffer();
-    text_log.set_buffer(buffer_log);
+    text_log.get_buffer()->set_text("Waiting for instructions...\n");
 }
 
 
@@ -115,7 +109,7 @@ void MainWindow::create_log() {
 
 void MainWindow::on_add_objects_clicked() {
     std::cout << "Add Object" << std::endl;
-    AddObjectDialog dialog(canvas);
+    AddObjectDialog dialog(canvas, text_log);
     dialog.run();
 
     int id = canvas.get_last_id(); // -1 because new object was added after dialog

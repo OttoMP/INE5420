@@ -5,16 +5,18 @@
 #include <gtkmm/entry.h>
 #include <gtkmm/label.h>
 #include <gtkmm/button.h>
+#include <gtkmm/textview.h>
 
 #include "poligono.h"
 #include "canvas.h"
 
 class AddObjectDialog : public Gtk::Dialog {
 public:
-    AddObjectDialog(Canvas& drawing_window);
+    AddObjectDialog(Canvas& drawing_window, Gtk::TextView& text_log);
     virtual ~AddObjectDialog();
 
 protected:
+    Gtk::TextView& log;
   // Internal reference to the drawing area
     Canvas& canvas;
     Poligono new_poly;
