@@ -13,11 +13,15 @@ class WindowMenu : public Gtk::Frame {
              Canvas& window);
 
     protected:
+        // Child Widgets
+        // Navigation buttons
         Gtk::Button button_up, button_down, button_left, button_right;
+        // Zoom function buttons
         Gtk::Button button_zoom_in, button_zoom_out;
+        // Reference to drawing area
         Canvas& window_ref;
+
         //Signal handlers:
-        void on_button_clicked(Glib::ustring data);
         void zoom_in_clicked();
         void zoom_out_clicked();
         void button_up_clicked();
@@ -27,4 +31,4 @@ class WindowMenu : public Gtk::Frame {
 };
 
 #endif //GTKMM_BUTTONBOX_H
-	 	  	 	    	 	    		    	    	  	 	
+
