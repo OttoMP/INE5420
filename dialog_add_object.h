@@ -16,7 +16,9 @@ public:
     virtual ~AddObjectDialog();
 
 protected:
+  // Internal reference to text log to send updates to the user
     Gtk::TextView& log;
+
   // Internal reference to the drawing area
     Canvas& canvas;
     Poligono new_poly;

@@ -4,7 +4,7 @@
 AddObjectDialog::AddObjectDialog(Canvas& drawing_area,
                                  Gtk::TextView& text_log)
     : canvas{drawing_area}, // Receive reference from parameter
-      log{text_log},
+      log{text_log},        // Receive reference from parameter
       new_poly(""),
       l_x("Coordenada x"),        // Initialize Label for Entry
       l_y("Coordenada y"),
