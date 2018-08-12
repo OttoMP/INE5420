@@ -6,7 +6,7 @@ MainWindow::MainWindow()
   : b_menu(Gtk::ORIENTATION_VERTICAL),
     b_view(Gtk::ORIENTATION_VERTICAL),
     b_objects(Gtk::ORIENTATION_VERTICAL),
-    f_window_menu("Window"),
+    f_window_menu("Viewport Options"),
     f_view("Viewport"),
     f_log("Log"),
     bt_box(Gtk::ORIENTATION_VERTICAL),
@@ -108,16 +108,16 @@ void MainWindow::create_log() {
 // ---------BUTTONS CLICKED FUNCTIONS-------
 
 void MainWindow::on_add_objects_clicked() {
-    std::cout << "Add Object" << std::endl;
     AddObjectDialog dialog(canvas, text_log);
     dialog.run();
 
-    int id = canvas.get_last_id(); // -1 because new object was added after dialog
+    int id = canvas.get_last_id();
+    std::string name = canvas.get_last_name();
 
     // Fill the TreeView's model
     Gtk::TreeModel::Row row = *(ref_view_objects->append());
     row[m_Columns.m_col_id] = id;
-    row[m_Columns.m_col_name] = "a new namw";
+    row[m_Columns.m_col_name] = name;
 }
 
 void MainWindow::on_rm_objects_clicked(int ID) {

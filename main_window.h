@@ -19,7 +19,7 @@ class MainWindow : public Gtk::Window {
         Gtk::Paned                          main_pane;
         Gtk::Box                            b_menu, b_view;
 
-      // Objects selection
+      // Object Viewer Widgets
         void create_objects_viewer();
         void on_add_objects_clicked();
         void on_rm_objects_clicked(int ID);
@@ -28,6 +28,7 @@ class MainWindow : public Gtk::Window {
         Gtk::ButtonBox                      b_add_rm_objects;
         Gtk::Box                            b_objects;
         Gtk::ScrolledWindow                 w_objects;
+        Gtk::ListBox                        object_viewer;
         Gtk::TreeView                       view_objects;
         Glib::RefPtr<Gtk::ListStore>        ref_view_objects;
       // TreeView

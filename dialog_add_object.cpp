@@ -3,13 +3,13 @@
 
 AddObjectDialog::AddObjectDialog(Canvas& drawing_area,
                                  Gtk::TextView& text_log)
-    : canvas{drawing_area}, // Receive reference from parameter
-      log{text_log},        // Receive reference from parameter
+    : canvas{drawing_area},       // Receive reference from parameter
+      log{text_log},              // Receive reference from parameter
       new_poly(""),
       l_x("Coordenada x"),        // Initialize Label for Entry
-      l_y("Coordenada y"),
-      l_name("Nome do Objeto"),
-      add_Dot_button("Adicionar Ponto")
+      l_y("Coordenada y"),        // Initialize Label for Entry
+      l_name("Nome do Objeto"),   // Initialize Label for Entry
+      add_dot_button("Adicionar Ponto") // Initialize button
 {
   // Setting configurations for dialog
     set_title("Adicionar Objeto");
@@ -28,15 +28,15 @@ AddObjectDialog::AddObjectDialog(Canvas& drawing_area,
     get_content_area()->pack_start(e_y);
     get_content_area()->pack_start(l_name);
     get_content_area()->pack_start(e_name);
-    get_content_area()->pack_start(add_Dot_button);
+    get_content_area()->pack_start(add_dot_button);
 
     // Adding a "close" button to the bottom of the dialog
     add_button("_Close", Gtk::RESPONSE_CLOSE);
     signal_response().connect(sigc::mem_fun(*this, &AddObjectDialog::on_dialog_response));
 
   // Setting Add Button function
-    add_Dot_button.signal_clicked().connect(
-            sigc::mem_fun(*this, &AddObjectDialog::on_add_Dot_button_clicked));
+    add_dot_button.signal_clicked().connect(
+            sigc::mem_fun(*this, &AddObjectDialog::on_add_dot_button_clicked));
 
   /* This makes it so the button is the default.
    * Simply hitting the "Enter" key will cause this button to activate. */
@@ -50,7 +50,9 @@ AddObjectDialog::~AddObjectDialog()
 }
 
 /*  Close button function
- *  when called close dialog
+ *  Before the dialogs closes it sets the ID and Name of the
+ *  polygon being created and send to the canvas. The text log
+ *  updates telling the name of the polygon recently created
  */
 void AddObjectDialog::on_dialog_response(int response_id) {
     switch (response_id)
@@ -73,10 +75,11 @@ void AddObjectDialog::on_dialog_response(int response_id) {
 }
 
 /*  Add Object function
- *  Read the text from entrys and call function add_ponto from Poligono
- *  sending coordinates x and y
+ *  Read the text from entries and call function add_ponto from Poligono
+ *  sending coordinates x and y collected by the entries as parameters.
+ *  The log updates telling the user the coordinates recently added
  */
-void AddObjectDialog::on_add_Dot_button_clicked() {
+void AddObjectDialog::on_add_dot_button_clicked() {
     new_poly.add_ponto(atoi(e_x.get_text().c_str()),
                        atoi(e_y.get_text().c_str()));
     log.get_buffer()->set_text(log.get_buffer()->get_text()

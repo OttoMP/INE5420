@@ -4,9 +4,9 @@
 #include "poligono.h"
 
 Canvas::Canvas()
-    : scale(1),
-      x_dislocate(0),
-      y_dislocate(0)
+    : scale(1),       // scales starts at 1 to indicate normal zoom
+      x_dislocate(0), // dislocate parameters starts at 0
+      y_dislocate(0)  //
 {
 }
 
@@ -14,6 +14,12 @@ Canvas::~Canvas()
 {
 }
 
+/*  Function Get Last ID
+ *  Function used when setting the id of polygons in display_file.
+ *  When display_file is empty it returns 0. Otherwise it returns the
+ *  id of the currently last object. If the display_file ever empties after
+ *  the start of the application the id count resets
+ */
 int Canvas::get_last_id() {
     if(display_file.empty())
         return display_file.size();
@@ -21,16 +27,35 @@ int Canvas::get_last_id() {
         return display_file.back().get_id();
 }
 
+std::string Canvas::get_last_name() {
+    if(display_file.empty())
+        return "";
+    else
+        return display_file.back().get_nome();
+}
+
+/*  Function Add Polygon
+ *  Function used to add a new polygon to the display_file. It
+ *  pushes the polygon sent as parameter to the end of the list
+ */
 void Canvas::add_poligono(Poligono pol){
     display_file.push_back(pol);
     queue_draw();
 }
 
+/*  Function Remove Polygon
+ *  Function used to remove the especified polygon from the display_file
+ */
 void Canvas::rem_poligono(Poligono pol){
     //display_file.remove(pol);
     queue_draw();
 }
 
+/*  Drawing function
+ *  Function used to draw all objects in the display_file in the screen.
+ *  It first reads the scale and dislocate parameters to set the view accordingly
+ *  then it iterates the display_file drawing each of the objects inside of it
+ */
 bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 {
     Gtk::Allocation allocation = get_allocation();
@@ -76,41 +101,82 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     return true;
 }
 
+/*  Funtion Zoom In
+ *  Function used to set the zoom of the viewport.
+ *  It changes the value of scale adding a factor sent as parameter
+ */
 void Canvas::zoom_in(double factor) {
     scale += factor;
     queue_draw();
 }
 
+
+/*  Funtion Zoom Out
+ *  Function used to set the zoom of the viewport.
+ *  It changes the value of scale subtracting a factor sent as parameter
+ */
 void Canvas::zoom_out(double factor) {
     scale -= factor;
     queue_draw();
 }
 
+/*  Move Up Function
+ *  Function used to change the view of the viewport, sending it up.
+ *  It changes the value in the y_dislocate attribute by adding a step
+ *  sent as parameter
+ */
 void Canvas::move_up(double step) {
     y_dislocate += step;
     queue_draw();
 }
 
+
+/*  Move Down Function
+ *  Function used to change the view of the viewport, sending it down.
+ *  It changes the value in the y_dislocate attribute by subtracting a step
+ *  sent as parameter
+ */
 void Canvas::move_down(double step) {
     y_dislocate -= step;
     queue_draw();
 }
 
+
+/*  Move Right Function
+ *  Function used to change the view of the viewport, sending it to the right.
+ *  It changes the value in the x_dislocate attribute by subtracting a step
+ *  sent as parameter
+ */
 void Canvas::move_right(double step) {
     x_dislocate -= step;
     queue_draw();
 }
+
+
+/*  Move Left Function
+ *  Function used to change the view of the viewport, sending it to the left.
+ *  It changes the value in the x_dislocate attribute by adding a step
+ *  sent as parameter
+ */
 
 void Canvas::move_left(double step) {
     x_dislocate += step;
     queue_draw();
 }
 
+/*  Function Viewport transform X
+ *  Function used to change a cartesian dot to viewport coordinates
+ *  in the X axis
+ */
 double Canvas::vp_transform_x(double x, double width){
     return (x - x_dislocate) / width * width;
 }
 
+
+/*  Function Viewport transform Y
+ *  Function used to change a cartesian dot to viewport coordinates
+ *  in the Y axis
+ */
 double Canvas::vp_transform_y(double y, double height){
     return (1-(y - y_dislocate)/height) * height;
 }
-
