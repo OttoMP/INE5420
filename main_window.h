@@ -29,23 +29,8 @@ class MainWindow : public Gtk::Window {
         Gtk::Box                            b_objects;
         Gtk::ScrolledWindow                 w_objects;
         Gtk::ListBox                        object_viewer;
-        Gtk::TreeView                       view_objects;
-        Glib::RefPtr<Gtk::ListStore>        ref_view_objects;
-      // TreeView
-      //// Tree model columns:
-      class ModelColumns : public Gtk::TreeModel::ColumnRecord {
-          public:
 
-            ModelColumns()
-            { add(m_col_id); add(m_col_name);;}
-
-            Gtk::TreeModelColumn<unsigned int> m_col_id;
-            Gtk::TreeModelColumn<Glib::ustring> m_col_name;
-      };
-
-      ModelColumns m_Columns;
-
-      // Button Menu
+        // Button Menu
         void create_window_menu();
         Gtk::Box                            bt_box;
         Gtk::Frame                          f_window_menu;
@@ -60,7 +45,6 @@ class MainWindow : public Gtk::Window {
         Gtk::Frame                          f_log;
         Gtk::ScrolledWindow                 w_log;
         Gtk::TextView                       text_log;
-        Glib::RefPtr<Gtk::TextBuffer>       buffer_log;
 };
 
 #endif // MAIN_WINDOW_H

@@ -27,7 +27,7 @@ MainWindow::MainWindow()
     create_objects_viewer();
     create_log();
 
-  // Left area contains application menu
+  // Left area contains object viewer and application menu
   // Right area contains viewport and log
     main_pane.add1(b_menu);
     main_pane.add2(b_view);
@@ -71,19 +71,10 @@ void MainWindow::create_objects_viewer() {
 
   // Objects Viewer Configurations
     w_objects.set_border_width(5);
-    w_objects.add(view_objects);
+    w_objects.add(object_viewer);
     w_objects.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
     b_objects.set_border_width(10);
     b_objects.pack_start(w_objects, Gtk::PACK_SHRINK, 0);
-
-  // Create the Tree model:
-    ref_view_objects = Gtk::ListStore::create(m_Columns);
-    view_objects.set_model(ref_view_objects);
-
-  // Add the TreeView's view columns:
-  // This number will be shown with the default numeric formatting.
-    view_objects.append_column("ID", m_Columns.m_col_id);
-    view_objects.append_column("Name", m_Columns.m_col_name);
 }
 
 void MainWindow::create_viewport() {
@@ -114,10 +105,13 @@ void MainWindow::on_add_objects_clicked() {
     int id = canvas.get_last_id();
     std::string name = canvas.get_last_name();
 
-    // Fill the TreeView's model
-    Gtk::TreeModel::Row row = *(ref_view_objects->append());
-    row[m_Columns.m_col_id] = id;
-    row[m_Columns.m_col_name] = name;
+    auto row = Gtk::manage(new Gtk::ListBoxRow);
+    auto label = Gtk::manage(new Gtk::Label);
+    label->set_text(std::to_string(id)+" "+name);
+    row->add(*label);
+    row->show_all_children();
+    object_viewer.append(*row);
+    row->show();
 }
 
 void MainWindow::on_rm_objects_clicked(int ID) {
