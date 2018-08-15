@@ -21,7 +21,7 @@ class MainWindow : public Gtk::Window {
       // Object Viewer Widgets
         void create_objects_viewer();
         void on_add_objects_clicked();
-        void on_rm_objects_clicked(int ID);
+        void on_rm_objects_clicked();
         Gtk::Button                         bt_add_objects;
         Gtk::Button                         bt_rm_objects;
         Gtk::ButtonBox                      b_add_rm_objects;

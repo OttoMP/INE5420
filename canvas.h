@@ -45,7 +45,7 @@ class Canvas : public Gtk::DrawingArea {
         double y_dislocate;
 
         // List of all objects currently drawn in the canvas
-        std::list<Poligono> display_file;
+        std::vector<Poligono> display_file;
 };
 
 #endif //CANVAS_H

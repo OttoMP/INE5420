@@ -27,6 +27,9 @@ int Canvas::get_last_id() {
         return display_file.back().get_id();
 }
 
+/*
+ *
+ */
 std::string Canvas::get_last_name() {
     if(display_file.empty())
         return "";
@@ -47,7 +50,12 @@ void Canvas::add_poligono(Poligono pol){
  *  Function used to remove the especified polygon from the display_file
  */
 void Canvas::rm_poligono(int id){
-    //display_file.remove(pol);
+    for(auto i = 0; i != display_file.size(); i++) {
+       if(display_file[i].get_id() == id) {
+           display_file.erase(display_file.begin()+i);
+           break;
+        }
+    }
     queue_draw();
 }
 
@@ -77,18 +85,18 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     //drawing the coordinate lines
     cr->set_line_width(1);
     cr->set_source_rgb(0.0, 0.4, 0.8);
-    
+
     cr->move_to(0, vp_transform_y(0, height));
     cr->line_to(width/scale, vp_transform_y(0, height));
-    
+
     cr->move_to(-x_dislocate, 0);
     cr->line_to(-x_dislocate, height/scale);
-    
+
   // draw red lines out from the center of the window
     cr->stroke();
     cr->set_source_rgb(0.8, 0.0, 0.0);
 
-    for (std::list<Poligono>::iterator pol = display_file.begin(); pol != display_file.end(); pol++)
+    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
     {
         std::list<Ponto> pontos= pol->draw();
         cr->set_line_width(pol->get_brush_size());

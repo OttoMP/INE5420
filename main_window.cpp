@@ -2,6 +2,10 @@
 #include "window_menu.h"
 #include "object_menu.h"
 #include <iostream>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iterator>
 
 MainWindow::MainWindow()
   : b_menu(Gtk::ORIENTATION_VERTICAL),
@@ -44,8 +48,8 @@ MainWindow::MainWindow()
   // Button functions
     bt_add_objects.signal_clicked().connect(
               sigc::mem_fun(*this, &MainWindow::on_add_objects_clicked));
-    bt_rm_objects.signal_clicked().connect(sigc::bind<int>(
-              sigc::mem_fun(*this, &MainWindow::on_rm_objects_clicked), 0));
+    bt_rm_objects.signal_clicked().connect(
+              sigc::mem_fun(*this, &MainWindow::on_rm_objects_clicked));
 
   // The final step is to display this newly created widget
     show_all_children();
@@ -115,17 +119,27 @@ void MainWindow::on_add_objects_clicked() {
     auto row = Gtk::manage(new Gtk::ListBoxRow);
     auto label = Gtk::manage(new Gtk::Label);
     label->set_text(std::to_string(id)+" "+name);
+    label->set_name(label->get_text());
     row->add(*label);
     row->show_all_children();
     object_viewer.append(*row);
     row->show();
 }
 
-void MainWindow::on_rm_objects_clicked(int ID) {
+void MainWindow::on_rm_objects_clicked() {
+    using namespace std;
+    string name =object_viewer.get_selected_row()->get_child()->get_name();
+
+    istringstream iss(name);
+    vector<string> info;
+    copy(istream_iterator<string>(iss),
+         istream_iterator<string>(),
+         back_inserter(info));
+
+    string id = info[0];
+
+    cout << id << endl;
+
+    canvas.rm_poligono(atoi(id.c_str()));
     object_viewer.remove(*object_viewer.get_selected_row());
-    //std::cout << object_viewer.get_selected_row()->get_children()[0]->get_text() << std::endl;
-
-
-    //canvas.rm_object();
-//    gtk_list_store_remove(view_objects, 0);
 }
