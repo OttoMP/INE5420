@@ -46,7 +46,7 @@ void Canvas::add_poligono(Poligono pol){
 /*  Function Remove Polygon
  *  Function used to remove the especified polygon from the display_file
  */
-void Canvas::rem_poligono(Poligono pol){
+void Canvas::rm_poligono(int id){
     //display_file.remove(pol);
     queue_draw();
 }

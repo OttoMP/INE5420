@@ -115,7 +115,10 @@ void MainWindow::on_add_objects_clicked() {
 }
 
 void MainWindow::on_rm_objects_clicked(int ID) {
-    std::cout << "Rm Object" << std::endl;
+    //object_viewer.remove(*object_viewer.get_selected_row());
+    std::cout << object_viewer.get_selected_row()->get_children()[0]->get_text() << std::endl;
+
+
     //canvas.rm_object();
 //    gtk_list_store_remove(view_objects, 0);
 }

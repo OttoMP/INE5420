@@ -27,7 +27,7 @@ class Canvas : public Gtk::DrawingArea {
 
         // Functions used to add or remove polygons from drawing area
         void add_poligono(Poligono pol);
-        void rem_poligono(Poligono pol);
+        void rm_poligono(int id);
 
     protected:
         // Function used to draw all objects from display_file
