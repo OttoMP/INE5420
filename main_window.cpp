@@ -58,8 +58,7 @@ void MainWindow::create_window_menu() {
     f_window_menu.set_border_width(10);
     f_window_menu.add(bt_box);
     bt_box.pack_start(*Gtk::manage(
-              new WindowMenu(false, "Move Buttons", 5,
-                  Gtk::BUTTONBOX_START, canvas)),
+              new WindowMenu("Move Buttons", 5, canvas)),
           Gtk::PACK_EXPAND_WIDGET);
 }
 
@@ -115,8 +114,8 @@ void MainWindow::on_add_objects_clicked() {
 }
 
 void MainWindow::on_rm_objects_clicked(int ID) {
-    //object_viewer.remove(*object_viewer.get_selected_row());
-    std::cout << object_viewer.get_selected_row()->get_children()[0]->get_text() << std::endl;
+    object_viewer.remove(*object_viewer.get_selected_row());
+    //std::cout << object_viewer.get_selected_row()->get_children()[0]->get_text() << std::endl;
 
 
     //canvas.rm_object();
