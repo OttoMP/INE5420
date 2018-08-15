@@ -35,20 +35,20 @@ void Poligono::set_brush_size(double brush)
 std::list<Ponto> Poligono::draw()
 {
     std::list<Ponto> d = this->pontos;
-    
-    if (this->get_size() > 2) 
-    {	 	  	 	    	 	    		    	    	  	 	
+
+    if (this->get_size() > 2)
+    {
         Ponto p((this->pontos.front().get_x() + this->pontos.back().get_x())/2,
         (this->pontos.front().get_y() + this->pontos.back().get_y())/2, this->pontos.back().get_z());
        d.push_back(p);
        d.push_front(p);
-    } 
+    }
     else if (this->get_size() == 1)
     {
-        d.push_back(Ponto(this->pontos.front().get_x(), this->pontos.front().get_y() 
+        d.push_back(Ponto(this->pontos.front().get_x(), this->pontos.front().get_y()
         + this->brush_size, this->pontos.front().get_z()));
     }
-    
+
     return d;
 }
 
@@ -70,4 +70,11 @@ string Poligono::get_nome()
 void Poligono::set_nome(string nome) {
     this->nome = nome;
 }
-	 	  	 	    	 	    		    	    	  	 	
+
+int Poligono::get_id() {
+    return this->id;
+}
+
+void Poligono::set_id(int new_id) {
+    this->id = new_id;
+}

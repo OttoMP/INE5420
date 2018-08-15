@@ -6,13 +6,12 @@ MainWindow::MainWindow()
   : b_menu(Gtk::ORIENTATION_VERTICAL),
     b_view(Gtk::ORIENTATION_VERTICAL),
     b_objects(Gtk::ORIENTATION_VERTICAL),
-    f_window_menu("Window"),
+    f_window_menu("Viewport Options"),
     f_view("Viewport"),
     f_log("Log"),
     bt_box(Gtk::ORIENTATION_VERTICAL),
     add_objects("New Object"),
-    rm_objects("Remove"),
-    transfer_poly("Novo Polígono")
+    rm_objects("Remove")
 {
   // Main Window Configurations
     set_title("Main Window");
@@ -28,7 +27,7 @@ MainWindow::MainWindow()
     create_objects_viewer();
     create_log();
 
-  // Left area contains application menu
+  // Left area contains object viewer and application menu
   // Right area contains viewport and log
     main_pane.add1(b_menu);
     main_pane.add2(b_view);
@@ -50,14 +49,9 @@ MainWindow::MainWindow()
   // The final step is to display this newly created widget
     show_all_children();
 
-}	 	  	 	    	 	    		    	    	  	 	
+}
 
 MainWindow::~MainWindow() {}
-
-void MainWindow::fill_buffer() {
-  buffer_log = Gtk::TextBuffer::create();
-  buffer_log->set_text("Ready to type");
-}
 
 void MainWindow::create_window_menu() {
   // Include Move buttons
@@ -77,20 +71,11 @@ void MainWindow::create_objects_viewer() {
 
   // Objects Viewer Configurations
     w_objects.set_border_width(5);
-    w_objects.add(view_objects);
+    w_objects.add(object_viewer);
     w_objects.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
     b_objects.set_border_width(10);
     b_objects.pack_start(w_objects, Gtk::PACK_SHRINK, 0);
-
-  // Create the Tree model:
-    ref_view_objects = Gtk::ListStore::create(m_Columns);
-    view_objects.set_model(ref_view_objects);
-
-  // Add the TreeView's view columns:
-  // This number will be shown with the default numeric formatting.
-    view_objects.append_column("ID", m_Columns.m_col_id);
-    view_objects.append_column("Name", m_Columns.m_col_name);
-}	 	  	 	    	 	    		    	    	  	 	
+}
 
 void MainWindow::create_viewport() {
   // Include canvas in viewport
@@ -105,38 +90,32 @@ void MainWindow::create_log() {
     w_log.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
     f_log.set_border_width(10);
     f_log.add(w_log);
+    text_log.set_editable(false);
 
-  // Log Buffers
-    fill_buffer();
-    text_log.set_buffer(buffer_log);
+    text_log.get_buffer()->set_text("Waiting for instructions...\n");
 }
 
 
 // ---------BUTTONS CLICKED FUNCTIONS-------
 
 void MainWindow::on_add_objects_clicked() {
-    std::cout << "Add Object" << std::endl;
-    std::cout << transfer_poly.get_nome() << std::endl;
-    Poligono new_polygon = add_object_dialog();
-    std::cout << new_polygon.get_nome() << std::endl;
-    std::cout << new_polygon.get_nome() << std::endl;
-    int id = canvas.add_poligono(new_polygon);
-    // Fill the TreeView's model
+    AddObjectDialog dialog(canvas, text_log);
+    dialog.run();
 
-    Gtk::TreeModel::Row row = *(ref_view_objects->append());
-    row[m_Columns.m_col_id] = id;
-    row[m_Columns.m_col_name] = new_polygon.get_nome();
-}	 	  	 	    	 	    		    	    	  	 	
+    int id = canvas.get_last_id();
+    std::string name = canvas.get_last_name();
+
+    auto row = Gtk::manage(new Gtk::ListBoxRow);
+    auto label = Gtk::manage(new Gtk::Label);
+    label->set_text(std::to_string(id)+" "+name);
+    row->add(*label);
+    row->show_all_children();
+    object_viewer.append(*row);
+    row->show();
+}
 
 void MainWindow::on_rm_objects_clicked(int ID) {
     std::cout << "Rm Object" << std::endl;
     //canvas.rm_object();
 //    gtk_list_store_remove(view_objects, 0);
-}
-
-Poligono MainWindow::add_object_dialog() {
-    Poligono new_polygon("?");
-    AddObjectDialog dialog(new_polygon);
-    dialog.run();
-    return new_polygon;
 }

@@ -13,12 +13,13 @@ private:
 	std::list<Ponto> pontos;
 	string nome;
 	double brush_size = 1;
+    int id = 0;
 
 public:
 	Poligono(string nome);
 	Poligono(string nome, std::list<Ponto> pontos);
-	
-	
+
+
 	void add_ponto(Ponto p);
 	void add_ponto(int coordx, int coordy);
 	void add_ponto(int coordx, int coordy, int coordz);
@@ -31,7 +32,9 @@ public:
 	string get_nome();
     void set_nome(string nome);
 	int get_size();
+    int get_id();
+    void set_id(int new_id);
 
 };
 
-#endif //POLIGONO_H	 	  	 	    	 	    		    	    	  	 	
+#endif //POLIGONO_H
