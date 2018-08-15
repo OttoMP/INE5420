@@ -1,17 +1,18 @@
 #include "main_window.h"
 #include "window_menu.h"
+#include "object_menu.h"
 #include <iostream>
 
 MainWindow::MainWindow()
   : b_menu(Gtk::ORIENTATION_VERTICAL),
     b_view(Gtk::ORIENTATION_VERTICAL),
     b_objects(Gtk::ORIENTATION_VERTICAL),
-    f_window_menu("Viewport Options"),
+    b_application_menu(Gtk::ORIENTATION_VERTICAL),
     f_view("Viewport"),
     f_log("Log"),
-    bt_box(Gtk::ORIENTATION_VERTICAL),
-    add_objects("New Object"),
-    rm_objects("Remove")
+    b_window_menu(Gtk::ORIENTATION_VERTICAL),
+    bt_add_objects("New Object"),
+    bt_rm_objects("Remove")
 {
   // Main Window Configurations
     set_title("Main Window");
@@ -23,7 +24,7 @@ MainWindow::MainWindow()
 
   // Populate Main Window
     create_viewport();
-    create_window_menu();
+    create_application_menu();
     create_objects_viewer();
     create_log();
 
@@ -34,16 +35,16 @@ MainWindow::MainWindow()
 
   // Include child widgets in left area
     b_menu.pack_start(b_objects, Gtk::PACK_EXPAND_WIDGET, 10);
-    b_menu.pack_start(f_window_menu, Gtk::PACK_EXPAND_WIDGET, 10);
+    b_menu.pack_start(b_application_menu, Gtk::PACK_EXPAND_WIDGET, 10);
 
   // Include child widgets in right area
     b_view.pack_start(f_view, Gtk::PACK_EXPAND_WIDGET, 10);
     b_view.pack_start(f_log, Gtk::PACK_EXPAND_WIDGET, 10);
 
   // Button functions
-    add_objects.signal_clicked().connect(
+    bt_add_objects.signal_clicked().connect(
               sigc::mem_fun(*this, &MainWindow::on_add_objects_clicked));
-    rm_objects.signal_clicked().connect(sigc::bind<int>(
+    bt_rm_objects.signal_clicked().connect(sigc::bind<int>(
               sigc::mem_fun(*this, &MainWindow::on_rm_objects_clicked), 0));
 
   // The final step is to display this newly created widget
@@ -53,20 +54,27 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow() {}
 
-void MainWindow::create_window_menu() {
+void MainWindow::create_application_menu() {
+    b_application_menu.set_border_width(10);
+
   // Include Move buttons
-    f_window_menu.set_border_width(10);
-    f_window_menu.add(bt_box);
-    bt_box.pack_start(*Gtk::manage(
-              new WindowMenu("Move Buttons", 5, canvas)),
+    b_application_menu.pack_start(b_window_menu);
+    b_window_menu.pack_start(*Gtk::manage(
+              new WindowMenu("Window Menu", 5, canvas)),
+          Gtk::PACK_EXPAND_WIDGET);
+
+  // Include Object Functions
+    b_application_menu.pack_start(b_object_menu);
+    b_object_menu.pack_start(*Gtk::manage(
+              new ObjectMenu("Object Menu", 5, canvas, object_viewer)),
           Gtk::PACK_EXPAND_WIDGET);
 }
 
 void MainWindow::create_objects_viewer() {
   // Object Viewer Buttons
     b_objects.pack_start(b_add_rm_objects, Gtk::PACK_SHRINK, 0);
-    b_add_rm_objects.add(add_objects);
-    b_add_rm_objects.add(rm_objects);
+    b_add_rm_objects.add(bt_add_objects);
+    b_add_rm_objects.add(bt_rm_objects);
 
   // Objects Viewer Configurations
     w_objects.set_border_width(5);

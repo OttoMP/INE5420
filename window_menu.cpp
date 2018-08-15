@@ -46,6 +46,7 @@ WindowMenu::WindowMenu(const Glib::ustring& title,
     button_rotate_right.signal_clicked().connect(
             sigc::mem_fun(*this, &WindowMenu::rotate_right_clicked));
 
+  // Add Buttons to Grid
     grid->attach(button_up, 1, 0, 1, 1);
     grid->attach(button_down, 1, 1, 1, 1);
     grid->attach(button_left, 0, 1, 1, 1);
@@ -100,6 +101,7 @@ void WindowMenu::zoom_out_clicked() {
 
 /*  Function called when button R. LEFT is clicked
  *  calls function rotate_left from drawing window
+ *  sending 10 degrees of rotation
  */
 void WindowMenu::rotate_left_clicked() {
 //    window_ref.rotate_left(10);
@@ -107,6 +109,7 @@ void WindowMenu::rotate_left_clicked() {
 
 /*  Function called when button R. RIGHT is clicked
  *  calls function rotate_right from drawing window
+ *  sending 10 degrees of rotation
  */
 void WindowMenu::rotate_right_clicked() {
 //    window_ref.rotate_right(10);

@@ -1,10 +1,9 @@
-#ifndef GTKMM_BUTTONBOX_H
-#define GTKMM_BUTTONBOX_H
+#ifndef GTKMM_WINDOWMENU_H
+#define GTKMM_WINDOWMENU_H
 
 #include <gtkmm/button.h>
 #include <gtkmm/frame.h>
 #include <gtkmm/grid.h>
-#include <gtkmm/buttonbox.h>
 
 #include "canvas.h"
 
@@ -36,5 +35,5 @@ class WindowMenu : public Gtk::Frame {
         void button_left_clicked();
 };
 
-#endif //GTKMM_BUTTONBOX_H
+#endif //GTKMM_WINDOWMENU_H
 
