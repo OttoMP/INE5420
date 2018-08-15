@@ -76,13 +76,16 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     cr->scale(scale, scale);
     //drawing the coordinate lines
     cr->set_line_width(1);
-    cr->set_source_rgb(0.0, 0.0, 0.8);
+    cr->set_source_rgb(0.0, 0.4, 0.8);
+    
     cr->move_to(0, vp_transform_y(0, height));
     cr->line_to(width/scale, vp_transform_y(0, height));
-    cr->set_source_rgb(0.0, 0.4, 0.8);
+    
     cr->move_to(-x_dislocate, 0);
     cr->line_to(-x_dislocate, height/scale);
+    
   // draw red lines out from the center of the window
+    cr->stroke();
     cr->set_source_rgb(0.8, 0.0, 0.0);
 
     for (std::list<Poligono>::iterator pol = display_file.begin(); pol != display_file.end(); pol++)
@@ -148,7 +151,7 @@ void Canvas::move_down(double step) {
  *  sent as parameter
  */
 void Canvas::move_right(double step) {
-    x_dislocate -= step;
+    x_dislocate += step;
     queue_draw();
 }
 
@@ -160,7 +163,7 @@ void Canvas::move_right(double step) {
  */
 
 void Canvas::move_left(double step) {
-    x_dislocate += step;
+    x_dislocate -= step;
     queue_draw();
 }
 
