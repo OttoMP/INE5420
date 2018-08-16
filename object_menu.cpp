@@ -4,13 +4,15 @@
 ObjectMenu::ObjectMenu(const Glib::ustring& title,
        gint spacing,
        Canvas& window,
-       Gtk::ListBox& object_viewer)
+       Gtk::ListBox& object_viewer,
+       Gtk::TextView& text_log)
   : Gtk::Frame(title),       // initialize parent widget
     button_rotate("ROTATE"), /* creates buttons              */
     button_move("MOVE"),     /* with its respectives labels. */
     button_resize("RESIZE"), /**/
     window_ref(window),      // initialize reference to window using parameter
-    object_viewer_ref(object_viewer) // initialize reference to object_viewer
+    object_viewer_ref(object_viewer), // initialize reference to object_viewer
+    text_log_ref(text_log) // initialize reference to text_log
 {
   // Create Grid to hold the buttons
     Gtk::Grid* grid = Gtk::manage(new Gtk::Grid());
@@ -18,6 +20,12 @@ ObjectMenu::ObjectMenu(const Glib::ustring& title,
   // Setting border of parent widget
     set_border_width(10);
     add(*grid);
+
+  // Setting default texts for entries
+    e_move_x.set_text("0");
+    e_move_y.set_text("0");
+    e_scale.set_text("1");
+    e_angle.set_text("90");
 
   // Setting the appearance of th Grid
     grid->set_border_width(5);
@@ -34,8 +42,12 @@ ObjectMenu::ObjectMenu(const Glib::ustring& title,
 
   // Add buttons to Grid
     grid->attach(button_rotate, 0, 0, 1, 1);
+    grid->attach(e_angle, 1, 0, 1, 1);
     grid->attach(button_move, 0, 1, 1, 1);
+    grid->attach(e_move_x, 1, 1, 1, 1);
+    grid->attach(e_move_y, 2, 1, 1, 1);
     grid->attach(button_resize, 0, 2, 1, 1);
+    grid->attach(e_scale, 1, 2, 1, 1);
 }
 
 /*  Function called when button ROTATE is clicked

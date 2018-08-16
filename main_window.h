@@ -6,6 +6,7 @@
 #include "canvas.h"
 #include "poligono.h"
 #include "dialog_add_object.h"
+#include "object_viewer.h"
 
 class MainWindow : public Gtk::Window {
 

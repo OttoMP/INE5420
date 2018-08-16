@@ -29,7 +29,6 @@ MainWindow::MainWindow()
   // Populate Main Window
     create_viewport();
     create_application_menu();
-    create_objects_viewer();
     create_log();
 
   // Left area contains object viewer and application menu
@@ -38,7 +37,9 @@ MainWindow::MainWindow()
     main_pane.add2(b_view);
 
   // Include child widgets in left area
-    b_menu.pack_start(b_objects, Gtk::PACK_EXPAND_WIDGET, 10);
+    b_menu.pack_start(*Gtk::manage(
+                        new ObjectViewer(canvas, text_log))
+                , Gtk::PACK_EXPAND_WIDGET, 10);
     b_menu.pack_start(b_application_menu, Gtk::PACK_EXPAND_WIDGET, 10);
 
   // Include child widgets in right area
@@ -70,7 +71,8 @@ void MainWindow::create_application_menu() {
   // Include Object Functions
     b_application_menu.pack_start(b_object_menu);
     b_object_menu.pack_start(*Gtk::manage(
-              new ObjectMenu("Object Menu", 5, canvas, object_viewer)),
+              new ObjectMenu(
+                  "Object Menu", 5, canvas, object_viewer, text_log)),
           Gtk::PACK_EXPAND_WIDGET);
 }
 
@@ -137,8 +139,6 @@ void MainWindow::on_rm_objects_clicked() {
          back_inserter(info));
 
     string id = info[0];
-
-    cout << id << endl;
 
     canvas.rm_poligono(atoi(id.c_str()));
     object_viewer.remove(*object_viewer.get_selected_row());
