@@ -9,14 +9,15 @@
 #include <gtkmm/entry.h>
 
 #include "canvas.h"
+#include "object_viewer.h"
 
 class ObjectMenu : public Gtk::Frame {
     public:
         ObjectMenu(const Glib::ustring& title,
              gint spacing,
              Canvas& window,
-             Gtk::ListBox& object_viewer,
-             Gtk::TextView& text_log);
+             Gtk::TextView& text_log,
+             ObjectViewer& object_viewer);
 
     protected:
         // Object changing functions
@@ -25,10 +26,10 @@ class ObjectMenu : public Gtk::Frame {
         Gtk::Entry  e_move_x, e_move_y, e_scale, e_angle;
         // Reference to drawing area
         Canvas& window_ref;
-        //Reference to Object viewer
-        Gtk::ListBox& object_viewer_ref;
         //Reference to Text Log
         Gtk::TextView& text_log_ref;
+        //Reference to Object Viewer
+        ObjectViewer& object_viewer_ref;
 
         //Signal handlers:
         void rotate_clicked();

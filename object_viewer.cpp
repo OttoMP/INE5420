@@ -50,6 +50,37 @@ void ObjectViewer::on_add_objects_clicked() {
 }
 
 void ObjectViewer::on_rm_objects_clicked() {
+    canvas_ref.rm_poligono(get_selected_object_id());
+    text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
+                                       +"Polígono '"
+                                       +get_selected_object_name()
+                                       +"' removido\n");
+    object_viewer.remove(*object_viewer.get_selected_row());
+}
+
+std::string ObjectViewer::get_selected_object_name() {
+    using namespace std;
+    string name =object_viewer.get_selected_row()->get_child()->get_name();
+
+    istringstream iss(name);
+    vector<string> info;
+    copy(istream_iterator<string>(iss),
+         istream_iterator<string>(),
+         back_inserter(info));
+
+    string full_name;
+
+    for(auto i = 1; i < info.size(); i++) {
+        if(i == info.size()-1)
+            full_name += info[i];
+        else
+            full_name += info[i]+" ";
+    }
+
+    return full_name;
+}
+
+int ObjectViewer::get_selected_object_id() {
     using namespace std;
     string name =object_viewer.get_selected_row()->get_child()->get_name();
 
@@ -61,6 +92,5 @@ void ObjectViewer::on_rm_objects_clicked() {
 
     string id = info[0];
 
-    canvas_ref.rm_poligono(atoi(id.c_str()));
-    object_viewer.remove(*object_viewer.get_selected_row());
+    return atoi(id.c_str());
 }

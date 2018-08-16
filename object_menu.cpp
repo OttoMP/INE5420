@@ -4,15 +4,15 @@
 ObjectMenu::ObjectMenu(const Glib::ustring& title,
        gint spacing,
        Canvas& window,
-       Gtk::ListBox& object_viewer,
-       Gtk::TextView& text_log)
+       Gtk::TextView& text_log,
+       ObjectViewer& object_viewer)
   : Gtk::Frame(title),       // initialize parent widget
     button_rotate("ROTATE"), /* creates buttons              */
     button_move("MOVE"),     /* with its respectives labels. */
     button_resize("RESIZE"), /**/
     window_ref(window),      // initialize reference to window using parameter
-    object_viewer_ref(object_viewer), // initialize reference to object_viewer
-    text_log_ref(text_log) // initialize reference to text_log
+    text_log_ref(text_log), // initialize reference to text_log
+    object_viewer_ref(object_viewer) // initialize reference to object_viewer
 {
   // Create Grid to hold the buttons
     Gtk::Grid* grid = Gtk::manage(new Gtk::Grid());
@@ -54,19 +54,26 @@ ObjectMenu::ObjectMenu(const Glib::ustring& title,
  *  calls function rotate_object from drawing window
  */
 void ObjectMenu::rotate_clicked() {
-//    window_ref.rotate_object(10);
+    int id = object_viewer_ref.get_selected_object_id();
+    int angle = atoi(e_angle.get_text().c_str());
+//    window_ref.rotate_object(id, angle);
 }
 
 /*  Function called when button MOVE is clicked
  *  calls function move_object from drawing window
  */
 void ObjectMenu::move_clicked() {
-//    window_ref.move_object(10);
+    int id = object_viewer_ref.get_selected_object_id();
+    int x = atoi(e_move_x.get_text().c_str());
+    int y = atoi(e_move_y.get_text().c_str());
+//    window_ref.move_object(id, x, y);
 }
 
 /*  Function called when button RESIZE is clicked
  *  calls function resize_object from drawing window
  */
 void ObjectMenu::resize_clicked() {
-//    window_ref.resize_object(10);
+    int id = object_viewer_ref.get_selected_object_id();
+    int scale = atoi(e_scale.get_text().c_str());
+//    window_ref.resize_object(id, scale);
 }

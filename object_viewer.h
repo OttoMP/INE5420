@@ -17,11 +17,12 @@ class ObjectViewer : public Gtk::Box {
              Canvas& window,
              Gtk::TextView& text_log);
 
+        std::string get_selected_object_name();
+        int get_selected_object_id();
+
     protected:
         void on_add_objects_clicked();
         void on_rm_objects_clicked();
-        std::string get_object_name();
-        int get_object_id();
 
         Gtk::Button                         bt_add_objects;
         Gtk::Button                         bt_rm_objects;
