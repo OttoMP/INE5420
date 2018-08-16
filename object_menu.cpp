@@ -57,6 +57,12 @@ void ObjectMenu::rotate_clicked() {
     int id = object_viewer_ref.get_selected_object_id();
     int angle = atoi(e_angle.get_text().c_str());
 //    window_ref.rotate_object(id, angle);
+    text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
+                                       +"Polígono '"
+                                       +object_viewer_ref.get_selected_object_name()
+                                       +"' rotacionado "
+                                       +std::to_string(angle)
+                                       +" graus\n");
 }
 
 /*  Function called when button MOVE is clicked
@@ -67,6 +73,14 @@ void ObjectMenu::move_clicked() {
     int x = atoi(e_move_x.get_text().c_str());
     int y = atoi(e_move_y.get_text().c_str());
 //    window_ref.move_object(id, x, y);
+    text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
+                                       +"Polígono '"
+                                       +object_viewer_ref.get_selected_object_name()
+                                       +"' movido para ("
+                                       +std::to_string(x)
+                                       +", "
+                                       +std::to_string(y)
+                                       +")\n");
 }
 
 /*  Function called when button RESIZE is clicked
@@ -76,4 +90,10 @@ void ObjectMenu::resize_clicked() {
     int id = object_viewer_ref.get_selected_object_id();
     int scale = atoi(e_scale.get_text().c_str());
 //    window_ref.resize_object(id, scale);
+    text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
+                                       +"Polígono '"
+                                       +object_viewer_ref.get_selected_object_name()
+                                       +"' aumentado em "
+                                       +std::to_string(scale)
+                                       +" vezes\n");
 }
