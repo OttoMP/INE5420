@@ -3,7 +3,6 @@
 
 #include <gtkmm.h>
 
-#include "window_menu.h"
 #include "canvas.h"
 #include "poligono.h"
 #include "dialog_add_object.h"
@@ -22,18 +21,18 @@ class MainWindow : public Gtk::Window {
       // Object Viewer Widgets
         void create_objects_viewer();
         void on_add_objects_clicked();
-        void on_rm_objects_clicked(int ID);
-        Gtk::Button                         add_objects;
-        Gtk::Button                         rm_objects;
+        void on_rm_objects_clicked();
+        Gtk::Button                         bt_add_objects;
+        Gtk::Button                         bt_rm_objects;
         Gtk::ButtonBox                      b_add_rm_objects;
         Gtk::Box                            b_objects;
         Gtk::ScrolledWindow                 w_objects;
         Gtk::ListBox                        object_viewer;
 
-        // Button Menu
-        void create_window_menu();
-        Gtk::Box                            bt_box;
-        Gtk::Frame                          f_window_menu;
+      // Application Menu
+        void create_application_menu();
+        Gtk::Box                            b_application_menu;
+        Gtk::Box                            b_window_menu, b_object_menu;
 
       // Viewport
         void create_viewport();

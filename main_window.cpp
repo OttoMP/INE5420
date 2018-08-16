@@ -1,17 +1,22 @@
 #include "main_window.h"
 #include "window_menu.h"
+#include "object_menu.h"
 #include <iostream>
+#include <string>
+#include <sstream>
+#include <algorithm>
+#include <iterator>
 
 MainWindow::MainWindow()
   : b_menu(Gtk::ORIENTATION_VERTICAL),
     b_view(Gtk::ORIENTATION_VERTICAL),
     b_objects(Gtk::ORIENTATION_VERTICAL),
-    f_window_menu("Viewport Options"),
+    b_application_menu(Gtk::ORIENTATION_VERTICAL),
     f_view("Viewport"),
     f_log("Log"),
-    bt_box(Gtk::ORIENTATION_VERTICAL),
-    add_objects("New Object"),
-    rm_objects("Remove")
+    b_window_menu(Gtk::ORIENTATION_VERTICAL),
+    bt_add_objects("New Object"),
+    bt_rm_objects("Remove")
 {
   // Main Window Configurations
     set_title("Main Window");
@@ -23,7 +28,7 @@ MainWindow::MainWindow()
 
   // Populate Main Window
     create_viewport();
-    create_window_menu();
+    create_application_menu();
     create_objects_viewer();
     create_log();
 
@@ -34,17 +39,17 @@ MainWindow::MainWindow()
 
   // Include child widgets in left area
     b_menu.pack_start(b_objects, Gtk::PACK_EXPAND_WIDGET, 10);
-    b_menu.pack_start(f_window_menu, Gtk::PACK_EXPAND_WIDGET, 10);
+    b_menu.pack_start(b_application_menu, Gtk::PACK_EXPAND_WIDGET, 10);
 
   // Include child widgets in right area
     b_view.pack_start(f_view, Gtk::PACK_EXPAND_WIDGET, 10);
     b_view.pack_start(f_log, Gtk::PACK_EXPAND_WIDGET, 10);
 
   // Button functions
-    add_objects.signal_clicked().connect(
+    bt_add_objects.signal_clicked().connect(
               sigc::mem_fun(*this, &MainWindow::on_add_objects_clicked));
-    rm_objects.signal_clicked().connect(sigc::bind<int>(
-              sigc::mem_fun(*this, &MainWindow::on_rm_objects_clicked), 0));
+    bt_rm_objects.signal_clicked().connect(
+              sigc::mem_fun(*this, &MainWindow::on_rm_objects_clicked));
 
   // The final step is to display this newly created widget
     show_all_children();
@@ -53,21 +58,27 @@ MainWindow::MainWindow()
 
 MainWindow::~MainWindow() {}
 
-void MainWindow::create_window_menu() {
+void MainWindow::create_application_menu() {
+    b_application_menu.set_border_width(10);
+
   // Include Move buttons
-    f_window_menu.set_border_width(10);
-    f_window_menu.add(bt_box);
-    bt_box.pack_start(*Gtk::manage(
-              new WindowMenu(false, "Move Buttons", 5,
-                  Gtk::BUTTONBOX_START, canvas)),
+    b_application_menu.pack_start(b_window_menu);
+    b_window_menu.pack_start(*Gtk::manage(
+              new WindowMenu("Window Menu", 5, canvas)),
+          Gtk::PACK_EXPAND_WIDGET);
+
+  // Include Object Functions
+    b_application_menu.pack_start(b_object_menu);
+    b_object_menu.pack_start(*Gtk::manage(
+              new ObjectMenu("Object Menu", 5, canvas, object_viewer)),
           Gtk::PACK_EXPAND_WIDGET);
 }
 
 void MainWindow::create_objects_viewer() {
   // Object Viewer Buttons
     b_objects.pack_start(b_add_rm_objects, Gtk::PACK_SHRINK, 0);
-    b_add_rm_objects.add(add_objects);
-    b_add_rm_objects.add(rm_objects);
+    b_add_rm_objects.add(bt_add_objects);
+    b_add_rm_objects.add(bt_rm_objects);
 
   // Objects Viewer Configurations
     w_objects.set_border_width(5);
@@ -108,14 +119,27 @@ void MainWindow::on_add_objects_clicked() {
     auto row = Gtk::manage(new Gtk::ListBoxRow);
     auto label = Gtk::manage(new Gtk::Label);
     label->set_text(std::to_string(id)+" "+name);
+    label->set_name(label->get_text());
     row->add(*label);
     row->show_all_children();
     object_viewer.append(*row);
     row->show();
 }
 
-void MainWindow::on_rm_objects_clicked(int ID) {
-    std::cout << "Rm Object" << std::endl;
-    //canvas.rm_object();
-//    gtk_list_store_remove(view_objects, 0);
+void MainWindow::on_rm_objects_clicked() {
+    using namespace std;
+    string name =object_viewer.get_selected_row()->get_child()->get_name();
+
+    istringstream iss(name);
+    vector<string> info;
+    copy(istream_iterator<string>(iss),
+         istream_iterator<string>(),
+         back_inserter(info));
+
+    string id = info[0];
+
+    cout << id << endl;
+
+    canvas.rm_poligono(atoi(id.c_str()));
+    object_viewer.remove(*object_viewer.get_selected_row());
 }
