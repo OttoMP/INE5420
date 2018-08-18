@@ -6,11 +6,13 @@
 using std::string;
 
 #include "ponto.h"
+#include "matriz.h"
 
 class Poligono{
 
 private:
 	std::list<Ponto> pontos;
+	Ponto center = Ponto(0, 0);
 	string nome;
 	double brush_size = 1;
     int id = 0;
@@ -34,7 +36,10 @@ public:
 	int get_size();
     int get_id();
     void set_id(int new_id);
+    Ponto get_center();
+    void exec_transform(Matriz transform);
 
 };
 
 #endif //POLIGONO_H
+	 	  	 	    	 	    		    	    	  	 	

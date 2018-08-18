@@ -14,11 +14,29 @@ Poligono::Poligono(string nome, std::list<Ponto> pontos)
 
 void Poligono::add_ponto(Ponto p)
 {
+    if (this->get_size() == 0)
+    {
+        this->center = p;
+    }
+    else
+    {
+        this->center = Ponto((this->center.get_x()*this->get_size() + p.get_x())/(this->get_size()+1),(this->center.get_y()*this->get_size() + p.get_y())/(this->get_size()+1));
+    }
     this->pontos.push_back(p);
+    
+    
 }
 
 void Poligono::add_ponto(int coordx, int coordy) {
     Ponto p(coordx, coordy);
+     if (this->get_size() == 0)
+    {
+        this->center = p;
+    }
+    else
+    {	 	  	 	    	 	    		    	    	  	 	
+        this->center = Ponto((this->center.get_x()*this->get_size() + p.get_x())/(this->get_size()+1),(this->center.get_y()*this->get_size() + p.get_y())/(this->get_size()+1));
+    }
     this->pontos.push_back(p);
 }
 
@@ -53,7 +71,7 @@ std::list<Ponto> Poligono::draw()
 }
 
 int Poligono::get_size()
-{
+{	 	  	 	    	 	    		    	    	  	 	
     return this->pontos.size();
 }
 
@@ -77,4 +95,18 @@ int Poligono::get_id() {
 
 void Poligono::set_id(int new_id) {
     this->id = new_id;
+}
+
+Ponto Poligono::get_center()
+{
+    return this->center;
+}
+
+void Poligono::exec_transform(Matriz transform)
+{
+    for (std::list<Ponto>::iterator pt = this->pontos.begin(); pt != this->pontos.end(); pt++)
+    {
+        *pt = transform.exec_transform(*pt);
+    }	 	  	 	    	 	    		    	    	  	 	
+    this->center = transform.exec_transform(center);
 }

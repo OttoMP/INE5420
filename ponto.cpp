@@ -34,3 +34,5 @@ void Ponto::calc_new_pos()
 {
 	
 }
+
+
