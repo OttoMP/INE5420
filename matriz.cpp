@@ -25,13 +25,11 @@ Matriz Matriz::rotate(double angle, Ponto center)
     Matriz m = Matriz().translate(Ponto(-center.get_x(),-center.get_y()))
 	   .multiplication(*this)
 	   .multiplication(Matriz().translate(Ponto(center.get_x(),center.get_y())));
-	return m;
-	
+	return m;	
 }
 
 Matriz Matriz::scale(Ponto scale, Ponto center)
 {
-	
 	this->matriz[0][0] = scale.get_x();
 	this->matriz[1][1] = scale.get_y();
 	this->matriz[2][2] = 1;

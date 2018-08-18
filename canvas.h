@@ -31,7 +31,7 @@ class Canvas : public Gtk::DrawingArea {
 
         // Functions used to add or remove polygons from drawing area
         void add_poligono(Poligono pol);
-        void rem_poligono(Poligono pol);
+        void rm_poligono(int id);
 
     protected:
         // Function used to draw all objects from display_file
@@ -49,7 +49,7 @@ class Canvas : public Gtk::DrawingArea {
         double y_dislocate;
 
         // List of all objects currently drawn in the canvas
-        std::list<Poligono> display_file;
+        std::vector<Poligono> display_file;
 };
 
 #endif //CANVAS_H
