@@ -1,12 +1,9 @@
 #include "canvas.h"
-#include <cairomm/context.h>
-#include "ponto.h"
-#include "poligono.h"
 
 Canvas::Canvas()
     : scale(1),       // scales starts at 1 to indicate normal zoom
-      x_dislocate(0), // dislocate parameters starts at 0
-      y_dislocate(0)  //
+      x_dislocate(-50), // dislocate parameters starts at 0
+      y_dislocate(-50)  //
 {
 }
 
@@ -41,7 +38,11 @@ std::string Canvas::get_last_name() {
  *  Function used to add a new polygon to the display_file. It
  *  pushes the polygon sent as parameter to the end of the list
  */
-void Canvas::add_poligono(Poligono pol){
+void Canvas::add_poligono(Poligono pol){	 	  	 	    	 	    		    	    	  	 	
+    //display_file.push_back(pol);
+    Matriz m = Matriz().rotate(45, pol.get_center());
+        
+    pol.exec_transform(m);
     display_file.push_back(pol);
     queue_draw();
 }
@@ -96,15 +97,17 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     cr->stroke();
     cr->set_source_rgb(0.8, 0.0, 0.0);
 
+
     for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
     {
         std::list<Ponto> pontos= pol->draw();
         cr->set_line_width(pol->get_brush_size());
         cr->move_to(vp_transform_x(pontos.back().get_x(), width), vp_transform_y(pontos.back().get_y(), height));
         for (std::list<Ponto>::iterator pt = pontos.begin(); pt != pontos.end(); pt++)
-            {
-                cr->line_to(vp_transform_x(pt->get_x(), width), vp_transform_y(pt->get_y(), height));
-            }
+        {
+            cr->line_to(vp_transform_x(pt->get_x(), width), vp_transform_y(pt->get_y(), height));
+        }
+        cr->line_to(vp_transform_x(pol->get_center().get_x(), width), vp_transform_y(pol->get_center().get_y(), height));
     }
 
     cr->stroke();
@@ -136,7 +139,7 @@ void Canvas::zoom_out(double factor) {
  *  It changes the value in the y_dislocate attribute by adding a step
  *  sent as parameter
  */
-void Canvas::move_up(double step) {
+void Canvas::move_up(double step) {	 	  	 	    	 	    		    	    	  	 	
     y_dislocate += step;
     queue_draw();
 }
@@ -173,7 +176,7 @@ void Canvas::move_right(double step) {
 void Canvas::move_left(double step) {
     x_dislocate -= step;
     queue_draw();
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 /*  Function Viewport transform X
  *  Function used to change a cartesian dot to viewport coordinates

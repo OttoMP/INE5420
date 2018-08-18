@@ -3,6 +3,10 @@
 
 #include <gtkmm/drawingarea.h>
 #include "poligono.h"
+#include <cairomm/context.h>
+#include "ponto.h"
+#include "poligono.h"
+#include "matriz.h"
 
 class Canvas : public Gtk::DrawingArea {
     public:
@@ -50,3 +54,4 @@ class Canvas : public Gtk::DrawingArea {
 
 #endif //CANVAS_H
 
+	 	  	 	    	 	    		    	    	  	 	
