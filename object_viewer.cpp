@@ -47,7 +47,7 @@ void ObjectViewer::on_add_objects_clicked() {
     row->show_all_children();
     object_viewer.append(*row);
     row->show();
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 void ObjectViewer::on_rm_objects_clicked() {
     canvas_ref.rm_poligono(get_selected_object_id());
@@ -93,4 +93,4 @@ int ObjectViewer::get_selected_object_id() {
     string id = info[0];
 
     return atoi(id.c_str());
-}
+}	 	  	 	    	 	    		    	    	  	 	

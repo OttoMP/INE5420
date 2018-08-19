@@ -43,7 +43,7 @@ AddObjectDialog::AddObjectDialog(Canvas& drawing_area,
     set_default_response(Gtk::RESPONSE_CLOSE);
 
     show_all_children();
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 AddObjectDialog::~AddObjectDialog()
 {
@@ -79,9 +79,9 @@ void AddObjectDialog::on_dialog_response(int response_id) {
  *  sending coordinates x and y collected by the entries as parameters.
  *  The log updates telling the user the coordinates recently added
  */
-void AddObjectDialog::on_add_dot_button_clicked() {
-    new_poly.add_ponto(atoi(e_x.get_text().c_str()),
-                       atoi(e_y.get_text().c_str()));
+void AddObjectDialog::on_add_dot_button_clicked() {	 	  	 	    	 	    		    	    	  	 	
+    new_poly.add_ponto(Ponto(atof(e_x.get_text().c_str()),
+                       atof(e_y.get_text().c_str())));
     log.get_buffer()->set_text(log.get_buffer()->get_text()
                                +"Ponto adicionado na coordenada ("
                                +e_x.get_text()

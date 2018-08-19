@@ -48,15 +48,15 @@ ObjectMenu::ObjectMenu(const Glib::ustring& title,
     grid->attach(e_move_y, 2, 1, 1, 1);
     grid->attach(button_resize, 0, 2, 1, 1);
     grid->attach(e_scale, 1, 2, 1, 1);
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 /*  Function called when button ROTATE is clicked
  *  calls function rotate_object from drawing window
  */
 void ObjectMenu::rotate_clicked() {
     int id = object_viewer_ref.get_selected_object_id();
-    int angle = atoi(e_angle.get_text().c_str());
-//    window_ref.rotate_object(id, angle);
+    double angle = atof(e_angle.get_text().c_str());
+    window_ref.rotate_object(id, angle);
     text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
                                        +"Polígono '"
                                        +object_viewer_ref.get_selected_object_name()
@@ -70,9 +70,9 @@ void ObjectMenu::rotate_clicked() {
  */
 void ObjectMenu::move_clicked() {
     int id = object_viewer_ref.get_selected_object_id();
-    int x = atoi(e_move_x.get_text().c_str());
-    int y = atoi(e_move_y.get_text().c_str());
-//    window_ref.move_object(id, x, y);
+    double x = atof(e_move_x.get_text().c_str());
+    double y = atof(e_move_y.get_text().c_str());
+    window_ref.move_object(id, Ponto(x, y));
     text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
                                        +"Polígono '"
                                        +object_viewer_ref.get_selected_object_name()
@@ -86,10 +86,10 @@ void ObjectMenu::move_clicked() {
 /*  Function called when button RESIZE is clicked
  *  calls function resize_object from drawing window
  */
-void ObjectMenu::resize_clicked() {
+void ObjectMenu::resize_clicked() {	 	  	 	    	 	    		    	    	  	 	
     int id = object_viewer_ref.get_selected_object_id();
-    int scale = atoi(e_scale.get_text().c_str());
-//    window_ref.resize_object(id, scale);
+    double scale = atof(e_scale.get_text().c_str());
+    window_ref.resize_object(id, Ponto(scale, scale));
     text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
                                        +"Polígono '"
                                        +object_viewer_ref.get_selected_object_name()

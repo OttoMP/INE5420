@@ -3,6 +3,7 @@
 
 #define DIMENSOES 3
 #define PI 3.14159265
+#define _USE_MATH_DEFINES
 
 #include <math.h>
 #include "ponto.h"
