@@ -24,6 +24,12 @@ class Canvas : public Gtk::DrawingArea {
         void move_down(double step);
         void move_right(double step);
         void move_left(double step);
+        
+        // Transforming Functions
+        void rotate_object(int id, double angle);
+        void rotate_point(int id, double angle, Ponto reference);
+        void move_object(int id, Ponto distancia);
+        void resize_object(int id, Ponto escala);
 
         // Viewport Transforms
         double vp_transform_x(double x, double width);

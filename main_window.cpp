@@ -45,7 +45,7 @@ MainWindow::MainWindow()
   // The final step is to display this newly created widget
     show_all_children();
 
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 MainWindow::~MainWindow() {}
 
@@ -85,7 +85,7 @@ void MainWindow::create_log() {
     text_log.set_editable(false);
 
     text_log.get_buffer()->set_text("Waiting for instructions...\n");
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 
 // ---------BUTTONS CLICKED FUNCTIONS-------

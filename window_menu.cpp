@@ -55,7 +55,7 @@ WindowMenu::WindowMenu(const Glib::ustring& title,
     grid->attach(button_zoom_out, 2, 0, 1, 1);
     grid->attach(button_rotate_left, 0, 2, 1, 1);
     grid->attach(button_rotate_right, 2, 2, 1, 1);
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 /*  Function called when button UP is clicked
  *  calls function move_up from drawing window
@@ -95,7 +95,7 @@ void WindowMenu::zoom_in_clicked() {
 /*  Function called when button ZOOM OUT is clicked
  *  calls function zoom_out from drawing window
  */
-void WindowMenu::zoom_out_clicked() {
+void WindowMenu::zoom_out_clicked() {	 	  	 	    	 	    		    	    	  	 	
     window_ref.zoom_out(0.1);
 }
 

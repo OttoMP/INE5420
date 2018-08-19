@@ -27,24 +27,6 @@ void Poligono::add_ponto(Ponto p)
     
 }
 
-void Poligono::add_ponto(int coordx, int coordy) {
-    Ponto p(coordx, coordy);
-     if (this->get_size() == 0)
-    {
-        this->center = p;
-    }
-    else
-    {	 	  	 	    	 	    		    	    	  	 	
-        this->center = Ponto((this->center.get_x()*this->get_size() + p.get_x())/(this->get_size()+1),(this->center.get_y()*this->get_size() + p.get_y())/(this->get_size()+1));
-    }
-    this->pontos.push_back(p);
-}
-
-void Poligono::add_ponto(int coordx, int coordy, int coordz) {
-    Ponto p(coordx, coordy, coordz);
-    this->pontos.push_back(p);
-}
-
 void Poligono::set_brush_size(double brush)
 {
     this->brush_size = brush;
@@ -104,9 +86,11 @@ Ponto Poligono::get_center()
 
 void Poligono::exec_transform(Matriz transform)
 {
+    this->center = transform.exec_transform(center);
     for (std::list<Ponto>::iterator pt = this->pontos.begin(); pt != this->pontos.end(); pt++)
     {
         *pt = transform.exec_transform(*pt);
-    }	 	  	 	    	 	    		    	    	  	 	
-    this->center = transform.exec_transform(center);
+    }	 
+
+    
 }

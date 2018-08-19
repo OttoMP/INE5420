@@ -176,7 +176,58 @@ void Canvas::move_right(double step) {
 void Canvas::move_left(double step) {
     x_dislocate -= step;
     queue_draw();
-}	 	  	 	    	 	    		    	    	  	 	
+}	 	  	 	
+
+/*  Rotate Function
+ *  Function used to rotate an object around itself by some angle
+ */
+
+void Canvas::rotate_object(int id, double angle) {
+    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
+    {
+        if(pol->get_id() == id) {
+           Matriz m = Matriz().rotate(angle, (*pol).get_center());
+           pol->exec_transform(m);
+           break;
+        }
+    }
+    queue_draw();
+}	 
+
+/*  Move Function
+ *  Function used to move an object around by some distance determined by a dot
+ */
+
+void Canvas::move_object(int id, Ponto distancia) {
+    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
+    {
+        if(pol->get_id() == id) {
+           Matriz m = Matriz().translate(distancia);
+           pol->exec_transform(m);
+           break;
+        }
+    }
+    queue_draw();
+}	
+
+/*  Resize Function
+ *  Function used to Resize an object by some size
+ */
+
+void Canvas::resize_object(int id, Ponto size) {
+    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
+    {
+        if(pol->get_id() == id) {
+           Matriz m = Matriz().scale(size, pol->get_center());
+           pol->exec_transform(m);
+           break;
+        }
+    }
+    queue_draw();
+}	
+
+
+
 
 /*  Function Viewport transform X
  *  Function used to change a cartesian dot to viewport coordinates
