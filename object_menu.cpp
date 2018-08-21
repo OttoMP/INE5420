@@ -10,7 +10,7 @@ ObjectMenu::ObjectMenu(const Glib::ustring& title,
     button_rotate_poly("ROTATE"),              /* creates buttons             */
     button_rotate_center("ROTATE REF CENTER"), /* with its respectives labels.*/
     button_rotate_dot("ROTATE REF DOT"),       /**/
-    button_move("MOVE TO REFERENCE"),          /**/
+    button_move("MOVE USING REFERENCE"),       /**/
     button_resize("RESIZE"),                   /**/
     window_ref(window),      // initialize reference to window using parameter
     text_log_ref(text_log), // initialize reference to text_log
