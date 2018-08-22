@@ -38,10 +38,10 @@ std::string Canvas::get_last_name() {
  *  Function used to add a new polygon to the display_file. It
  *  pushes the polygon sent as parameter to the end of the list
  */
-void Canvas::add_poligono(Poligono pol){	 	  	 	    	 	    		    	    	  	 	
+void Canvas::add_poligono(Poligono pol){
     //display_file.push_back(pol);
     Matriz m = Matriz().rotate(45, pol.get_center());
-        
+
     pol.exec_transform(m);
     display_file.push_back(pol);
     queue_draw();
@@ -95,9 +95,23 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 
   // draw red lines out from the center of the window
     cr->stroke();
+
+//--------------------CLIPPING----------------------------
+    // drawing subcanvas for clipping
+    cr->set_source_rgb(0.0, 0.8, 0.0);
+
+    cr->move_to(10, (height/scale)-10);
+    cr->line_to((width/scale)-10, (height/scale)-10);
+
+    cr->line_to((width/scale)-10, 10);
+    cr->line_to(10, 10);
+    cr->line_to(10, (height/scale)-10);
+
+    cr->stroke();
+
+//---------------------------------------------------------
+
     cr->set_source_rgb(0.8, 0.0, 0.0);
-
-
     for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
     {
         std::list<Ponto> pontos= pol->draw();
@@ -139,7 +153,7 @@ void Canvas::zoom_out(double factor) {
  *  It changes the value in the y_dislocate attribute by adding a step
  *  sent as parameter
  */
-void Canvas::move_up(double step) {	 	  	 	    	 	    		    	    	  	 	
+void Canvas::move_up(double step) {
     y_dislocate += step;
     queue_draw();
 }
@@ -176,7 +190,7 @@ void Canvas::move_right(double step) {
 void Canvas::move_left(double step) {
     x_dislocate -= step;
     queue_draw();
-}	 	  	 	
+}
 
 /*  Rotate Function
  *  Function used to rotate an object around itself by some angle
@@ -192,7 +206,7 @@ void Canvas::rotate_object(int id, double angle) {
         }
     }
     queue_draw();
-}	
+}
 
 /*  Rotate Function
  *  Function used to rotate an object around itself by some angle
@@ -208,7 +222,7 @@ void Canvas::rotate_point(int id, double angle, Ponto centro) {
         }
     }
     queue_draw();
-}	
+}
 
 /*  Move Function
  *  Function used to move an object around by some distance determined by a dot
@@ -224,7 +238,7 @@ void Canvas::move_object(int id, Ponto distancia) {
         }
     }
     queue_draw();
-}	
+}
 
 /*  Resize Function
  *  Function used to Resize an object by some size
@@ -240,7 +254,7 @@ void Canvas::resize_object(int id, Ponto size) {
         }
     }
     queue_draw();
-}	
+}
 
 
 
