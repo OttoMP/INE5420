@@ -72,6 +72,7 @@ ObjectMenu::ObjectMenu(const Glib::ustring& title,
  */
 void ObjectMenu::rotate_poly_clicked() {
     int id = object_viewer_ref.get_selected_object_id();
+    if(id == 0) return;
     double angle = atof(e_angle.get_text().c_str());
     window_ref.rotate_object(id, angle);
     text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
@@ -88,6 +89,7 @@ void ObjectMenu::rotate_poly_clicked() {
  */
 void ObjectMenu::rotate_dot_clicked() {
     int id = object_viewer_ref.get_selected_object_id();
+    if(id == 0) return;
     double angle = atof(e_angle.get_text().c_str());
     double x = atof(e_move_x.get_text().c_str());
     double y = atof(e_move_y.get_text().c_str());
@@ -111,6 +113,7 @@ void ObjectMenu::rotate_dot_clicked() {
  */
 void ObjectMenu::rotate_center_clicked() {
     int id = object_viewer_ref.get_selected_object_id();
+    if(id == 0) return;
     double angle = atof(e_angle.get_text().c_str());
     Ponto center(0,0);
     //window_ref.rotate_point(id, angle, center);
@@ -128,6 +131,7 @@ void ObjectMenu::rotate_center_clicked() {
  */
 void ObjectMenu::move_clicked() {
     int id = object_viewer_ref.get_selected_object_id();
+    if(id == 0) return;
     double x = atof(e_move_x.get_text().c_str());
     double y = atof(e_move_y.get_text().c_str());
     window_ref.move_object(id, Ponto(x, y));
@@ -146,6 +150,7 @@ void ObjectMenu::move_clicked() {
  */
 void ObjectMenu::resize_clicked() {
     int id = object_viewer_ref.get_selected_object_id();
+    if(id == 0) return;
     double scale = atof(e_scale.get_text().c_str());
     window_ref.resize_object(id, Ponto(scale, scale));
     text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()

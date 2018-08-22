@@ -47,9 +47,14 @@ void ObjectViewer::on_add_objects_clicked() {
     row->show_all_children();
     object_viewer.append(*row);
     row->show();
-}	 	  	 	    	 	    		    	    	  	 	
+}
 
 void ObjectViewer::on_rm_objects_clicked() {
+    if (object_viewer.get_selected_row() == nullptr) {
+        text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
+                                   +"Nenhum objeto selecionado\n");
+        return;
+    }
     canvas_ref.rm_poligono(get_selected_object_id());
     text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
                                        +"Polígono '"
@@ -60,6 +65,11 @@ void ObjectViewer::on_rm_objects_clicked() {
 
 std::string ObjectViewer::get_selected_object_name() {
     using namespace std;
+    if (object_viewer.get_selected_row() == nullptr) {
+        text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
+                                   +"Nenhum objeto selecionado\n");
+        return "";
+    }
     string name =object_viewer.get_selected_row()->get_child()->get_name();
 
     istringstream iss(name);
@@ -82,6 +92,12 @@ std::string ObjectViewer::get_selected_object_name() {
 
 int ObjectViewer::get_selected_object_id() {
     using namespace std;
+    if (object_viewer.get_selected_row() == nullptr) {
+        text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
+                                   +"Nenhum objeto selecionado\n");
+        return 0;
+    }
+
     string name =object_viewer.get_selected_row()->get_child()->get_name();
 
     istringstream iss(name);
@@ -93,4 +109,4 @@ int ObjectViewer::get_selected_object_id() {
     string id = info[0];
 
     return atoi(id.c_str());
-}	 	  	 	    	 	    		    	    	  	 	
+}
