@@ -13,7 +13,7 @@ class Canvas : public Gtk::DrawingArea {
         Canvas();
         virtual ~Canvas();
 
-        // Funtion used in setting the id's of display_file's polygons
+        // Functions used in setting the id's of display_file's polygons
         int get_last_id();
         std::string get_last_name();
 
@@ -24,7 +24,7 @@ class Canvas : public Gtk::DrawingArea {
         void move_down(double step);
         void move_right(double step);
         void move_left(double step);
-        
+
         // Transforming Functions
         void rotate_object(int id, double angle);
         void rotate_point(int id, double angle, Ponto reference);
@@ -56,8 +56,13 @@ class Canvas : public Gtk::DrawingArea {
 
         // List of all objects currently drawn in the canvas
         std::vector<Poligono> display_file;
+
+        //Clipping functions
+        void clipping_line();
+        void clipping_poly(Poligono poly, double height, double width, double scale);
+        bool inside_view(Ponto p, Ponto tl, Ponto br);
 };
 
 #endif //CANVAS_H
 
-	 	  	 	    	 	    		    	    	  	 	
+

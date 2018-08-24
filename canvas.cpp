@@ -100,31 +100,33 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     // drawing subcanvas for clipping
     cr->set_source_rgb(0.0, 0.8, 0.0);
 
-    cr->move_to(10, (height/scale)-10);
+    cr->move_to(10, 10);
+    cr->line_to(10, (height/scale)-10);
     cr->line_to((width/scale)-10, (height/scale)-10);
-
     cr->line_to((width/scale)-10, 10);
     cr->line_to(10, 10);
-    cr->line_to(10, (height/scale)-10);
 
     cr->stroke();
 
 //---------------------------------------------------------
 
     cr->set_source_rgb(0.8, 0.0, 0.0);
-    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
+    for (auto i = 0; i < display_file.size(); i++)
     {
-        std::list<Ponto> pontos= pol->draw();
-        cr->set_line_width(pol->get_brush_size());
+        std::list<Ponto> pontos= display_file[i].draw();
+        cr->set_line_width(display_file[i].get_brush_size());
         cr->move_to(vp_transform_x(pontos.back().get_x(), width), vp_transform_y(pontos.back().get_y(), height));
         for (std::list<Ponto>::iterator pt = pontos.begin(); pt != pontos.end(); pt++)
         {
             cr->line_to(vp_transform_x(pt->get_x(), width), vp_transform_y(pt->get_y(), height));
         }
-        cr->line_to(vp_transform_x(pol->get_center().get_x(), width), vp_transform_y(pol->get_center().get_y(), height));
-    }
+        cr->line_to(vp_transform_x(display_file[i].get_center().get_x(), width),
+                    vp_transform_y(display_file[i].get_center().get_y(), height));
 
-    cr->stroke();
+        if(display_file[i].get_filled())
+            cr->fill();
+        cr->stroke();
+    }
 
     return true;
 }
@@ -256,9 +258,6 @@ void Canvas::resize_object(int id, Ponto size) {
     queue_draw();
 }
 
-
-
-
 /*  Function Viewport transform X
  *  Function used to change a cartesian dot to viewport coordinates
  *  in the X axis
@@ -274,4 +273,46 @@ double Canvas::vp_transform_x(double x, double width){
  */
 double Canvas::vp_transform_y(double y, double height){
     return (1-(y - y_dislocate)/height) * height;
+}
+
+/* Function Clipping Line
+ * Function used to clip lines out of viewport
+ */
+void clipping_line() {}
+
+/* Function Clipping Polygon
+ * Function used to clip polygons out of viewport
+ * It uses the Weiler-Atherton algorithm
+ */
+void clipping_poly(Poligono poly, double height, double width, double scale) {
+/*    Ponto top_left(10, 10);
+    Ponto bottom_left(10, (height/scale)-10;
+    Ponto bottom_right((width/scale)-10, (height/scale)-10);
+    Ponto top_right((width/scale)-10, 10);
+
+    std::list<Ponto> window_corners = {top_left, top_right, bottom_right, bottom_left};
+    std::list<Ponto> entrances = {};
+    std::list<Ponto> poly_corners = poly.draw();
+
+    for {auto p = poly_corners.begin(); p != poly_corners.end(); p++) {
+        next = p++;
+        if(!inside_view(p, top_left, bottom_right) && inside_view(next, top_left, bottom_right)) {
+            entrances.push_back();
+            window_corners.insert();
+            poly_corners.insert();
+        } else
+    }*/
+}
+
+bool Canvas::inside_view(Ponto p, Ponto tl, Ponto br) {
+    double xmin = tl.get_x();
+    double ymin = tl.get_y();
+    double xmax = br.get_x();
+    double ymax = br.get_y();
+
+    if(p.get_x() < xmax && p.get_x() > xmin && p.get_y() < ymax && p.get_y() > ymin) {
+        return true;
+    } else {
+        return false;
+    }
 }
