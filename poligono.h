@@ -16,6 +16,7 @@ private:
 	string nome;
 	double brush_size = 1;
     int id = 0;
+    bool filled = false;
 
 public:
 	Poligono(string nome);
@@ -38,8 +39,10 @@ public:
     void set_id(int new_id);
     Ponto get_center();
     void exec_transform(Matriz transform);
+    void set_filled(bool fill);
+    bool get_filled();
 
 };
 
 #endif //POLIGONO_H
-	 	  	 	    	 	    		    	    	  	 	
+

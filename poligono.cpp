@@ -23,8 +23,8 @@ void Poligono::add_ponto(Ponto p)
         this->center = Ponto((this->center.get_x()*this->get_size() + p.get_x())/(this->get_size()+1),(this->center.get_y()*this->get_size() + p.get_y())/(this->get_size()+1));
     }
     this->pontos.push_back(p);
-    
-    
+
+
 }
 
 void Poligono::set_brush_size(double brush)
@@ -53,7 +53,7 @@ std::list<Ponto> Poligono::draw()
 }
 
 int Poligono::get_size()
-{	 	  	 	    	 	    		    	    	  	 	
+{
     return this->pontos.size();
 }
 
@@ -90,7 +90,13 @@ void Poligono::exec_transform(Matriz transform)
     for (std::list<Ponto>::iterator pt = this->pontos.begin(); pt != this->pontos.end(); pt++)
     {
         *pt = transform.exec_transform(*pt);
-    }	 
+    }
+}
 
-    
+void Poligono::set_filled(bool fill) {
+    this->filled = fill;
+}
+
+bool Poligono::get_filled() {
+    return this->filled;
 }
