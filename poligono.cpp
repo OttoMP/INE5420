@@ -20,7 +20,9 @@ void Poligono::add_ponto(Ponto p)
     }
     else
     {
-        this->center = Ponto((this->center.get_x()*this->get_size() + p.get_x())/(this->get_size()+1),(this->center.get_y()*this->get_size() + p.get_y())/(this->get_size()+1));
+        this->center =
+            Ponto((this->center.get_x()*this->get_size() + p.get_x())/(this->get_size()+1),
+                  (this->center.get_y()*this->get_size() + p.get_y())/(this->get_size()+1));
     }
     this->pontos.push_back(p);
 

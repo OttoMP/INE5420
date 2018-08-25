@@ -61,7 +61,7 @@ class Canvas : public Gtk::DrawingArea {
         //Clipping functions
         void clipping_line(Poligono line, Ponto tl, Ponto br);
         void clipping_poly(Poligono poly, double height, double width, double scale);
-        bool inside_view(Ponto p, Ponto tl, Ponto br);
+        bool inside_view(Ponto p, Ponto tl, Ponto br, double height, double width);
 };
 
 #endif //CANVAS_H

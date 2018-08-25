@@ -1,4 +1,5 @@
 #include "canvas.h"
+#include <iostream>
 
 Canvas::Canvas()
     : scale(1),       // scales starts at 1 to indicate normal zoom
@@ -40,9 +41,6 @@ std::string Canvas::get_last_name() {
  */
 void Canvas::add_poligono(Poligono pol){
     //display_file.push_back(pol);
-    Matriz m = Matriz().rotate(45, pol.get_center());
-
-    pol.exec_transform(m);
     display_file.push_back(pol);
     queue_draw();
 }
@@ -100,16 +98,18 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     // drawing subcanvas for clipping
     cr->set_source_rgb(0.0, 0.8, 0.0);
 
-    cr->move_to(10, 10);
-    cr->line_to(10, (height/scale)-10);
-    cr->line_to((width/scale)-10, (height/scale)-10);
-    cr->line_to((width/scale)-10, 10);
-    cr->line_to(10, 10);
+    cr->move_to(10,10);
 
-    Ponto top_left(vp_transform_x(10, width),
-                   vp_transform_y(10, height));
-    Ponto bottom_right(vp_transform_x((width/scale)-10, width),
-                       vp_transform_y((height/scale)-10, height));
+    cr->line_to(10,(height/scale)-10);
+
+    cr->line_to((width/scale)-10,(height/scale)-10);
+
+    cr->line_to((width/scale)-10,10);
+
+    cr->line_to(10,10);
+
+    Ponto top_left(10,10);
+    Ponto bottom_right((width/scale)-10,(height/scale)-10);
 
     cr->stroke();
 
@@ -119,8 +119,10 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     for (auto i = display_file.begin(); i != display_file.end(); i++)
     {
         std::list<Ponto> pontos= i->draw();
-        if(pontos.size() == 1) {
-            if(!inside_view(pontos.front(), top_left, bottom_right)) {
+        if(pontos.size() == 2) {
+            if(!inside_view(pontos.front(),
+                            top_left, bottom_right,
+                            height, width)) {
                 continue;
             }
         }
@@ -297,17 +299,17 @@ void clipping_line(Poligono line, Ponto tl, Ponto br) {
     double xmax = br.get_x();
     double ymax = br.get_y();
 
-    std::vector<Ponto> line_p{ std::begin(line.draw()), std::end(line.draw) };
+    std::list<Ponto> line_p = line.draw();
 
-    double p1 = -(line_p[0].get_x() - line_p[1].get_x());
-    double p2 = line_p[0].get_x() - line_p[1].get_x();
-    double p3 = -(line_p[0].get_y() - line_p[1].get_y());
-    double p4 = line_p[0].get_y() - line_p[1].get_y();
+    double p1 = -(line_p.front().get_x() - line_p.back().get_x());
+    double p2 = line_p.front().get_x() - line_p.back().get_x();
+    double p3 = -(line_p.front().get_y() - line_p.back().get_y());
+    double p4 = line_p.front().get_y() - line_p.back().get_y();
 
-    double q1 = line_p[0],get_x() - xmin;
-    double q2 = xmax - line_p[0].get_x();
-    double q3 = line_p[0].get_y() - ymin;
-    double q4 = ymax - line_p[0].get_y();
+    double q1 = line_p.front().get_x() - xmin;
+    double q2 = xmax - line_p.front().get_x();
+    double q3 = line_p.front().get_y() - ymin;
+    double q4 = ymax - line_p.front().get_y();
 
     if(p1 != 0)
         double r1 = q1/p1;
@@ -344,13 +346,17 @@ void clipping_poly(Poligono poly, double height, double width, double scale) {
     }*/
 }
 
-bool Canvas::inside_view(Ponto p, Ponto tl, Ponto br) {
+bool Canvas::inside_view(Ponto p,
+                         Ponto tl, Ponto br,
+                         double height, double width) {
     double xmin = tl.get_x();
     double ymin = tl.get_y();
     double xmax = br.get_x();
     double ymax = br.get_y();
+    double x = vp_transform_x(p.get_x(), width);
+    double y = vp_transform_y(p.get_y(), height);
 
-    if(p.get_x() < xmax && p.get_x() > xmin && p.get_y() < ymax && p.get_y() > ymin) {
+    if(x < xmax && x > xmin && y < ymax && y > ymin) {
         return true;
     } else {
         return false;
