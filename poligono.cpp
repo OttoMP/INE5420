@@ -87,7 +87,7 @@ Ponto Poligono::get_center()
 void Poligono::exec_transform(Matriz transform)
 {
     this->center = transform.exec_transform(center);
-    for (std::list<Ponto>::iterator pt = this->pontos.begin(); pt != this->pontos.end(); pt++)
+    for (auto pt = this->pontos.begin(); pt != this->pontos.end(); pt++)
     {
         *pt = transform.exec_transform(*pt);
     }

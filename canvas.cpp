@@ -51,9 +51,9 @@ void Canvas::add_poligono(Poligono pol){
  *  Function used to remove the especified polygon from the display_file
  */
 void Canvas::rm_poligono(int id){
-    for(auto i = 0; i != display_file.size(); i++) {
-       if(display_file[i].get_id() == id) {
-           display_file.erase(display_file.begin()+i);
+    for(auto i = display_file.begin(); i != display_file.end(); i++) {
+       if(i->get_id() == id) {
+           display_file.erase(i);
            break;
         }
     }
@@ -106,24 +106,36 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     cr->line_to((width/scale)-10, 10);
     cr->line_to(10, 10);
 
+    Ponto top_left(vp_transform_x(10, width),
+                   vp_transform_y(10, height));
+    Ponto bottom_right(vp_transform_x((width/scale)-10, width),
+                       vp_transform_y((height/scale)-10, height));
+
     cr->stroke();
 
 //---------------------------------------------------------
 
     cr->set_source_rgb(0.8, 0.0, 0.0);
-    for (auto i = 0; i < display_file.size(); i++)
+    for (auto i = display_file.begin(); i != display_file.end(); i++)
     {
-        std::list<Ponto> pontos= display_file[i].draw();
-        cr->set_line_width(display_file[i].get_brush_size());
-        cr->move_to(vp_transform_x(pontos.back().get_x(), width), vp_transform_y(pontos.back().get_y(), height));
-        for (std::list<Ponto>::iterator pt = pontos.begin(); pt != pontos.end(); pt++)
-        {
-            cr->line_to(vp_transform_x(pt->get_x(), width), vp_transform_y(pt->get_y(), height));
+        std::list<Ponto> pontos= i->draw();
+        if(pontos.size() == 1) {
+            if(!inside_view(pontos.front(), top_left, bottom_right)) {
+                continue;
+            }
         }
-        cr->line_to(vp_transform_x(display_file[i].get_center().get_x(), width),
-                    vp_transform_y(display_file[i].get_center().get_y(), height));
+        cr->set_line_width(i->get_brush_size());
+        cr->move_to(vp_transform_x(pontos.back().get_x(), width),
+                    vp_transform_y(pontos.back().get_y(), height));
+        for (auto pt = pontos.begin(); pt != pontos.end(); pt++)
+        {
+            cr->line_to(vp_transform_x(pt->get_x(), width),
+                        vp_transform_y(pt->get_y(), height));
+        }
+        cr->line_to(vp_transform_x(i->get_center().get_x(), width),
+                    vp_transform_y(i->get_center().get_y(), height));
 
-        if(display_file[i].get_filled())
+        if(i->get_filled())
             cr->fill();
         cr->stroke();
     }
@@ -277,8 +289,36 @@ double Canvas::vp_transform_y(double y, double height){
 
 /* Function Clipping Line
  * Function used to clip lines out of viewport
+ * It uses the Liang-Barsky algorithm
  */
-void clipping_line() {}
+void clipping_line(Poligono line, Ponto tl, Ponto br) {
+/*    double xmin = tl.get_x();
+    double ymin = tl.get_y();
+    double xmax = br.get_x();
+    double ymax = br.get_y();
+
+    std::vector<Ponto> line_p{ std::begin(line.draw()), std::end(line.draw) };
+
+    double p1 = -(line_p[0].get_x() - line_p[1].get_x());
+    double p2 = line_p[0].get_x() - line_p[1].get_x();
+    double p3 = -(line_p[0].get_y() - line_p[1].get_y());
+    double p4 = line_p[0].get_y() - line_p[1].get_y();
+
+    double q1 = line_p[0],get_x() - xmin;
+    double q2 = xmax - line_p[0].get_x();
+    double q3 = line_p[0].get_y() - ymin;
+    double q4 = ymax - line_p[0].get_y();
+
+    if(p1 != 0)
+        double r1 = q1/p1;
+    if(p2 != 0)
+        double r2 = q2/p2;
+    if(p3 != 0)
+        double r3 = q3/p3;
+    if(p4 != 0)
+        double r4 = q4/p4;
+*/
+}
 
 /* Function Clipping Polygon
  * Function used to clip polygons out of viewport

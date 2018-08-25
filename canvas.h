@@ -2,6 +2,7 @@
 #define CANVAS_H
 
 #include <gtkmm/drawingarea.h>
+#include <list>
 #include "poligono.h"
 #include <cairomm/context.h>
 #include "ponto.h"
@@ -55,10 +56,10 @@ class Canvas : public Gtk::DrawingArea {
         double y_dislocate;
 
         // List of all objects currently drawn in the canvas
-        std::vector<Poligono> display_file;
+        std::list<Poligono> display_file;
 
         //Clipping functions
-        void clipping_line();
+        void clipping_line(Poligono line, Ponto tl, Ponto br);
         void clipping_poly(Poligono poly, double height, double width, double scale);
         bool inside_view(Ponto p, Ponto tl, Ponto br);
 };
