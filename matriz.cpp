@@ -17,10 +17,10 @@ Matriz Matriz::translate(Ponto vector)
 
 Matriz Matriz::rotate(double angle, Ponto center)
 {
-	this->matriz[0][0] = cos(-angle*M_PI/180);
-	this->matriz[1][1] = cos(-angle*M_PI/180);
-	this->matriz[1][0] = sin(-angle*M_PI/180);
-	this->matriz[0][1] = -sin(-angle*M_PI/180);
+	this->matriz[0][0] = cos(angle*M_PI/180);
+	this->matriz[1][1] = cos(angle*M_PI/180);
+	this->matriz[1][0] = sin(angle*M_PI/180);
+	this->matriz[0][1] = -sin(angle*M_PI/180);
 	this->matriz[2][2] = 1;
     Matriz m = Matriz().translate(Ponto(-center.get_x(),-center.get_y()))
 	   .multiplication(*this)
