@@ -89,14 +89,14 @@ void WindowMenu::button_left_clicked() {
  *  calls function zoom_in from drawing window
  */
 void WindowMenu::zoom_in_clicked() {
-    window_ref.zoom_in(0.1);
+    window_ref.zoom_in(1.1);
 }
 
 /*  Function called when button ZOOM OUT is clicked
  *  calls function zoom_out from drawing window
  */
 void WindowMenu::zoom_out_clicked() {	 	  	 	    	 	    		    	    	  	 	
-    window_ref.zoom_out(0.1);
+    window_ref.zoom_out(1.1);
 }
 
 /*  Function called when button R. LEFT is clicked
@@ -104,7 +104,7 @@ void WindowMenu::zoom_out_clicked() {
  *  sending 10 degrees of rotation
  */
 void WindowMenu::rotate_left_clicked() {
-//    window_ref.rotate_left(10);
+    window_ref.rotate(-10);
 }
 
 /*  Function called when button R. RIGHT is clicked
@@ -112,5 +112,5 @@ void WindowMenu::rotate_left_clicked() {
  *  sending 10 degrees of rotation
  */
 void WindowMenu::rotate_right_clicked() {
-//    window_ref.rotate_right(10);
+    window_ref.rotate(10);
 }

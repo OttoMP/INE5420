@@ -23,6 +23,7 @@ void Poligono::add_ponto(Ponto p)
         this->center = Ponto((this->center.get_x()*this->get_size() + p.get_x())/(this->get_size()+1),(this->center.get_y()*this->get_size() + p.get_y())/(this->get_size()+1));
     }
     this->pontos.push_back(p);
+    this->pontos_scn.push_back(Ponto(0,0));
     
     
 }
@@ -71,9 +72,10 @@ void Poligono::set_nome(string nome) {
     this->nome = nome;
 }
 
-int Poligono::get_id() {
+int Poligono::get_id() const{
     return this->id;
 }
+
 
 void Poligono::set_id(int new_id) {
     this->id = new_id;
@@ -92,5 +94,22 @@ void Poligono::exec_transform(Matriz transform)
         *pt = transform.exec_transform(*pt);
     }	 
 
-    
 }
+
+void Poligono::exec_update_scn(Matriz transform)
+{
+    std::list<Ponto>::iterator pt2 = this->pontos_scn.begin();
+    for (std::list<Ponto>::iterator pt = this->pontos.begin(); pt != this->pontos.end(); pt++)
+    {
+        *pt2 = transform.exec_transform(*pt);
+        pt2++;
+    }	 
+
+}
+
+bool Poligono::operator==(const Poligono& a) {
+    return this->get_id() == a.get_id();
+}
+
+
+

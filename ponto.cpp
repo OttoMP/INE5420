@@ -30,9 +30,4 @@ double Ponto::get_z()
 	return this->coord[2];
 }
 
-void Ponto::calc_new_pos()
-{
-	
-}
-
 

@@ -44,4 +44,3 @@ class ObjectMenu : public Gtk::Frame {
 };
 
 #endif //GTKMM_OBJECTMENU_H
-
