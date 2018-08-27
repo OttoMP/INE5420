@@ -9,6 +9,7 @@
 #include <gtkmm/entry.h>
 
 #include "canvas.h"
+#include "ponto.h"
 #include "object_viewer.h"
 
 class ObjectMenu : public Gtk::Frame {
@@ -21,9 +22,12 @@ class ObjectMenu : public Gtk::Frame {
 
     protected:
         // Object changing functions
-        Gtk::Button button_rotate, button_move, button_resize;
+        Gtk::Button button_rotate_poly, button_move, button_resize;
+        Gtk::Button button_rotate_center, button_rotate_dot;
         // Entries slots for button functions
         Gtk::Entry  e_move_x, e_move_y, e_scale, e_angle;
+        // Labels for entries
+        Gtk::Label l_angle, l_dot, l_scale;
         // Reference to drawing area
         Canvas& window_ref;
         //Reference to Text Log
@@ -32,10 +36,13 @@ class ObjectMenu : public Gtk::Frame {
         ObjectViewer& object_viewer_ref;
 
         //Signal handlers:
-        void rotate_clicked();
+        void rotate_poly_clicked();
+        void rotate_center_clicked();
+        void rotate_dot_clicked();
         void move_clicked();
         void resize_clicked();
 };
 
 #endif //GTKMM_OBJECTMENU_H
+
 	 	  	 	    	 	    		    	    	  	 	
