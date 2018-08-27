@@ -25,10 +25,13 @@ public:
 
 
 	void add_ponto(Ponto p);
+	void add_ponto(double x, double y);
+	void add_ponto(double x, double y, double z);
 	void set_brush_size(double brush);
 	//void set_color(double r, double g, double b);
 
     std::list<Ponto> draw();
+    std::list<Ponto> get_pontos();
     double get_brush_size();
 	int get_tipo();
 	string get_nome();

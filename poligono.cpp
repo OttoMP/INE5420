@@ -26,8 +26,40 @@ void Poligono::add_ponto(Ponto p)
     }
     this->pontos.push_back(p);
     this->pontos_scn.push_back(Ponto(0,0));
+}
 
+void Poligono::add_ponto(double x, double y)
+{
+	Ponto p(x,y);
+    if (this->get_size() == 0)
+    {
+        this->center = p;
+    }
+    else
+    {
+        this->center =
+            Ponto((this->center.get_x()*this->get_size() + p.get_x())/(this->get_size()+1),
+                  (this->center.get_y()*this->get_size() + p.get_y())/(this->get_size()+1));
+    }
+    this->pontos.push_back(p);
+    this->pontos_scn.push_back(Ponto(0,0));
+}
 
+void Poligono::add_ponto(double x, double y, double z)
+{
+	Ponto p(x,y,z);
+    if (this->get_size() == 0)
+    {
+        this->center = p;
+    }
+    else
+    {
+        this->center =
+            Ponto((this->center.get_x()*this->get_size() + p.get_x())/(this->get_size()+1),
+                  (this->center.get_y()*this->get_size() + p.get_y())/(this->get_size()+1));
+    }
+    this->pontos.push_back(p);
+    this->pontos_scn.push_back(Ponto(0,0));
 }
 
 void Poligono::set_brush_size(double brush)
@@ -35,6 +67,9 @@ void Poligono::set_brush_size(double brush)
     this->brush_size = brush;
 }
 
+std::list<Ponto> Poligono:: get_pontos() {
+    return this->pontos;
+}
 std::list<Ponto> Poligono::draw()
 {
     std::list<Ponto> d = this->pontos;

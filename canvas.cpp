@@ -44,6 +44,14 @@ std::list<Poligono> Canvas::get_display_file() {
     return this->display_file;
 }
 
+/*
+ *
+ */
+void Canvas::set_display_file(std::list<Poligono> loaded_display_file) {
+    this->display_file = loaded_display_file;
+    queue_draw();
+}
+
 /*  Function Add Polygon
  *  Function used to add a new polygon to the display_file. It
  *  pushes the polygon sent as parameter to the end of the list

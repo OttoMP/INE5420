@@ -28,16 +28,26 @@ class ObjectMenu : public Gtk::Frame {
 
         // Entries slots for button functions
         Gtk::Entry  e_move_x, e_move_y, e_scale, e_angle;
+        Gtk::Entry  e_file;
+
         // Labels for entries
         Gtk::Label l_angle, l_dot, l_scale;
+        Gtk::Label l_file;
+
         // Reference to drawing area
         Canvas& window_ref;
+
         //Reference to Text Log
         Gtk::TextView& text_log_ref;
-        //Reference to Object Viewer
+
+         //Reference to Object Viewer
         ObjectViewer& object_viewer_ref;
-        // Read Write buttons
+
+         // Read Write buttons
         Gtk::Button button_read_file, button_write_file;
+
+         // Object descriptor
+        descritorObj d_obj;
 
         //Signal handlers:
         void rotate_poly_clicked();

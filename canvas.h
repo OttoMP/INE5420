@@ -46,6 +46,7 @@ class Canvas : public Gtk::DrawingArea {
 
         // Return a specific polygon from display file
         std::list<Poligono> get_display_file();
+        void set_display_file(std::list<Poligono> loaded_display_file);
 
         // Mathematic functions
         double calc_distancia(Ponto a, Ponto b); // gets distance between two points
