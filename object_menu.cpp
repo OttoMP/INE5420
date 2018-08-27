@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #include "object_menu.h"
 #include <iostream>
 
@@ -13,8 +12,8 @@ ObjectMenu::ObjectMenu(const Glib::ustring& title,
     button_rotate_dot("ROTATE REF DOT"),       /**/
     button_move("MOVE USING REFERENCE"),       /**/
     button_resize("RESIZE"),                   /**/
-    button_read("Read File"),                  /**/
-    button_write("Save Polygon"),              /**/
+    button_read_file("Read File"),                  /**/
+    button_write_file("Save Polygon"),              /**/
     window_ref(window),      // initialize reference to window using parameter
     text_log_ref(text_log), // initialize reference to text_log
     object_viewer_ref(object_viewer) // initialize reference to object_viewer

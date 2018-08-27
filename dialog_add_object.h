@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #ifndef DIALOG_ADD_OBJECT_H
 #define DIALOG_ADD_OBJECT_H
 

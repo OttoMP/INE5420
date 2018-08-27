@@ -11,6 +11,7 @@
 #include "canvas.h"
 #include "ponto.h"
 #include "object_viewer.h"
+#include "descritorOBJ.h"
 
 class ObjectMenu : public Gtk::Frame {
     public:
@@ -36,7 +37,7 @@ class ObjectMenu : public Gtk::Frame {
         //Reference to Object Viewer
         ObjectViewer& object_viewer_ref;
         // Read Write buttons
-        Gtk::Buttons button_read_file, button_write_file;
+        Gtk::Button button_read_file, button_write_file;
 
         //Signal handlers:
         void rotate_poly_clicked();

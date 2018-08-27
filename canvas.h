@@ -45,7 +45,7 @@ class Canvas : public Gtk::DrawingArea {
         void rm_poligono(int id);
 
         // Return a specific polygon from display file
-        Poligono get_poly(int id);
+        std::list<Poligono> get_display_file();
 
         // Mathematic functions
         double calc_distancia(Ponto a, Ponto b); // gets distance between two points
@@ -76,9 +76,9 @@ class Canvas : public Gtk::DrawingArea {
         Matriz scn_to_cart;
 
         //Clipping function
-        void clipping_line(Poligono line, Ponto tl, Ponto br)
-        void clipping_poly(Poligono poly, double height, double width, double scale)
-        bool inside_view(Ponto p, Ponto tl, Ponto br, double height, double width)
+        void clipping_line(Poligono line, Ponto tl, Ponto br);
+        void clipping_poly(Poligono poly, double height, double width, double scale);
+        bool inside_view(Ponto p, Ponto tl, Ponto br, double height, double width);
 };
 
 #endif //CANVAS_H

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 #include "canvas.h"
 
 Canvas::Canvas()
@@ -41,10 +40,8 @@ std::string Canvas::get_last_name() {
  *  Function that returns a specific polygon to be recorded
  *  in a object file
  */
-Poligono Canvas::get_poly(int id) {
-    for(auto i = display_file.begin(); i != display_file.end(); i++) {
-       if(i->get_id() == id) {
-           return i
+std::list<Poligono> Canvas::get_display_file() {
+    return this->display_file;
 }
 
 /*  Function Add Polygon
@@ -53,7 +50,6 @@ Poligono Canvas::get_poly(int id) {
  */
 void Canvas::add_poligono(Poligono pol) {
     pol.exec_update_scn(this->cart_to_scn);
-    //display_file.push_back(pol);
     display_file.push_back(pol);
     queue_draw();
 }
@@ -343,22 +339,28 @@ void Canvas::update_scn_coord()
 void Canvas::update_conv_matrix()
 {
     double angulo = this->calc_angulo(screen.get_v(), Ponto(0,1));
-    this->cart_to_scn = Matriz().translate(Ponto(-screen.get_wc().get_x(), -screen.get_wc().get_y()))
+    this->cart_to_scn = Matriz().translate(
+                                           Ponto(
+                                                 -screen.get_wc().get_x(),
+                                                 -screen.get_wc().get_y()))
         .multiplication(Matriz().rotate(-angulo, Ponto(0,0)))
         .multiplication(Matriz().scale(
-            Ponto(1/this->calc_distancia(screen.get_v(),Ponto(0,0)),
-                1/this->calc_distancia(screen.get_u(),Ponto(0,0))),
-            screen.get_wc()));
+                                       Ponto(
+                                             1/this->calc_distancia(screen.get_v(),Ponto(0,0)),
+                                             1/this->calc_distancia(screen.get_u(),Ponto(0,0))),
+                                             screen.get_wc()));
+
     this->scn_to_cart = Matriz().scale(Ponto(this->calc_distancia(screen.get_v(),Ponto(0,0)),
                 this->calc_distancia(screen.get_u(),Ponto(0,0))),screen.get_wc())
         .multiplication(Matriz().rotate(angulo, Ponto(0,0)))
         .multiplication(Matriz().translate(Ponto(screen.get_wc().get_x(), screen.get_wc().get_y())));
+}
 
 /* Function Clipping Line
  * Function used to clip lines out of viewport
  * It uses the Liang-Barsky algorithm
  */
-void clipping_line(Poligono line, Ponto tl, Ponto br) {
+void Canvas::clipping_line(Poligono line, Ponto tl, Ponto br) {
     double xmin = tl.get_x();
     double ymin = tl.get_y();
     double xmax = br.get_x();
@@ -391,7 +393,7 @@ void clipping_line(Poligono line, Ponto tl, Ponto br) {
  * Function used to clip polygons out of viewport
  * It uses the Weiler-Atherton algorithm
  */
-void clipping_poly(Poligono poly, double height, double width, double scale) {
+void Canvas::clipping_poly(Poligono poly, double height, double width, double scale) {
 /*    Ponto top_left(10, 10);
     Ponto bottom_left(10, (height/scale)-10;
     Ponto bottom_right((width/scale)-10, (height/scale)-10);

@@ -3,10 +3,17 @@
 
 #include "poligono.h"
 
-class DescritorObj {
+#include <list>
+#include <fstream>
+#include <iostream>
+
+class descritorObj {
 
     public:
-        std::string write(Poligono poly);
+        descritorObj();
+        ~descritorObj();
+
+        void write(std::list<Poligono> display_file);
         Poligono read(std::string file);
 };
 
