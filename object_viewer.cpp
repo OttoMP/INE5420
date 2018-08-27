@@ -110,4 +110,3 @@ int ObjectViewer::get_selected_object_id() {
 
     return atoi(id.c_str());
 }
-	 	  	 	    	 	    		    	    	  	 	
