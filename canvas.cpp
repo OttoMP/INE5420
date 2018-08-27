@@ -25,14 +25,24 @@ int Canvas::get_last_id() {
         return display_file.back().get_id();
 }
 
-/*
- *
+/*  Function Get Last Name
+ *  Function used to display in the log the name of the polygon
  */
 std::string Canvas::get_last_name() {
     if(display_file.empty())
         return "";
     else
         return display_file.back().get_nome();
+}
+
+/*  Function Get Polygon
+ *  Function that returns a specific polygon to be recorded
+ *  in a object file
+ */
+Poligono Canvas::get_poly(int id) {
+    for(auto i = display_file.begin(); i != display_file.end(); i++) {
+       if(i->get_id() == id) {
+           return i
 }
 
 /*  Function Add Polygon
@@ -294,7 +304,7 @@ double Canvas::vp_transform_y(double y, double height){
  * It uses the Liang-Barsky algorithm
  */
 void clipping_line(Poligono line, Ponto tl, Ponto br) {
-/*    double xmin = tl.get_x();
+    double xmin = tl.get_x();
     double ymin = tl.get_y();
     double xmax = br.get_x();
     double ymax = br.get_y();
@@ -319,7 +329,7 @@ void clipping_line(Poligono line, Ponto tl, Ponto br) {
         double r3 = q3/p3;
     if(p4 != 0)
         double r4 = q4/p4;
-*/
+
 }
 
 /* Function Clipping Polygon

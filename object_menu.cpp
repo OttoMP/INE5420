@@ -12,6 +12,8 @@ ObjectMenu::ObjectMenu(const Glib::ustring& title,
     button_rotate_dot("ROTATE REF DOT"),       /**/
     button_move("MOVE USING REFERENCE"),       /**/
     button_resize("RESIZE"),                   /**/
+    button_read("Read File"),                  /**/
+    button_write("Save Polygon"),              /**/
     window_ref(window),      // initialize reference to window using parameter
     text_log_ref(text_log), // initialize reference to text_log
     object_viewer_ref(object_viewer) // initialize reference to object_viewer
@@ -48,6 +50,10 @@ ObjectMenu::ObjectMenu(const Glib::ustring& title,
               sigc::mem_fun(*this, &ObjectMenu::move_clicked));
     button_resize.signal_clicked().connect(
               sigc::mem_fun(*this, &ObjectMenu::resize_clicked));
+    button_read_file.signal_clicked().connect(
+              sigc::mem_fun(*this, &ObjectMenu::read_file));
+    button_write_file.signal_clicked().connect(
+              sigc::mem_fun(*this, &ObjectMenu::write_file));
 
   // Add buttons to Grid
     grid->attach(button_rotate_poly, 0, 0, 1, 1);
@@ -159,4 +165,12 @@ void ObjectMenu::resize_clicked() {
                                        +"' aumentado em "
                                        +std::to_string(scale)
                                        +" vezes\n");
+}
+
+void ObjectMenu::write_file() {
+
+}
+
+void ObjectMenu::read_file() {
+
 }

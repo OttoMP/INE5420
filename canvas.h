@@ -40,6 +40,9 @@ class Canvas : public Gtk::DrawingArea {
         void add_poligono(Poligono pol);
         void rm_poligono(int id);
 
+        // Return a specific polygon from display file
+        Poligono get_poly(int id);
+
     protected:
         // Function used to draw all objects from display_file
         bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;

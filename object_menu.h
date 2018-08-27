@@ -34,6 +34,8 @@ class ObjectMenu : public Gtk::Frame {
         Gtk::TextView& text_log_ref;
         //Reference to Object Viewer
         ObjectViewer& object_viewer_ref;
+        // Read Write buttons
+        Gtk::Buttons button_read_file, button_write_file;
 
         //Signal handlers:
         void rotate_poly_clicked();
@@ -41,6 +43,8 @@ class ObjectMenu : public Gtk::Frame {
         void rotate_dot_clicked();
         void move_clicked();
         void resize_clicked();
+        void write_file();
+        void read_file();
 };
 
 #endif //GTKMM_OBJECTMENU_H
