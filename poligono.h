@@ -12,6 +12,7 @@ class Poligono{
 
 private:
 	std::list<Ponto> pontos;
+	std::list<Ponto> pontos_scn;
 	Ponto center = Ponto(0, 0);
 	string nome;
 	double brush_size = 1;
@@ -24,8 +25,6 @@ public:
 
 
 	void add_ponto(Ponto p);
-	void add_ponto(int coordx, int coordy);
-	void add_ponto(int coordx, int coordy, int coordz);
 	void set_brush_size(double brush);
 	//void set_color(double r, double g, double b);
 
@@ -35,14 +34,15 @@ public:
 	string get_nome();
     void set_nome(string nome);
 	int get_size();
-    int get_id();
+    int get_id() const;
     void set_id(int new_id);
     Ponto get_center();
     void exec_transform(Matriz transform);
+    void exec_update_scn(Matriz transform);
+    bool operator==(const Poligono& a);
     void set_filled(bool fill);
     bool get_filled();
 
 };
 
 #endif //POLIGONO_H
-

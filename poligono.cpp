@@ -25,6 +25,7 @@ void Poligono::add_ponto(Ponto p)
                   (this->center.get_y()*this->get_size() + p.get_y())/(this->get_size()+1));
     }
     this->pontos.push_back(p);
+    this->pontos_scn.push_back(Ponto(0,0));
 
 
 }
@@ -41,7 +42,8 @@ std::list<Ponto> Poligono::draw()
     if (this->get_size() > 2)
     {
         Ponto p((this->pontos.front().get_x() + this->pontos.back().get_x())/2,
-        (this->pontos.front().get_y() + this->pontos.back().get_y())/2, this->pontos.back().get_z());
+        (this->pontos.front().get_y() + this->pontos.back().get_y())/2,
+         this->pontos.back().get_z());
        d.push_back(p);
        d.push_front(p);
     }
@@ -73,7 +75,7 @@ void Poligono::set_nome(string nome) {
     this->nome = nome;
 }
 
-int Poligono::get_id() {
+int Poligono::get_id() const{
     return this->id;
 }
 
@@ -93,6 +95,21 @@ void Poligono::exec_transform(Matriz transform)
     {
         *pt = transform.exec_transform(*pt);
     }
+}
+
+void Poligono::exec_update_scn(Matriz transform)
+{
+    auto pt2 = this->pontos_scn.begin();
+    for (auto pt = this->pontos.begin(); pt != this->pontos.end(); pt++)
+    {
+        *pt2 = transform.exec_transform(*pt);
+        pt2++;
+    }
+
+}
+
+bool Poligono::operator==(const Poligono& a) {
+    return this->get_id() == a.get_id();
 }
 
 void Poligono::set_filled(bool fill) {

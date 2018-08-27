@@ -1,11 +1,13 @@
+<<<<<<< HEAD
 #include "canvas.h"
-#include <iostream>
 
 Canvas::Canvas()
     : scale(1),       // scales starts at 1 to indicate normal zoom
-      x_dislocate(-50), // dislocate parameters starts at 0
-      y_dislocate(-50)  //
+      x_dislocate(-10), // dislocate parameters starts at 0
+      y_dislocate(-10),
+      screen(Ponto(0,0), Ponto(0,100), Ponto(100,0))//
 {
+    this->update_conv_matrix();
 }
 
 Canvas::~Canvas()
@@ -49,7 +51,8 @@ Poligono Canvas::get_poly(int id) {
  *  Function used to add a new polygon to the display_file. It
  *  pushes the polygon sent as parameter to the end of the list
  */
-void Canvas::add_poligono(Poligono pol){
+void Canvas::add_poligono(Poligono pol) {
+    pol.exec_update_scn(this->cart_to_scn);
     //display_file.push_back(pol);
     display_file.push_back(pol);
     queue_draw();
@@ -58,13 +61,10 @@ void Canvas::add_poligono(Poligono pol){
 /*  Function Remove Polygon
  *  Function used to remove the especified polygon from the display_file
  */
-void Canvas::rm_poligono(int id){
-    for(auto i = display_file.begin(); i != display_file.end(); i++) {
-       if(i->get_id() == id) {
-           display_file.erase(i);
-           break;
-        }
-    }
+void Canvas::rm_poligono(int id) {
+    Poligono p = Poligono("deletar");
+    p.set_id(id);
+    display_file.remove(p);
     queue_draw();
 }
 
@@ -78,14 +78,8 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     Gtk::Allocation allocation = get_allocation();
     const int width = allocation.get_width();
     const int height = allocation.get_height();
-//-----------------------------------------------------------------------------------------------------
 
-
-
-
-
-//-----------------------------------------------------------------------------------------------------
-  // coordinates for the center of the window
+    // coordinates for the center of the window
     int xc, yc;
     xc = width / 2;
     yc = height / 2;
@@ -160,17 +154,20 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
  *  It changes the value of scale adding a factor sent as parameter
  */
 void Canvas::zoom_in(double factor) {
-    scale += factor;
+    screen.scale(Ponto(factor,factor));
+    this->update_conv_matrix();
+    this->update_scn_coord();
     queue_draw();
 }
-
 
 /*  Funtion Zoom Out
  *  Function used to set the zoom of the viewport.
  *  It changes the value of scale subtracting a factor sent as parameter
  */
 void Canvas::zoom_out(double factor) {
-    scale -= factor;
+    screen.scale(Ponto(1/factor,1/factor));
+    this->update_conv_matrix();
+    this->update_scn_coord();
     queue_draw();
 }
 
@@ -180,10 +177,11 @@ void Canvas::zoom_out(double factor) {
  *  sent as parameter
  */
 void Canvas::move_up(double step) {
-    y_dislocate += step;
+    screen.translate(Ponto(0,step));
+    this->update_conv_matrix();
+    this->update_scn_coord();
     queue_draw();
 }
-
 
 /*  Move Down Function
  *  Function used to change the view of the viewport, sending it down.
@@ -191,7 +189,9 @@ void Canvas::move_up(double step) {
  *  sent as parameter
  */
 void Canvas::move_down(double step) {
-    y_dislocate -= step;
+    screen.translate(Ponto(0,-step));
+    this->update_conv_matrix();
+    this->update_scn_coord();
     queue_draw();
 }
 
@@ -202,7 +202,9 @@ void Canvas::move_down(double step) {
  *  sent as parameter
  */
 void Canvas::move_right(double step) {
-    x_dislocate += step;
+    screen.translate(Ponto(step,0));
+    this->update_conv_matrix();
+    this->update_scn_coord();
     queue_draw();
 }
 
@@ -214,7 +216,20 @@ void Canvas::move_right(double step) {
  */
 
 void Canvas::move_left(double step) {
-    x_dislocate -= step;
+    screen.translate(Ponto(-step,0));
+    this->update_conv_matrix();
+    this->update_scn_coord();
+    queue_draw();
+}
+
+/*
+ *
+ */
+void Canvas::rotate(double angle)
+{
+    screen.rotate(angle);
+    this->update_conv_matrix();
+    this->update_scn_coord();
     queue_draw();
 }
 
@@ -228,6 +243,7 @@ void Canvas::rotate_object(int id, double angle) {
         if(pol->get_id() == id) {
            Matriz m = Matriz().rotate(angle, (*pol).get_center());
            pol->exec_transform(m);
+           pol->exec_update_scn(this->cart_to_scn);
            break;
         }
     }
@@ -244,6 +260,7 @@ void Canvas::rotate_point(int id, double angle, Ponto centro) {
         if(pol->get_id() == id) {
            Matriz m = Matriz().rotate(angle, centro);
            pol->exec_transform(m);
+           pol->exec_update_scn(this->cart_to_scn);
            break;
         }
     }
@@ -255,11 +272,13 @@ void Canvas::rotate_point(int id, double angle, Ponto centro) {
  */
 
 void Canvas::move_object(int id, Ponto distancia) {
+    Ponto novo_ponto = distancia;
     for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
     {
         if(pol->get_id() == id) {
-           Matriz m = Matriz().translate(distancia);
+           Matriz m = Matriz().translate(novo_ponto);
            pol->exec_transform(m);
+           pol->exec_update_scn(this->cart_to_scn);
            break;
         }
     }
@@ -276,6 +295,7 @@ void Canvas::resize_object(int id, Ponto size) {
         if(pol->get_id() == id) {
            Matriz m = Matriz().scale(size, pol->get_center());
            pol->exec_transform(m);
+           pol->exec_update_scn(this->cart_to_scn);
            break;
         }
     }
@@ -298,6 +318,41 @@ double Canvas::vp_transform_x(double x, double width){
 double Canvas::vp_transform_y(double y, double height){
     return (1-(y - y_dislocate)/height) * height;
 }
+
+double Canvas::calc_angulo(Ponto a, Ponto b) //só funciona quando b é vertical arrumar depois
+{
+    double coef_a = a.get_x()/a.get_y();
+    double coef_b = b.get_x()/b.get_y();
+    double temp = abs(1/(coef_a));
+    return atan(temp)*180/M_PI;
+}
+
+double Canvas::calc_distancia(Ponto a, Ponto b)
+{
+    return sqrt(pow(a.get_x() - b.get_x(), 2) + pow(a.get_y() - b.get_y(), 2));
+}
+
+void Canvas::update_scn_coord()
+{
+    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
+    {
+        pol->exec_update_scn(this->cart_to_scn);
+    }
+}
+
+void Canvas::update_conv_matrix()
+{
+    double angulo = this->calc_angulo(screen.get_v(), Ponto(0,1));
+    this->cart_to_scn = Matriz().translate(Ponto(-screen.get_wc().get_x(), -screen.get_wc().get_y()))
+        .multiplication(Matriz().rotate(-angulo, Ponto(0,0)))
+        .multiplication(Matriz().scale(
+            Ponto(1/this->calc_distancia(screen.get_v(),Ponto(0,0)),
+                1/this->calc_distancia(screen.get_u(),Ponto(0,0))),
+            screen.get_wc()));
+    this->scn_to_cart = Matriz().scale(Ponto(this->calc_distancia(screen.get_v(),Ponto(0,0)),
+                this->calc_distancia(screen.get_u(),Ponto(0,0))),screen.get_wc())
+        .multiplication(Matriz().rotate(angulo, Ponto(0,0)))
+        .multiplication(Matriz().translate(Ponto(screen.get_wc().get_x(), screen.get_wc().get_y())));
 
 /* Function Clipping Line
  * Function used to clip lines out of viewport

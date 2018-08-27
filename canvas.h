@@ -1,22 +1,25 @@
 #ifndef CANVAS_H
 #define CANVAS_H
+#define _USE_MATH_DEFINE
 
+#include <math.h>
 #include <gtkmm/drawingarea.h>
-#include <list>
 #include "poligono.h"
 #include <cairomm/context.h>
 #include "ponto.h"
 #include "poligono.h"
 #include "matriz.h"
+#include "window.h"
 
 class Canvas : public Gtk::DrawingArea {
     public:
         Canvas();
         virtual ~Canvas();
 
-        // Functions used in setting the id's of display_file's polygons
+        // Funtion used in setting the id's of display_file's polygons
         int get_last_id();
         std::string get_last_name();
+        Window screen;
 
         // Navigation Functions
         void zoom_in(double factor);
@@ -25,6 +28,7 @@ class Canvas : public Gtk::DrawingArea {
         void move_down(double step);
         void move_right(double step);
         void move_left(double step);
+        void rotate(double angle);
 
         // Transforming Functions
         void rotate_object(int id, double angle);
@@ -42,6 +46,12 @@ class Canvas : public Gtk::DrawingArea {
 
         // Return a specific polygon from display file
         Poligono get_poly(int id);
+
+        // Mathematic functions
+        double calc_distancia(Ponto a, Ponto b); // gets distance between two points
+        double calc_angulo(Ponto a, Ponto b); //gets angle between two lines that start at 0,0
+        void update_conv_matrix();
+        void update_scn_coord();
 
     protected:
         // Function used to draw all objects from display_file
@@ -61,12 +71,14 @@ class Canvas : public Gtk::DrawingArea {
         // List of all objects currently drawn in the canvas
         std::list<Poligono> display_file;
 
-        //Clipping functions
-        void clipping_line(Poligono line, Ponto tl, Ponto br);
-        void clipping_poly(Poligono poly, double height, double width, double scale);
-        bool inside_view(Ponto p, Ponto tl, Ponto br, double height, double width);
+        // Conversion matrix for fast calculations
+        Matriz cart_to_scn;
+        Matriz scn_to_cart;
+
+        //Clipping function
+        void clipping_line(Poligono line, Ponto tl, Ponto br)
+        void clipping_poly(Poligono poly, double height, double width, double scale)
+        bool inside_view(Ponto p, Ponto tl, Ponto br, double height, double width)
 };
 
 #endif //CANVAS_H
-
-

@@ -24,6 +24,7 @@ class ObjectMenu : public Gtk::Frame {
         // Object changing functions
         Gtk::Button button_rotate_poly, button_move, button_resize;
         Gtk::Button button_rotate_center, button_rotate_dot;
+
         // Entries slots for button functions
         Gtk::Entry  e_move_x, e_move_y, e_scale, e_angle;
         // Labels for entries
@@ -48,4 +49,3 @@ class ObjectMenu : public Gtk::Frame {
 };
 
 #endif //GTKMM_OBJECTMENU_H
-

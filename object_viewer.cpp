@@ -47,7 +47,7 @@ void ObjectViewer::on_add_objects_clicked() {
     row->show_all_children();
     object_viewer.append(*row);
     row->show();
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 void ObjectViewer::on_rm_objects_clicked() {
     if (object_viewer.get_selected_row() == nullptr) {
@@ -85,7 +85,7 @@ std::string ObjectViewer::get_selected_object_name() {
             full_name += info[i];
         else
             full_name += info[i]+" ";
-    }
+    }	 	  	 	    	 	    		    	    	  	 	
 
     return full_name;
 }
