@@ -1,6 +1,7 @@
 #ifndef PONTO_H
 #define PONTO_H
 
+
 class Ponto{
 
 private:
@@ -18,6 +19,8 @@ public:
 	double get_z();
 
 	void calc_new_pos();
+
+	
 };
 
 #endif //PONTO_H

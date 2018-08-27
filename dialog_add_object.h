@@ -37,3 +37,4 @@ protected:
 
 #endif //DIALOG_ADD_OBJECT_H
 
+	 	  	 	    	 	    		    	    	  	 	
