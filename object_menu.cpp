@@ -71,7 +71,7 @@ ObjectMenu::ObjectMenu(const Glib::ustring& title,
     grid->attach(button_resize, 0, 4, 1, 1);
     grid->attach(l_scale, 1, 4, 1, 1);
     grid->attach(e_scale, 2, 4, 1, 1);
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 /*  Function called when button ROTATE is clicked
  *  calls function rotate_object from drawing window
@@ -100,7 +100,7 @@ void ObjectMenu::rotate_dot_clicked() {
     double x = atof(e_move_x.get_text().c_str());
     double y = atof(e_move_y.get_text().c_str());
     Ponto dot(x,y);
-    //window_ref.rotate_point(id, angle, dot);
+    window_ref.rotate_point(id, angle, dot);
     text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
                                        +"Polígono '"
                                        +object_viewer_ref.get_selected_object_name()
@@ -112,6 +112,7 @@ void ObjectMenu::rotate_dot_clicked() {
                                        +std::to_string(dot.get_y())
                                        +")\n");
 }
+
 //-----------------------------------
 /*  Function called when button ROTATE REF DOT is clicked
  *  calls function rotate_object from drawing window sending
@@ -122,7 +123,7 @@ void ObjectMenu::rotate_center_clicked() {
     if(id == 0) return;
     double angle = atof(e_angle.get_text().c_str());
     Ponto center(0,0);
-    //window_ref.rotate_point(id, angle, center);
+    window_ref.rotate_point(id, angle, center);
     text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
                                        +"Polígono '"
                                        +object_viewer_ref.get_selected_object_name()
@@ -149,7 +150,7 @@ void ObjectMenu::move_clicked() {
                                        +", "
                                        +std::to_string(y)
                                        +")\n");
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 /*  Function called when button RESIZE is clicked
  *  calls function resize_object from drawing window

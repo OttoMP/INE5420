@@ -26,8 +26,6 @@ void Poligono::add_ponto(Ponto p)
     }
     this->pontos.push_back(p);
     this->pontos_scn.push_back(Ponto(0,0));
-
-
 }
 
 void Poligono::set_brush_size(double brush)
@@ -35,22 +33,22 @@ void Poligono::set_brush_size(double brush)
     this->brush_size = brush;
 }
 
-std::list<Ponto> Poligono::draw()
-{
-    std::list<Ponto> d = this->pontos;
+std::list<Ponto> Poligono::draw(double scale)
+{	 	  	 	    	 	    		    	    	  	 	
+    std::list<Ponto> d = this->pontos_scn;
 
     if (this->get_size() > 2)
     {
-        Ponto p((this->pontos.front().get_x() + this->pontos.back().get_x())/2,
-        (this->pontos.front().get_y() + this->pontos.back().get_y())/2,
-         this->pontos.back().get_z());
+        Ponto p((this->pontos_scn.front().get_x() + this->pontos_scn.back().get_x())/2,
+        (this->pontos_scn.front().get_y() + this->pontos_scn.back().get_y())/2,
+         this->pontos_scn.back().get_z());
        d.push_back(p);
        d.push_front(p);
     }
     else if (this->get_size() == 1)
     {
-        d.push_back(Ponto(this->pontos.front().get_x(), this->pontos.front().get_y()
-        + this->brush_size, this->pontos.front().get_z()));
+        d.push_back(Ponto(this->pontos_scn.front().get_x(), this->pontos_scn.front().get_y()
+        + this->brush_size/scale, this->pontos_scn.front().get_z()));
     }
 
     return d;
@@ -73,7 +71,7 @@ string Poligono::get_nome()
 
 void Poligono::set_nome(string nome) {
     this->nome = nome;
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 int Poligono::get_id() const{
     return this->id;
@@ -110,7 +108,7 @@ void Poligono::exec_update_scn(Matriz transform)
 
 bool Poligono::operator==(const Poligono& a) {
     return this->get_id() == a.get_id();
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 void Poligono::set_filled(bool fill) {
     this->filled = fill;
