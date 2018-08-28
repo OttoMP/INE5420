@@ -61,28 +61,28 @@ WindowMenu::WindowMenu(const Glib::ustring& title,
  *  calls function move_up from drawing window
  */
 void WindowMenu::button_up_clicked() {
-    window_ref.move_up(10);
+    window_ref.move_up(0.1);
 }
 
 /*  Function called when button DOWN is clicked
  *  calls function move_down from drawing window
  */
 void WindowMenu::button_down_clicked() {
-    window_ref.move_down(10);
+    window_ref.move_down(0.1);
 }
 
 /*  Function called when button RIGHT is clicked
  *  calls function move_right from drawing window
  */
 void WindowMenu::button_right_clicked() {
-    window_ref.move_right(10);
+    window_ref.move_right(0.1);
 }
 
 /*  Function called when button LEFT is clicked
  *  calls function move_left from drawing window
  */
 void WindowMenu::button_left_clicked() {
-    window_ref.move_left(10);
+    window_ref.move_left(0.1);
 }
 
 /*  Function called when button ZOON IN is clicked

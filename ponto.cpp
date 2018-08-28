@@ -29,5 +29,3 @@ double Ponto::get_z()
 {
 	return this->coord[2];
 }
-
-

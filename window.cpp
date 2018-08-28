@@ -26,13 +26,15 @@ void Window::rotate(double angle)
 {
     Matriz m = Matriz().rotate(angle, Ponto(0,0));
     this->v = m.exec_transform(this->v);
-    
     this->u = m.exec_transform(this->u);
+    
+    m = Matriz().rotate(angle,Ponto(0,0));
+    this->wc = m.exec_transform(this->wc);
 }
 
 void Window::scale(Ponto scale)
 {
-    Matriz m = Matriz().scale(scale, Ponto(0,0));
+    Matriz m = Matriz().scale(scale, this->wc);
     this->v = m.exec_transform(this->v);
     
     this->u = m.exec_transform(this->u);

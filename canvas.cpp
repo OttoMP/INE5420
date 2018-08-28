@@ -2,8 +2,8 @@
 
 Canvas::Canvas()
     : scale(1),       // scales starts at 1 to indicate normal zoom
-      x_dislocate(-10), // dislocate parameters starts at 0
-      y_dislocate(-10),
+      x_dislocate(0), // dislocate parameters starts at 0
+      y_dislocate(0),
       screen(Ponto(0,0), Ponto(0,100), Ponto(100,0))//
 {
     this->update_conv_matrix();
@@ -34,6 +34,14 @@ std::string Canvas::get_last_name() {
         return "";
     else
         return display_file.back().get_nome();
+}	 	  	 	    	 	    		    	    	  	 	
+
+/*  Function Get Polygon
+ *  Function that returns a specific polygon to be recorded
+ *  in a object file
+ */
+std::list<Poligono> Canvas::get_display_file() {
+    return this->display_file;
 }
 
 /*  Function Get Polygon
@@ -78,7 +86,7 @@ void Canvas::rm_poligono(int id) {
  *  then it iterates the display_file drawing each of the objects inside of it
  */
 bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
-{
+{	 	  	 	    	 	    		    	    	  	 	
     Gtk::Allocation allocation = get_allocation();
     const int width = allocation.get_width();
     const int height = allocation.get_height();
@@ -92,12 +100,17 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     //drawing the coordinate lines
     cr->set_line_width(1);
     cr->set_source_rgb(0.0, 0.4, 0.8);
+    Ponto p1 = this->cart_to_scn.exec_transform(Ponto(0,-1000));
+    Ponto p2 = this->cart_to_scn.exec_transform(Ponto(0, 1000));
+    
+    cr->move_to(vp_transform_x(p1.get_x(),width), vp_transform_y(p1.get_y(),height));
+    cr->line_to(vp_transform_x(p2.get_x(),width), vp_transform_y(p2.get_y(),height));
 
-    cr->move_to(0, vp_transform_y(0, height));
-    cr->line_to(width/scale, vp_transform_y(0, height));
-
-    cr->move_to(-x_dislocate, 0);
-    cr->line_to(-x_dislocate, height/scale);
+    p1 = this->cart_to_scn.exec_transform(Ponto(-1000,0));
+    p2 = this->cart_to_scn.exec_transform(Ponto(1000,0));
+    
+    cr->move_to(vp_transform_x(p1.get_x(),width), vp_transform_y(p1.get_y(),height));
+    cr->line_to(vp_transform_x(p2.get_x(),width), vp_transform_y(p2.get_y(),height));
 
   // draw red lines out from the center of the window
     cr->stroke();
@@ -121,12 +134,10 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 
     cr->stroke();
 
-//---------------------------------------------------------
-
     cr->set_source_rgb(0.8, 0.0, 0.0);
     for (auto i = display_file.begin(); i != display_file.end(); i++)
-    {
-        std::list<Ponto> pontos= i->draw();
+    {	 	  	 	    	 	    		    	    	  	 	
+        std::list<Ponto> pontos= i->draw(this->calc_distancia(screen.get_v(), Ponto(0,0)));
         if(pontos.size() == 2) {
             if(!inside_view(pontos.front(),
                             top_left, bottom_right,
@@ -142,9 +153,6 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
             cr->line_to(vp_transform_x(pt->get_x(), width),
                         vp_transform_y(pt->get_y(), height));
         }
-        cr->line_to(vp_transform_x(i->get_center().get_x(), width),
-                    vp_transform_y(i->get_center().get_y(), height));
-
         if(i->get_filled())
             cr->fill();
         cr->stroke();
@@ -162,7 +170,8 @@ void Canvas::zoom_in(double factor) {
     this->update_conv_matrix();
     this->update_scn_coord();
     queue_draw();
-}
+}	 	  	 	    	 	    		    	    	  	 	
+
 
 /*  Funtion Zoom Out
  *  Function used to set the zoom of the viewport.
@@ -205,7 +214,8 @@ void Canvas::move_down(double step) {
  *  It changes the value in the x_dislocate attribute by subtracting a step
  *  sent as parameter
  */
-void Canvas::move_right(double step) {
+
+void Canvas::move_right(double step) {	 	  	 	    	 	    		    	    	  	 	
     screen.translate(Ponto(step,0));
     this->update_conv_matrix();
     this->update_scn_coord();
@@ -241,7 +251,7 @@ void Canvas::rotate(double angle)
  *  Function used to rotate an object around itself by some angle
  */
 
-void Canvas::rotate_object(int id, double angle) {
+void Canvas::rotate_object(int id, double angle) {	 	  	 	    	 	    		    	    	  	 	
     for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
     {
         if(pol->get_id() == id) {
@@ -276,9 +286,9 @@ void Canvas::rotate_point(int id, double angle, Ponto centro) {
  */
 
 void Canvas::move_object(int id, Ponto distancia) {
-    Ponto novo_ponto = distancia;
+    Ponto novo_ponto = this->scn_to_cart.exec_transform(distancia);
     for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
-    {
+    {	 	  	 	    	 	    		    	    	  	 	
         if(pol->get_id() == id) {
            Matriz m = Matriz().translate(novo_ponto);
            pol->exec_transform(m);
@@ -311,7 +321,7 @@ void Canvas::resize_object(int id, Ponto size) {
  *  in the X axis
  */
 double Canvas::vp_transform_x(double x, double width){
-    return (x - x_dislocate) / width * width;
+    return (x - (-1)) / (1-(-1)) * width;
 }
 
 
@@ -319,16 +329,23 @@ double Canvas::vp_transform_x(double x, double width){
  *  Function used to change a cartesian dot to viewport coordinates
  *  in the Y axis
  */
-double Canvas::vp_transform_y(double y, double height){
-    return (1-(y - y_dislocate)/height) * height;
+double Canvas::vp_transform_y(double y, double height){	 	  	 	    	 	    		    	    	  	 	
+    return (y - (1)) / (-1-(1)) * height;
 }
 
 double Canvas::calc_angulo(Ponto a, Ponto b) //só funciona quando b é vertical arrumar depois
 {
-    double coef_a = a.get_x()/a.get_y();
-    double coef_b = b.get_x()/b.get_y();
-    double temp = abs(1/(coef_a));
-    return atan(temp)*180/M_PI;
+    
+    double cima = a.get_x()*b.get_x() + a.get_y()*b.get_y();
+    double baixo = sqrt(pow(a.get_x(),2) + pow(a.get_y(),2))*
+        sqrt(pow(b.get_x(),2)+pow(b.get_y(),2));
+    double temp = cima/baixo;
+    if (a.get_x() >=0 && a.get_y() <0 || a.get_x()>0 && a.get_y()>0){
+        return -abs(acos(temp)*180/M_PI);
+    } else {
+        return abs(acos(temp)*180/M_PI);
+    }
+    
 }
 
 double Canvas::calc_distancia(Ponto a, Ponto b)
@@ -362,7 +379,7 @@ void Canvas::update_conv_matrix()
                 this->calc_distancia(screen.get_u(),Ponto(0,0))),screen.get_wc())
         .multiplication(Matriz().rotate(angulo, Ponto(0,0)))
         .multiplication(Matriz().translate(Ponto(screen.get_wc().get_x(), screen.get_wc().get_y())));
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 /* Function Clipping Line
  * Function used to clip lines out of viewport
@@ -374,7 +391,7 @@ void Canvas::clipping_line(Poligono line, Ponto tl, Ponto br) {
     double xmax = br.get_x();
     double ymax = br.get_y();
 
-    std::list<Ponto> line_p = line.draw();
+    std::list<Ponto> line_p = line.draw(this->calc_distancia(screen.get_v(), Ponto(0,0)));
 
     double p1 = -(line_p.front().get_x() - line_p.back().get_x());
     double p2 = line_p.front().get_x() - line_p.back().get_x();
@@ -401,7 +418,7 @@ void Canvas::clipping_line(Poligono line, Ponto tl, Ponto br) {
  * Function used to clip polygons out of viewport
  * It uses the Weiler-Atherton algorithm
  */
-void Canvas::clipping_poly(Poligono poly, double height, double width, double scale) {
+void Canvas::clipping_poly(Poligono poly, double height, double width, double scale) {	 	  	 	    	 	    		    	    	  	 	
 /*    Ponto top_left(10, 10);
     Ponto bottom_left(10, (height/scale)-10;
     Ponto bottom_right((width/scale)-10, (height/scale)-10);

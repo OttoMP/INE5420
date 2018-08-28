@@ -21,12 +21,9 @@ public:
 	
 	Ponto get_wc();
 
-    void translate(Ponto p);
-    void rotate(double angle);
-    void scale(Ponto p);
-    
-    
-	
+  void translate(Ponto p);
+  void rotate(double angle);
+  void scale(Ponto p);	
 };
 
 #endif //WINDOW_H

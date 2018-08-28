@@ -123,6 +123,7 @@ void ObjectMenu::rotate_dot_clicked() {
                                        +std::to_string(dot.get_y())
                                        +")\n");
 }
+
 //-----------------------------------
 /*  Function called when button ROTATE REF DOT is clicked
  *  calls function rotate_object from drawing window sending

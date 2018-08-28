@@ -31,7 +31,7 @@ public:
 	void set_brush_size(double brush);
 	//void set_color(double r, double g, double b);
 
-    std::list<Ponto> draw();
+    std::list<Ponto> draw(double scale);
     std::list<Ponto> get_pontos();
     double get_brush_size();
 	int get_tipo();
