@@ -44,6 +44,14 @@ std::list<Poligono> Canvas::get_display_file() {
     return this->display_file;
 }
 
+/*  Function Get Polygon
+ *  Function that returns a specific polygon to be recorded
+ *  in a object file
+ */
+std::list<Poligono> Canvas::get_display_file() {
+    return this->display_file;
+}
+
 /*  Function Add Polygon
  *  Function used to add a new polygon to the display_file. It
  *  pushes the polygon sent as parameter to the end of the list
@@ -118,8 +126,6 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 
     cr->stroke();
 
-//---------------------------------------------------------
-
     cr->set_source_rgb(0.8, 0.0, 0.0);
     for (auto i = display_file.begin(); i != display_file.end(); i++)
     {	 	  	 	    	 	    		    	    	  	 	
@@ -139,9 +145,6 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
             cr->line_to(vp_transform_x(pt->get_x(), width),
                         vp_transform_y(pt->get_y(), height));
         }
-        //cr->line_to(vp_transform_x(i->get_center().get_x(), width),
-        //            vp_transform_y(i->get_center().get_y(), height));
-
         if(i->get_filled())
             cr->fill();
         cr->stroke();
@@ -160,6 +163,7 @@ void Canvas::zoom_in(double factor) {
     this->update_scn_coord();
     queue_draw();
 }	 	  	 	    	 	    		    	    	  	 	
+
 
 /*  Funtion Zoom Out
  *  Function used to set the zoom of the viewport.
@@ -202,6 +206,7 @@ void Canvas::move_down(double step) {
  *  It changes the value in the x_dislocate attribute by subtracting a step
  *  sent as parameter
  */
+
 void Canvas::move_right(double step) {	 	  	 	    	 	    		    	    	  	 	
     screen.translate(Ponto(step,0));
     this->update_conv_matrix();
@@ -274,7 +279,6 @@ void Canvas::rotate_point(int id, double angle, Ponto centro) {
 
 void Canvas::move_object(int id, Ponto distancia) {
     Ponto novo_ponto = this->scn_to_cart.exec_transform(distancia);
-    //Ponto novo_ponto = distancia;
     for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
     {	 	  	 	    	 	    		    	    	  	 	
         if(pol->get_id() == id) {
@@ -442,4 +446,3 @@ bool Canvas::inside_view(Ponto p,
         return false;
     }
 }
-	 	  	 	    	 	    		    	    	  	 	

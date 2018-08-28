@@ -26,8 +26,6 @@ void Poligono::add_ponto(Ponto p)
     }
     this->pontos.push_back(p);
     this->pontos_scn.push_back(Ponto(0,0));
-
-
 }
 
 void Poligono::set_brush_size(double brush)
