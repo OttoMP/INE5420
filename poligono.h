@@ -21,6 +21,7 @@ private:
 
 public:
 	Poligono(string nome);
+	Poligono(string nome, int id, bool filled, std::list<Ponto> pontos);
 	Poligono(string nome, std::list<Ponto> pontos);
 
 

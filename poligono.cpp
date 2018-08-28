@@ -6,6 +6,14 @@ Poligono::Poligono(string nome)
 	this->nome = nome;
 }
 
+Poligono::Poligono(string nome, int id, bool filled, std::list<Ponto> pontos)
+{
+	this->nome = nome;
+    this->id = id;
+    this->filled = filled;
+    this->pontos = pontos;
+}
+
 Poligono::Poligono(string nome, std::list<Ponto> pontos)
 {
     this->nome = nome;
