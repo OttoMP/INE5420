@@ -9,12 +9,13 @@ AddObjectDialog::AddObjectDialog(Canvas& drawing_area,
       l_x("Coordenada x"),        // Initialize Label for Entry
       l_y("Coordenada y"),        // Initialize Label for Entry
       l_name("Nome do Objeto"),   // Initialize Label for Entry
-      add_dot_button("Adicionar Ponto") // Initialize button
+      fill_button("Preencher Poligono"), // Initialize fill button
+      add_dot_button("Adicionar Ponto") // Initialize add button
 {
   // Setting configurations for dialog
     set_title("Adicionar Objeto");
     set_border_width(0);
-    set_size_request(300, 300);
+    set_size_request(350, 350);
 
   // Setting default texts for Entrys
     e_x.set_text("0");
@@ -29,14 +30,17 @@ AddObjectDialog::AddObjectDialog(Canvas& drawing_area,
     get_content_area()->pack_start(l_name);
     get_content_area()->pack_start(e_name);
     get_content_area()->pack_start(add_dot_button);
+    get_content_area()->pack_start(fill_button);
 
     // Adding a "close" button to the bottom of the dialog
     add_button("_Close", Gtk::RESPONSE_CLOSE);
     signal_response().connect(sigc::mem_fun(*this, &AddObjectDialog::on_dialog_response));
 
-  // Setting Add Button function
+  // Setting Buttons function
     add_dot_button.signal_clicked().connect(
             sigc::mem_fun(*this, &AddObjectDialog::on_add_dot_button_clicked));
+    fill_button.signal_clicked().connect(
+            sigc::mem_fun(*this, &AddObjectDialog::on_fill_button_clicked));
 
   /* This makes it so the button is the default.
    * Simply hitting the "Enter" key will cause this button to activate. */
@@ -90,3 +94,19 @@ void AddObjectDialog::on_add_dot_button_clicked() {
                                +")\n");
 }
 
+/*  Fill Object function
+ *  Set the attrbute filled from polygon
+ */
+void AddObjectDialog::on_fill_button_clicked() {
+    if(new_poly.get_filled()) {
+        new_poly.set_filled(false);
+        log.get_buffer()->set_text(log.get_buffer()->get_text()
+                                   +"O Polígono não será preenchido\n");
+    }
+    else {
+        new_poly.set_filled(true);
+        log.get_buffer()->set_text(log.get_buffer()->get_text()
+                                   +"O Polígono será preenchido\n");
+    }
+}
+	 	  	 	    	 	    		    	    	  	 	
