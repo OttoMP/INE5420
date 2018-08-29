@@ -32,12 +32,17 @@ void Window::rotate(double angle)
     this->wc = m.exec_transform(this->wc);
 }
 
-void Window::scale(Ponto scale)
+void Window::scale(double factor)
 {
-    Matriz m = Matriz().scale(scale, this->wc);
-    this->v = m.exec_transform(this->v);
+    Matriz m = Matriz().scale(Ponto(1/factor,1/factor),Ponto(0,0));
+    this->wc = m.exec_transform(this->wc);
     
+    m = Matriz().scale(Ponto(factor,factor), Ponto(0,0));
+    this->v = m.exec_transform(this->v);
     this->u = m.exec_transform(this->u);
+    
+    
+    
 }	 	  	 	    	 	    		    	    	  	 	
 
 

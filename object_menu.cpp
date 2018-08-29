@@ -12,12 +12,15 @@ ObjectMenu::ObjectMenu(const Glib::ustring& title,
     button_rotate_dot("ROTATE REF DOT"),       /**/
     button_move("MOVE USING REFERENCE"),       /**/
     button_resize("RESIZE"),                   /**/
-    button_read_file("Read File"),                  /**/
-    button_write_file("Save Polygon"),              /**/
+    button_read_file("Load Display File"),             /**/
+    button_write_file("Save Display File"),         /**/
     window_ref(window),      // initialize reference to window using parameter
     text_log_ref(text_log), // initialize reference to text_log
+	d_obj(text_log_ref),
     object_viewer_ref(object_viewer) // initialize reference to object_viewer
 {
+  // Initalize Object Descriptor
+
   // Create Grid to hold the buttons
     Gtk::Grid* grid = Gtk::manage(new Gtk::Grid());
 
@@ -33,6 +36,9 @@ ObjectMenu::ObjectMenu(const Glib::ustring& title,
     l_angle.set_text("Angle");
     l_dot.set_text("Reference Coordinates");
     l_scale.set_text("Factor");
+
+	e_file.set_text("filename");
+	l_file.set_text("Nome do Arquivo");
 
   // Setting the appearance of th Grid
     grid->set_border_width(5);
@@ -71,6 +77,11 @@ ObjectMenu::ObjectMenu(const Glib::ustring& title,
     grid->attach(button_resize, 0, 4, 1, 1);
     grid->attach(l_scale, 1, 4, 1, 1);
     grid->attach(e_scale, 2, 4, 1, 1);
+
+	grid->attach(button_read_file, 0, 5, 1, 1);
+	grid->attach(button_write_file, 1, 5, 1, 1);
+	grid->attach(l_file, 0, 6, 1, 1);
+	grid->attach(e_file, 1, 6, 1, 1);
 }	 	  	 	    	 	    		    	    	  	 	
 
 /*  Function called when button ROTATE is clicked
@@ -112,6 +123,7 @@ void ObjectMenu::rotate_dot_clicked() {
                                        +std::to_string(dot.get_y())
                                        +")\n");
 }	 	  	 	    	 	    		    	    	  	 	
+
 //-----------------------------------
 /*  Function called when button ROTATE REF DOT is clicked
  *  calls function rotate_object from drawing window sending
@@ -121,8 +133,7 @@ void ObjectMenu::rotate_center_clicked() {
     int id = object_viewer_ref.get_selected_object_id();
     if(id == 0) return;
     double angle = atof(e_angle.get_text().c_str());
-    Ponto center(0,0);
-    window_ref.rotate_point(id, angle, center);
+    window_ref.rotate_center(id, angle);
     text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
                                        +"Polígono '"
                                        +object_viewer_ref.get_selected_object_name()
@@ -168,10 +179,13 @@ void ObjectMenu::resize_clicked() {
 }
 
 void ObjectMenu::write_file() {
-
+	d_obj.write(window_ref.get_display_file(), e_file.get_text());
 }
 
 void ObjectMenu::read_file() {
-
+	std::list<Poligono> loaded_display_file = d_obj.read(e_file.get_text());
+	if(loaded_display_file.size() != 0) {
+		window_ref.set_display_file(loaded_display_file);
+	}
 }
 	 	  	 	    	 	    		    	    	  	 	
