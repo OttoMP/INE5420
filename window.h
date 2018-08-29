@@ -23,7 +23,7 @@ public:
 
   void translate(Ponto p);
   void rotate(double angle);
-  void scale(Ponto p);	
+  void scale(double factor);	
 };
 
 #endif //WINDOW_H

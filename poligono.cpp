@@ -39,35 +39,13 @@ void Poligono::add_ponto(Ponto p)
 void Poligono::add_ponto(double x, double y)
 {
 	Ponto p(x,y);
-    if (this->get_size() == 0)
-    {
-        this->center = p;
-    }
-    else
-    {
-        this->center =
-            Ponto((this->center.get_x()*this->get_size() + p.get_x())/(this->get_size()+1),
-                  (this->center.get_y()*this->get_size() + p.get_y())/(this->get_size()+1));
-    }
-    this->pontos.push_back(p);
-    this->pontos_scn.push_back(Ponto(0,0));
+  this->add_ponto(p);
 }
 
 void Poligono::add_ponto(double x, double y, double z)
 {
 	Ponto p(x,y,z);
-    if (this->get_size() == 0)
-    {
-        this->center = p;
-    }
-    else
-    {
-        this->center =
-            Ponto((this->center.get_x()*this->get_size() + p.get_x())/(this->get_size()+1),
-                  (this->center.get_y()*this->get_size() + p.get_y())/(this->get_size()+1));
-    }
-    this->pontos.push_back(p);
-    this->pontos_scn.push_back(Ponto(0,0));
+  this->add_ponto(p);
 }
 
 void Poligono::set_brush_size(double brush)
@@ -92,7 +70,7 @@ std::list<Ponto> Poligono::draw(double scale)
        d.push_front(p);
     }
     else if (this->get_size() == 1)
-    {
+    {	 	  	 	    	 	    		    	    	  	 	
         d.push_back(Ponto(this->pontos_scn.front().get_x(), this->pontos_scn.front().get_y()
         + this->brush_size/scale, this->pontos_scn.front().get_z()));
     }
@@ -128,7 +106,7 @@ void Poligono::set_id(int new_id) {
 }
 
 Ponto Poligono::get_center()
-{
+{	 	  	 	    	 	    		    	    	  	 	
     return this->center;
 }
 
@@ -163,3 +141,4 @@ void Poligono::set_filled(bool fill) {
 bool Poligono::get_filled() {
     return this->filled;
 }
+	 	  	 	    	 	    		    	    	  	 	

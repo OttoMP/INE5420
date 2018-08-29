@@ -82,7 +82,7 @@ ObjectMenu::ObjectMenu(const Glib::ustring& title,
 	grid->attach(button_write_file, 1, 5, 1, 1);
 	grid->attach(l_file, 0, 6, 1, 1);
 	grid->attach(e_file, 1, 6, 1, 1);
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 /*  Function called when button ROTATE is clicked
  *  calls function rotate_object from drawing window
@@ -122,6 +122,7 @@ void ObjectMenu::rotate_dot_clicked() {
                                        +","
                                        +std::to_string(dot.get_y())
                                        +")\n");
+
 }
 
 //-----------------------------------
@@ -133,8 +134,7 @@ void ObjectMenu::rotate_center_clicked() {
     int id = object_viewer_ref.get_selected_object_id();
     if(id == 0) return;
     double angle = atof(e_angle.get_text().c_str());
-    Ponto center(0,0);
-    window_ref.rotate_point(id, angle, center);
+    window_ref.rotate_center(id, angle);
     text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
                                        +"Polígono '"
                                        +object_viewer_ref.get_selected_object_name()
