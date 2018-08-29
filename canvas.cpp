@@ -124,17 +124,23 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     Ponto bottom_right((width/scale)-10,(height/scale)-10);
 
     cr->stroke();
+//--------------------------------------------------------
 
     cr->set_source_rgb(0.8, 0.0, 0.0);
     for (auto i = display_file.begin(); i != display_file.end(); i++)
     {
         std::list<Ponto> pontos= i->draw(this->calc_distancia(screen.get_v(), Ponto(0,0)));
         if(pontos.size() == 2) {
+            // Clipping Dots
             if(!inside_view(pontos.front(),
                             top_left, bottom_right,
                             height, width)) {
                 continue;
             }
+            // Clipping Dots end
+
+
+            // Clipping lines
         }
         cr->set_line_width(i->get_brush_size());
         cr->move_to(vp_transform_x(pontos.back().get_x(), width),
@@ -376,7 +382,7 @@ void Canvas::update_conv_matrix()
  * Function used to clip lines out of viewport
  * It uses the Liang-Barsky algorithm
  */
-void Canvas::clipping_line(Poligono line, Ponto tl, Ponto br) {
+Poligono Canvas::clipping_line(Poligono line, Ponto tl, Ponto br) {
     double xmin = tl.get_x();
     double ymin = tl.get_y();
     double xmax = br.get_x();
@@ -394,15 +400,63 @@ void Canvas::clipping_line(Poligono line, Ponto tl, Ponto br) {
     double q3 = line_p.front().get_y() - ymin;
     double q4 = ymax - line_p.front().get_y();
 
-    if(p1 != 0)
-        double r1 = q1/p1;
-    if(p2 != 0)
-        double r2 = q2/p2;
-    if(p3 != 0)
-        double r3 = q3/p3;
-    if(p4 != 0)
-        double r4 = q4/p4;
+    std::vector<double> u1, u2;
+    u1.push_back(0);
+    u2.push_back(1);
 
+    if(p1 != 0) {
+        double r1 = q1/p1;
+        if(p1 > 0) {
+            u2.push_back(r1);
+        } else {
+            u1.push_back(r1);
+        }
+    }
+
+    if(p2 != 0) {
+        double r2 = q2/p2;
+        if(p1 > 0) {
+            u2.push_back(r2);
+        } else {
+            u1.push_back(r2);
+        }
+    }
+
+    if(p3 != 0) {
+        double r3 = q3/p3;
+        if(p1 > 0) {
+            u2.push_back(r3);
+        } else {
+            u1.push_back(r3);
+        }
+    }
+
+    if(p4 != 0) {
+        double r4 = q4/p4;
+        if(p1 > 0) {
+            u2.push_back(r4);
+        } else {
+            u1.push_back(r4);
+        }
+    }
+
+    auto max = *std::max_element(u1.begin(), u1.end());
+    auto min = *std::min_element(u2.begin(), u2.end());
+
+    if(max>min) {
+        // linha fora do canvas
+    }
+
+    double new_x_out_in = line_p.front().get_x() + max*p2;
+    double new_y_out_in = line_p.front().get_y() + max*p4;
+    double new_x_in_out = line_p.front().get_x() + max*p2;
+    double new_y_in_out = line_p.front().get_y() + max*p4;
+
+    Poligono clipped_line(line.get_nome());
+    clipped_line.add_ponto(Ponto(new_x_out_in, new_y_out_in));
+    clipped_line.add_ponto(Ponto(new_x_in_out, new_y_in_out));
+
+    return clipped_line;
 }
 
 /* Function Clipping Polygon
