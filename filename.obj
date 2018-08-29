@@ -1,0 +1,7 @@
+#nome jao
+#id 1
+#fill 0
+#number_of_vertex 3
+v 10 10 1
+v 10 20 1
+v 20 10 1

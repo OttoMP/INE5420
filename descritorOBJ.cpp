@@ -21,21 +21,21 @@ void descritorObj::write(std::list<Poligono> display_file, string name) {
 
         std::list<Ponto> p_list = i->get_pontos();
 
-		new_file << "#number of vertex " + to_string(p_list.size()) + "\n";
+		new_file << "#number_of_vertex " + to_string(p_list.size()) + "\n";
         for(Ponto p : p_list) {
            new_file << "v "
                        + to_string(p.get_x()) + " "
                        + to_string(p.get_y()) + " "
                        + to_string(p.get_z()) + "\n";
         }
-
+      
         if(p_list.size() == 1) {
             new_file << "p -1\n";
         } else if(p_list.size() == 2) {
             new_file << "l -2 -1\n";
         } else {
             new_file << "f";
-            for(auto i = p_list.size(); i > 0; i--) {
+            for(auto i = p_list.size(); i > 0; i--) {	 	  	 	    	 	    		    	    	  	 	
                new_file << " -" + to_string(i);
             }
             new_file << "\n";
@@ -49,10 +49,8 @@ void descritorObj::write(std::list<Poligono> display_file, string name) {
 
 std::list<Poligono> descritorObj::read(std::string file) {
     std::list<Poligono> display_file;
-    std::list<Ponto> pontos;
     string line, nome, id, filled, vertex, info;
     ifstream myfile(file+".obj");
-    bool to_fill = false;
 
     if (myfile.is_open())
     {
@@ -66,28 +64,26 @@ std::list<Poligono> descritorObj::read(std::string file) {
 			getline(myfile,filled);
 			vector<string> filled_tokens = split(filled, ' ');
 
+			Poligono poly = Poligono(nome_tokens[1]);
+			poly.set_id(stoi(id_tokens[1]));
+            if(filled_tokens[1].compare("1") != 0)
+                poly.set_filled(true);
+
 			getline(myfile,vertex);
 			vector<string> vertex_tokens = split(vertex, ' ');
 
-			int nvertex = stoi(vertex_tokens[3]);
-			for(auto i = 0; i < nvertex; i++) {
+			int nvertex = stoi(vertex_tokens[1]);
+			for(auto i = 0; i < nvertex; i++) {	 	  	 	    	 	    		    	    	  	 	
 				getline(myfile,line);
 				vector<string> tokens = split(line, ' ');
-				pontos.push_back(Ponto(
+				poly.add_ponto(Ponto(
                                 stof(tokens[1]),
                                 stof(tokens[2]),
                                 stof(tokens[3])));
-
 			}
-            if(filled_tokens[1].compare("1") != 0)
-                to_fill = true;
 
 			getline(myfile, info);
-			display_file.push_back(Poligono(nome_tokens[1],
-                                            stoi(id_tokens[1]),
-                                            to_fill,
-                                            pontos));
-            pontos.clear();
+			display_file.push_back(poly);
 		}
 		myfile.close();
     	text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
@@ -95,8 +91,6 @@ std::list<Poligono> descritorObj::read(std::string file) {
     } else {
     	text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
 											+"Não foi possível abri o arquivo\n");
-    }
-
     return display_file;
 }
 
@@ -113,4 +107,4 @@ std::vector<std::string> descritorObj::split(const std::string &s, char delim) {
     std::vector<std::string> elems;
     split(s, delim, std::back_inserter(elems));
     return elems;
-}
+}	 	  	 	    	 	    		    	    	  	 	

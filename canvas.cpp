@@ -48,6 +48,7 @@ std::list<Poligono> Canvas::get_display_file() {
  */
 void Canvas::set_display_file(std::list<Poligono> loaded_display_file) {
     this->display_file = loaded_display_file;
+    this->update_scn_coord();
     queue_draw();
 }
 
@@ -104,6 +105,15 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     cr->line_to(vp_transform_x(p2.get_x(),width), vp_transform_y(p2.get_y(),height));
 
   // draw red lines out from the center of the window
+    cr->stroke();
+    
+    cr->set_source_rgb(0.0, 0.5, 0);
+    
+    cr->move_to(vp_transform_x(0.1,width), vp_transform_y(0,height));
+    cr->line_to(vp_transform_x(-0.1,width), vp_transform_y(0,height));
+    cr->move_to(vp_transform_x(0,width), vp_transform_y(0.1,height));
+    cr->line_to(vp_transform_x(0,width), vp_transform_y(-0.1,height));
+    
     cr->stroke();
 
 //--------------------CLIPPING----------------------------
@@ -163,11 +173,12 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
  *  It changes the value of scale adding a factor sent as parameter
  */
 void Canvas::zoom_in(double factor) {
-    screen.scale(Ponto(factor,factor));
+    screen.scale(1/factor);
     this->update_conv_matrix();
     this->update_scn_coord();
     queue_draw();
 }
+
 
 
 /*  Funtion Zoom Out
@@ -175,7 +186,7 @@ void Canvas::zoom_in(double factor) {
  *  It changes the value of scale subtracting a factor sent as parameter
  */
 void Canvas::zoom_out(double factor) {
-    screen.scale(Ponto(1/factor,1/factor));
+    screen.scale(factor);
     this->update_conv_matrix();
     this->update_scn_coord();
     queue_draw();
@@ -187,7 +198,7 @@ void Canvas::zoom_out(double factor) {
  *  sent as parameter
  */
 void Canvas::move_up(double step) {
-    screen.translate(Ponto(0,step));
+    screen.translate(Ponto(0,-step));
     this->update_conv_matrix();
     this->update_scn_coord();
     queue_draw();
@@ -199,7 +210,7 @@ void Canvas::move_up(double step) {
  *  sent as parameter
  */
 void Canvas::move_down(double step) {
-    screen.translate(Ponto(0,-step));
+    screen.translate(Ponto(0,step));
     this->update_conv_matrix();
     this->update_scn_coord();
     queue_draw();
@@ -212,8 +223,9 @@ void Canvas::move_down(double step) {
  *  sent as parameter
  */
 
-void Canvas::move_right(double step) {
-    screen.translate(Ponto(step,0));
+
+void Canvas::move_right(double step) {	 	  	 	    	 	    		    	    	  	 	
+    screen.translate(Ponto(-step,0));
     this->update_conv_matrix();
     this->update_scn_coord();
     queue_draw();
@@ -227,7 +239,7 @@ void Canvas::move_right(double step) {
  */
 
 void Canvas::move_left(double step) {
-    screen.translate(Ponto(-step,0));
+    screen.translate(Ponto(step,0));
     this->update_conv_matrix();
     this->update_scn_coord();
     queue_draw();
@@ -266,10 +278,24 @@ void Canvas::rotate_object(int id, double angle) {
  */
 
 void Canvas::rotate_point(int id, double angle, Ponto centro) {
+    Ponto novo_ponto = this->scn_to_cart.exec_transform(centro);
     for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
     {
         if(pol->get_id() == id) {
-           Matriz m = Matriz().rotate(angle, centro);
+           Matriz m = Matriz().rotate(angle, novo_ponto);
+           pol->exec_transform(m);
+           pol->exec_update_scn(this->cart_to_scn);
+           break;
+        }
+    }
+    queue_draw();
+}
+
+void Canvas::rotate_center(int id, double angle) {
+    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
+    {
+        if(pol->get_id() == id) {
+           Matriz m = Matriz().rotate(angle, Ponto(0,0));
            pol->exec_transform(m);
            pol->exec_update_scn(this->cart_to_scn);
            break;
