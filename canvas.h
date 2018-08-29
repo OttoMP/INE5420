@@ -84,4 +84,3 @@ class Canvas : public Gtk::DrawingArea {
 };
 
 #endif //CANVAS_H
-	 	  	 	    	 	    		    	    	  	 	

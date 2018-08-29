@@ -122,7 +122,8 @@ void ObjectMenu::rotate_dot_clicked() {
                                        +","
                                        +std::to_string(dot.get_y())
                                        +")\n");
-}	 	  	 	    	 	    		    	    	  	 	
+
+}
 
 //-----------------------------------
 /*  Function called when button ROTATE REF DOT is clicked
@@ -160,7 +161,7 @@ void ObjectMenu::move_clicked() {
                                        +", "
                                        +std::to_string(y)
                                        +")\n");
-}	 	  	 	    	 	    		    	    	  	 	
+}
 
 /*  Function called when button RESIZE is clicked
  *  calls function resize_object from drawing window
@@ -188,4 +189,3 @@ void ObjectMenu::read_file() {
 		window_ref.set_display_file(loaded_display_file);
 	}
 }
-	 	  	 	    	 	    		    	    	  	 	

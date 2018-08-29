@@ -28,7 +28,7 @@ void descritorObj::write(std::list<Poligono> display_file, string name) {
                        + to_string(p.get_y()) + " "
                        + to_string(p.get_z()) + "\n";
         }
-        cout << p_list.size() << endl;
+      
         if(p_list.size() == 1) {
             new_file << "p -1\n";
         } else if(p_list.size() == 2) {
@@ -51,7 +51,6 @@ std::list<Poligono> descritorObj::read(std::string file) {
     std::list<Poligono> display_file;
     string line, nome, id, filled, vertex, info;
     ifstream myfile(file+".obj");
-    int i = 0;
 
     if (myfile.is_open())
     {
@@ -83,7 +82,7 @@ std::list<Poligono> descritorObj::read(std::string file) {
                                 stof(tokens[3])));
 			}
 
-			//getline(myfile, info);
+			getline(myfile, info);
 			display_file.push_back(poly);
 		}
 		myfile.close();
@@ -92,9 +91,6 @@ std::list<Poligono> descritorObj::read(std::string file) {
     } else {
     	text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
 											+"Não foi possível abri o arquivo\n");
-        cout << "Unable to open file";
-    }
-
     return display_file;
 }
 

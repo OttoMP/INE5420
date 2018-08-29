@@ -50,4 +50,3 @@ public:
 };
 
 #endif //POLIGONO_H
-	 	  	 	    	 	    		    	    	  	 	
