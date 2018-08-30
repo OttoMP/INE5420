@@ -78,10 +78,9 @@ class Canvas : public Gtk::DrawingArea {
         Matriz scn_to_cart;
 
         //Clipping function
-        std::list<Ponto> clipping_line(std::list<Ponto> line_p, Ponto tl,
-                                       Ponto br, double height, double width);
+        std::list<Ponto> clipping_line(std::list<Ponto> line_p);
         void clipping_poly(Poligono poly, double height, double width, double scale);
-        bool inside_view(Ponto p, Ponto tl, Ponto br, double height, double width);
+        bool inside_view(Ponto p);
 };
 
 #endif //CANVAS_H

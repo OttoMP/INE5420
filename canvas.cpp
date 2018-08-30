@@ -110,18 +110,20 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     // drawing subcanvas for clipping
     cr->set_source_rgb(0.0, 0.8, 0.0);
 
-    cr->move_to(10,10);
+    cr->move_to(vp_transform_x(-0.9, width),
+                vp_transform_y(0.9, height));
 
-    cr->line_to(10,(height/scale)-10);
+    cr->line_to(vp_transform_x(0.9, width),
+                vp_transform_y(0.9, height));
 
-    cr->line_to((width/scale)-10,(height/scale)-10);
+    cr->line_to(vp_transform_x(0.9, width),
+                vp_transform_y(-0.9, height));
 
-    cr->line_to((width/scale)-10,10);
+    cr->line_to(vp_transform_x(-0.9, width),
+                vp_transform_y(-0.9, height));
 
-    cr->line_to(10,10);
-
-    Ponto top_left(10,10);
-    Ponto bottom_right((width/scale)-10,(height/scale)-10);
+    cr->line_to(vp_transform_x(-0.9, width),
+                vp_transform_y(0.9, height));
 
     cr->stroke();
 //--------------------------------------------------------
@@ -130,31 +132,42 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     for (auto i = display_file.begin(); i != display_file.end(); i++)
     {
         std::list<Ponto> pontos = i->draw(this->calc_distancia(screen.get_v(), Ponto(0,0)));
-        if(i->get_pontos().size() == 2) {
-            /* Clipping Dots
+        /*
+        if(pontos.size() == 1) {
+            // Clipping Dots
             if(!inside_view(pontos.front(),
                             top_left, bottom_right,
                             height, width)) {
                 continue;
+            } else {
+                clipped_pontos = pontos;
             }
-             Clipping Dots end*/
-
+        } else */
+        if(pontos.size() == 2) {
             // Clipping lines
-            std::list<Ponto> clipped_pontos = clipping_line(pontos, top_left, bottom_right, height, width);
-            if(clipped_pontos.size() == 0) {
+            pontos = clipping_line(pontos);
+            if(pontos.size() == 0) {
                 continue;
             }
+        } else {
+            //clipping_poly();
+            pontos = pontos;
         }
+
         cr->set_line_width(i->get_brush_size());
         cr->move_to(vp_transform_x(pontos.back().get_x(), width),
                     vp_transform_y(pontos.back().get_y(), height));
+
         for (auto pt = pontos.begin(); pt != pontos.end(); pt++)
         {
             cr->line_to(vp_transform_x(pt->get_x(), width),
                         vp_transform_y(pt->get_y(), height));
         }
-        if(i->get_filled())
+
+        if(i->get_filled()) {
             cr->fill();
+        }
+
         cr->stroke();
     }
 
@@ -398,21 +411,19 @@ void Canvas::update_conv_matrix()
  * Function used to clip lines out of viewport
  * It uses the Liang-Barsky algorithm
  */
-std::list<Ponto> Canvas::clipping_line(std::list<Ponto> line_p,
-                               Ponto tl, Ponto br,
-                               double height, double width) {
+std::list<Ponto> Canvas::clipping_line(std::list<Ponto> line_p) {
 
-    bool front_is_inside = inside_view(line_p.front(), tl, br, height, width);
-    bool back_is_inside = inside_view(line_p.back(), tl, br, height, width);
+    bool front_is_inside = inside_view(line_p.front());
+    bool back_is_inside = inside_view(line_p.back());
 
     if(front_is_inside && back_is_inside) {
         return line_p;
     }
 
-    double xmin = tl.get_x();
-    double ymin = tl.get_y();
-    double xmax = br.get_x();
-    double ymax = br.get_y();
+    double xmin = -0.9;
+    double ymin = -0.9;
+    double xmax = 0.9;
+    double ymax = 0.9;
 
     double p1 = -(line_p.front().get_x() - line_p.back().get_x());
     double p2 = line_p.front().get_x() - line_p.back().get_x();
@@ -517,15 +528,13 @@ void Canvas::clipping_poly(Poligono poly, double height, double width, double sc
     }*/
 }
 
-bool Canvas::inside_view(Ponto p,
-                         Ponto tl, Ponto br,
-                         double height, double width) {
-    double xmin = tl.get_x();
-    double ymin = tl.get_y();
-    double xmax = br.get_x();
-    double ymax = br.get_y();
-    double x = vp_transform_x(p.get_x(), width);
-    double y = vp_transform_y(p.get_y(), height);
+bool Canvas::inside_view(Ponto p) {
+    double xmin = -0.9;
+    double ymin = -0.9;
+    double xmax = 0.9;
+    double ymax = 0.9;
+    double x = p.get_x();
+    double y = p.get_y();
 
     if(x < xmax && x > xmin && y < ymax && y > ymin) {
         return true;

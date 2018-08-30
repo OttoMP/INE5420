@@ -33,17 +33,27 @@ public:
 
     std::list<Ponto> draw(double scale);
     std::list<Ponto> get_pontos();
+    void set_pontos(std::list<Ponto> pontos);
+
     double get_brush_size();
+
 	int get_tipo();
+
 	string get_nome();
     void set_nome(string nome);
+
 	int get_size();
+
     int get_id() const;
     void set_id(int new_id);
+
     Ponto get_center();
+
     void exec_transform(Matriz transform);
     void exec_update_scn(Matriz transform);
+
     bool operator==(const Poligono& a);
+
     void set_filled(bool fill);
     bool get_filled();
 

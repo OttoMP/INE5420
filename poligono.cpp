@@ -57,6 +57,10 @@ std::list<Ponto> Poligono:: get_pontos() {
     return this->pontos;
 }
 
+void Poligono:: set_pontos(std::list<Ponto> pontos) {
+    this->pontos = pontos;
+}
+
 std::list<Ponto> Poligono::draw(double scale)
 {
     std::list<Ponto> d = this->pontos_scn;
@@ -70,7 +74,7 @@ std::list<Ponto> Poligono::draw(double scale)
        d.push_front(p);
     }
     else if (this->get_size() == 1)
-    {	 	  	 	    	 	    		    	    	  	 	
+    {
         d.push_back(Ponto(this->pontos_scn.front().get_x(), this->pontos_scn.front().get_y()
         + this->brush_size/scale, this->pontos_scn.front().get_z()));
     }
@@ -106,7 +110,7 @@ void Poligono::set_id(int new_id) {
 }
 
 Ponto Poligono::get_center()
-{	 	  	 	    	 	    		    	    	  	 	
+{
     return this->center;
 }
 
@@ -141,4 +145,4 @@ void Poligono::set_filled(bool fill) {
 bool Poligono::get_filled() {
     return this->filled;
 }
-	 	  	 	    	 	    		    	    	  	 	
+
