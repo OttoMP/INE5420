@@ -281,6 +281,19 @@ void Canvas::rotate_point(int id, double angle, Ponto centro) {
     queue_draw();
 }
 
+void Canvas::rotate_center(int id, double angle) {
+    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
+    {
+        if(pol->get_id() == id) {
+           Matriz m = Matriz().rotate(angle, Ponto(0,0));
+           pol->exec_transform(m);
+           pol->exec_update_scn(this->cart_to_scn);
+           break;
+        }
+    }
+    queue_draw();
+}
+
 /*  Move Function
  *  Function used to move an object around by some distance determined by a dot
  */
