@@ -28,14 +28,14 @@ void descritorObj::write(std::list<Poligono> display_file, string name) {
                        + to_string(p.get_y()) + " "
                        + to_string(p.get_z()) + "\n";
         }
-      
+
         if(p_list.size() == 1) {
             new_file << "p -1\n";
         } else if(p_list.size() == 2) {
             new_file << "l -2 -1\n";
         } else {
             new_file << "f";
-            for(auto i = p_list.size(); i > 0; i--) {	 	  	 	    	 	    		    	    	  	 	
+            for(auto i = p_list.size(); i > 0; i--) {
                new_file << " -" + to_string(i);
             }
             new_file << "\n";
@@ -73,7 +73,7 @@ std::list<Poligono> descritorObj::read(std::string file) {
 			vector<string> vertex_tokens = split(vertex, ' ');
 
 			int nvertex = stoi(vertex_tokens[1]);
-			for(auto i = 0; i < nvertex; i++) {	 	  	 	    	 	    		    	    	  	 	
+			for(auto i = 0; i < nvertex; i++) {
 				getline(myfile,line);
 				vector<string> tokens = split(line, ' ');
 				poly.add_ponto(Ponto(
@@ -91,6 +91,7 @@ std::list<Poligono> descritorObj::read(std::string file) {
     } else {
     	text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
 											+"Não foi possível abri o arquivo\n");
+    }
     return display_file;
 }
 
@@ -107,4 +108,4 @@ std::vector<std::string> descritorObj::split(const std::string &s, char delim) {
     std::vector<std::string> elems;
     split(s, delim, std::back_inserter(elems));
     return elems;
-}	 	  	 	    	 	    		    	    	  	 	
+}
