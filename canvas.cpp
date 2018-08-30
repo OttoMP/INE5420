@@ -413,6 +413,8 @@ void Canvas::update_conv_matrix()
  */
 std::list<Ponto> Canvas::clipping_line(std::list<Ponto> line_p) {
 
+    std::list<Ponto> clipped_dots;
+
     bool front_is_inside = inside_view(line_p.front());
     bool back_is_inside = inside_view(line_p.back());
 
@@ -425,60 +427,61 @@ std::list<Ponto> Canvas::clipping_line(std::list<Ponto> line_p) {
     double xmax = 0.9;
     double ymax = 0.9;
 
-    double p1 = -(line_p.front().get_x() - line_p.back().get_x());
-    double p2 = line_p.front().get_x() - line_p.back().get_x();
-    double p3 = -(line_p.front().get_y() - line_p.back().get_y());
-    double p4 = line_p.front().get_y() - line_p.back().get_y();
+    // - delta x
+    double p1 = -(line_p.back().get_x() - line_p.front().get_x());
+    // delta x
+    double p2 = -p1;
+    // - delta y
+    double p3 = -(line_p.back().get_y() - line_p.front().get_y());
+    // delta y
+    double p4 = -p3;
 
+    // x1 - xmin
     double q1 = line_p.front().get_x() - xmin;
+    // xmax - x1
     double q2 = xmax - line_p.front().get_x();
+    // y1 - ymin
     double q3 = line_p.front().get_y() - ymin;
+    // ymax - y1
     double q4 = ymax - line_p.front().get_y();
 
+    // u1 = values lesser than 0
+    // u2 = values greater than 0
     std::vector<double> u1, u2;
     u1.push_back(0);
     u2.push_back(1);
 
-    if(p1 != 0) {
-        double r1 = q1/p1;
-        if(p1 > 0) {
-            u2.push_back(r1);
-        } else {
-            u1.push_back(r1);
-        }
+    if ((p1 == 0 && q1 < 0) || (p3 == 0 && q3 < 0)) {
+        // line parallel to window
+        return clipped_dots;
     }
 
-    if(p2 != 0) {
+    if(p1 != 0) {
+        double r1 = q1/p1;
         double r2 = q2/p2;
-        if(p2 > 0) {
+        if(p1 < 0) {
+            u1.push_back(r1);
             u2.push_back(r2);
         } else {
             u1.push_back(r2);
+            u2.push_back(r1);
         }
     }
 
     if(p3 != 0) {
         double r3 = q3/p3;
-        if(p3 > 0) {
-            u2.push_back(r3);
-        } else {
-            u1.push_back(r3);
-        }
-    }
-
-    if(p4 != 0) {
         double r4 = q4/p4;
-        if(p4 > 0) {
+        if(p3 < 0) {
+            u1.push_back(r3);
             u2.push_back(r4);
         } else {
             u1.push_back(r4);
+            u2.push_back(r3);
         }
     }
 
     auto max = *std::max_element(u1.begin(), u1.end());
     auto min = *std::min_element(u2.begin(), u2.end());
-
-    std::list<Ponto> clipped_dots;
 
     if(max>min) {
         // linha fora do canvas
@@ -491,14 +494,18 @@ std::list<Ponto> Canvas::clipping_line(std::list<Ponto> line_p) {
         clipped_dots.push_back(Ponto(
                                line_p.front().get_x() + max*p2,
                                line_p.front().get_y() + max*p4));
+    } else {
+        clipped_dots.push_back(line_p.front());
     }
 
     if(!back_is_inside) {
     //double new_x_in_out = line_p.back().get_x() + max*p2;
     //double new_y_in_out = line_p.back().get_y() + max*p4;
         clipped_dots.push_back(Ponto(
-                               line_p.back().get_x() + max*p2,
-                               line_p.back().get_y() + max*p4));
+                               line_p.front().get_x() + min*p2,
+                               line_p.front().get_y() + min*p4));
+    } else {
+        clipped_dots.push_back(line_p.back());
     }
 
     return clipped_dots;
@@ -508,24 +515,35 @@ std::list<Ponto> Canvas::clipping_line(std::list<Ponto> line_p) {
  * Function used to clip polygons out of viewport
  * It uses the Weiler-Atherton algorithm
  */
-void Canvas::clipping_poly(Poligono poly, double height, double width, double scale) {
-/*    Ponto top_left(10, 10);
-    Ponto bottom_left(10, (height/scale)-10;
-    Ponto bottom_right((width/scale)-10, (height/scale)-10);
-    Ponto top_right((width/scale)-10, 10);
+std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
+    std::list<Poligono> clipped_poly;
+/*
+    Ponto top_left(-0.9, 0.9);
+    Ponto bottom_left(-0.9, -0.9);
+    Ponto bottom_right(0.9, -0.9);
+    Ponto top_right(0.9, 0.9);
 
     std::list<Ponto> window_corners = {top_left, top_right, bottom_right, bottom_left};
     std::list<Ponto> entrances = {};
-    std::list<Ponto> poly_corners = poly.draw();
 
-    for {auto p = poly_corners.begin(); p != poly_corners.end(); p++) {
-        next = p++;
-        if(!inside_view(p, top_left, bottom_right) && inside_view(next, top_left, bottom_right)) {
+    for (auto p = poly_p.begin(); p != poly_p.end()+1; p++) {
+        if(p == poly_p.end()) {
+            auto next = poly_p.begin();
+        } else {
+            auto next = p++;
+        }
+
+        if(!inside_view(p) && inside_view(next)) {
             entrances.push_back();
             window_corners.insert();
             poly_corners.insert();
-        } else
-    }*/
+        } else if(inside_view(p) && !inside_view(next)) {
+            window_corners.insert();
+            poly_corners.insert();
+        }
+    }
+*/
+    return clipped_poly;
 }
 
 bool Canvas::inside_view(Ponto p) {

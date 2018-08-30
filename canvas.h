@@ -79,7 +79,7 @@ class Canvas : public Gtk::DrawingArea {
 
         //Clipping function
         std::list<Ponto> clipping_line(std::list<Ponto> line_p);
-        void clipping_poly(Poligono poly, double height, double width, double scale);
+        std::list<Poligono> clipping_poly(std::list<Ponto> poly_p);
         bool inside_view(Ponto p);
 };
 
