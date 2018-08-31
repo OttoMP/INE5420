@@ -48,6 +48,7 @@ std::list<Poligono> Canvas::get_display_file() {
  */
 void Canvas::set_display_file(std::list<Poligono> loaded_display_file) {
     this->display_file = loaded_display_file;
+    this->update_scn_coord();
     queue_draw();
 }
 
@@ -94,16 +95,19 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     Ponto p1 = this->cart_to_scn.exec_transform(Ponto(0,-1000));
     Ponto p2 = this->cart_to_scn.exec_transform(Ponto(0, 1000));
 
-    cr->move_to(vp_transform_x(p1.get_x(),width), vp_transform_y(p1.get_y(),height));
-    cr->line_to(vp_transform_x(p2.get_x(),width), vp_transform_y(p2.get_y(),height));
+    cr->move_to(vp_transform_x(p1.get_x(),width),
+                vp_transform_y(p1.get_y(),height));
+    cr->line_to(vp_transform_x(p2.get_x(),width),
+                vp_transform_y(p2.get_y(),height));
 
     p1 = this->cart_to_scn.exec_transform(Ponto(-1000,0));
     p2 = this->cart_to_scn.exec_transform(Ponto(1000,0));
 
-    cr->move_to(vp_transform_x(p1.get_x(),width), vp_transform_y(p1.get_y(),height));
-    cr->line_to(vp_transform_x(p2.get_x(),width), vp_transform_y(p2.get_y(),height));
+    cr->move_to(vp_transform_x(p1.get_x(),width),
+                vp_transform_y(p1.get_y(),height));
+    cr->line_to(vp_transform_x(p2.get_x(),width),
+                vp_transform_y(p2.get_y(),height));
 
-  // draw red lines out from the center of the window
     cr->stroke();
 
 //--------------------CLIPPING----------------------------
@@ -179,7 +183,7 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
  *  It changes the value of scale adding a factor sent as parameter
  */
 void Canvas::zoom_in(double factor) {
-    screen.scale(factor);
+    screen.scale(1/factor);
     this->update_conv_matrix();
     this->update_scn_coord();
     queue_draw();
@@ -191,7 +195,7 @@ void Canvas::zoom_in(double factor) {
  *  It changes the value of scale subtracting a factor sent as parameter
  */
 void Canvas::zoom_out(double factor) {
-    screen.scale(1/factor);
+    screen.scale(factor);
     this->update_conv_matrix();
     this->update_scn_coord();
     queue_draw();
@@ -203,7 +207,7 @@ void Canvas::zoom_out(double factor) {
  *  sent as parameter
  */
 void Canvas::move_up(double step) {
-    screen.translate(Ponto(0,step));
+    screen.translate(Ponto(0,-step));
     this->update_conv_matrix();
     this->update_scn_coord();
     queue_draw();
@@ -215,7 +219,7 @@ void Canvas::move_up(double step) {
  *  sent as parameter
  */
 void Canvas::move_down(double step) {
-    screen.translate(Ponto(0,-step));
+    screen.translate(Ponto(0,step));
     this->update_conv_matrix();
     this->update_scn_coord();
     queue_draw();
@@ -229,7 +233,7 @@ void Canvas::move_down(double step) {
  */
 
 void Canvas::move_right(double step) {
-    screen.translate(Ponto(step,0));
+    screen.translate(Ponto(-step,0));
     this->update_conv_matrix();
     this->update_scn_coord();
     queue_draw();
@@ -243,7 +247,7 @@ void Canvas::move_right(double step) {
  */
 
 void Canvas::move_left(double step) {
-    screen.translate(Ponto(-step,0));
+    screen.translate(Ponto(step,0));
     this->update_conv_matrix();
     this->update_scn_coord();
     queue_draw();
@@ -282,10 +286,11 @@ void Canvas::rotate_object(int id, double angle) {
  */
 
 void Canvas::rotate_point(int id, double angle, Ponto centro) {
+    Ponto novo_ponto = this->scn_to_cart.exec_transform(centro);
     for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
     {
         if(pol->get_id() == id) {
-           Matriz m = Matriz().rotate(angle, centro);
+           Matriz m = Matriz().rotate(angle, novo_ponto);
            pol->exec_transform(m);
            pol->exec_update_scn(this->cart_to_scn);
            break;
@@ -517,7 +522,7 @@ std::list<Ponto> Canvas::clipping_line(std::list<Ponto> line_p) {
  */
 std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
     std::list<Poligono> clipped_poly;
-/*
+
     Ponto top_left(-0.9, 0.9);
     Ponto bottom_left(-0.9, -0.9);
     Ponto bottom_right(0.9, -0.9);
@@ -526,23 +531,24 @@ std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
     std::list<Ponto> window_corners = {top_left, top_right, bottom_right, bottom_left};
     std::list<Ponto> entrances = {};
 
-    for (auto p = poly_p.begin(); p != poly_p.end()+1; p++) {
+    for (auto p = poly_p.begin(); p != ++poly_p.end(); p++) {
+        auto next = p++;
         if(p == poly_p.end()) {
             auto next = poly_p.begin();
-        } else {
-            auto next = p++;
         }
 
-        if(!inside_view(p) && inside_view(next)) {
-            entrances.push_back();
-            window_corners.insert();
-            poly_corners.insert();
-        } else if(inside_view(p) && !inside_view(next)) {
-            window_corners.insert();
-            poly_corners.insert();
+        if(!inside_view(*p) && inside_view(*next)) {
+            Ponto intersect = intersect2d(window_corners, *p, *next);
+            entrances.push_back(intersect);
+            window_corners.insert(next, intersect);
+            poly_p.insert(next, intersect);
+        } else if(inside_view(*p) && !inside_view(*next)) {
+            Ponto intersect = intersect2d(window_corners, *p, *next);
+            window_corners.insert(next, intersect);
+            poly_p.insert(next, intersect);
         }
     }
-*/
+
     return clipped_poly;
 }
 
@@ -559,4 +565,32 @@ bool Canvas::inside_view(Ponto p) {
     } else {
         return false;
     }
+}
+
+Ponto Canvas::intersect2d(std::list<Ponto> window_corners, Ponto k, Ponto l) {
+    double det, s;
+
+    for (auto i = window_corners.begin(); i != ++window_corners.end(); i++) {
+        auto j = i++;
+        if(i == window_corners.end()) {
+            auto j = window_corners.begin();
+        }
+
+        auto n = *i;
+        auto m = *j;
+
+        det = (n.get_x() - m.get_x()) * (l.get_y() - k.get_y())
+            - (n.get_y() - m.get_y()) * (l.get_x() - k.get_x());
+
+        if (det != 0.0) {
+            s = ((n.get_x() - m.get_x()) * (m.get_y() - k.get_y())
+               - (n.get_y() - m.get_y()) * (m.get_x() - k.get_x()))
+               / det ;
+
+            return Ponto(k.get_x() + (l.get_x() - k.get_x()) * s,
+                         k.get_y() + (l.get_y() - k.get_y()) * s);
+        }
+    }
+
+    return Ponto(0,0);
 }
