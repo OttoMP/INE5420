@@ -537,13 +537,23 @@ std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
             auto next = poly_p.begin();
         }
 
-        if(!inside_view(*p) && inside_view(*next)) {
-            Ponto intersect = intersect2d(window_corners, *p, *next);
+        auto k = *p;
+        auto l = *next;
+
+        if(!inside_view(k) && inside_view(l)) {
+            auto s = intersect2d(window_corners, k, l);
+            Ponto intersect (k.get_x() + (l.get_x() - k.get_x()) * s,
+                             k.get_y() + (l.get_y() - k.get_y()) * s);
+
             entrances.push_back(intersect);
             window_corners.insert(next, intersect);
             poly_p.insert(next, intersect);
-        } else if(inside_view(*p) && !inside_view(*next)) {
-            Ponto intersect = intersect2d(window_corners, *p, *next);
+
+        } else if(inside_view(k) && !inside_view(l)) {
+            auto s = intersect2d(window_corners, k, l);
+            Ponto intersect (k.get_x() + (l.get_x() - k.get_x()) * s,
+                             k.get_y() + (l.get_y() - k.get_y()) * s);
+
             window_corners.insert(next, intersect);
             poly_p.insert(next, intersect);
         }
@@ -567,7 +577,7 @@ bool Canvas::inside_view(Ponto p) {
     }
 }
 
-Ponto Canvas::intersect2d(std::list<Ponto> window_corners, Ponto k, Ponto l) {
+double Canvas::intersect2d(std::list<Ponto> window_corners, Ponto k, Ponto l) {
     double det, s;
 
     for (auto i = window_corners.begin(); i != ++window_corners.end(); i++) {
@@ -587,10 +597,9 @@ Ponto Canvas::intersect2d(std::list<Ponto> window_corners, Ponto k, Ponto l) {
                - (n.get_y() - m.get_y()) * (m.get_x() - k.get_x()))
                / det ;
 
-            return Ponto(k.get_x() + (l.get_x() - k.get_x()) * s,
-                         k.get_y() + (l.get_y() - k.get_y()) * s);
+            return s;
         }
     }
 
-    return Ponto(0,0);
+    return -1.0;
 }
