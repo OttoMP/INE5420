@@ -151,10 +151,11 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
         } else */
         if(pontos.size() == 2) {
             // Clipping lines
-            to_draw_poly = clipping_line(pontos);
-            if(to_draw_poly.size() == 0) {
+            std::list<Ponto> clipped_line = clipping_line(pontos);
+            if(clipped_line.size() == 0) {
                 continue;
             }
+            to_draw_poly.push_back(Poligono("clip", clipped_line));
         } else {
             //clipping_poly();
             to_draw_poly = clipping_poly(pontos);
@@ -426,7 +427,7 @@ void Canvas::update_conv_matrix()
  * Function used to clip lines out of viewport
  * It uses the Liang-Barsky algorithm
  */
-std::list<Poligono> Canvas::clipping_line(std::list<Ponto> line_p) {
+std::list<Ponto> Canvas::clipping_line(std::list<Ponto> line_p) {
 
     std::list<Ponto> clipped_dots;
 
@@ -434,8 +435,7 @@ std::list<Poligono> Canvas::clipping_line(std::list<Ponto> line_p) {
     bool back_is_inside = inside_view(line_p.back());
 
     if(front_is_inside && back_is_inside) {
-        std::list<Poligono> clipped_poly = {Poligono("clipped", line_p)};
-        return clipped_poly;
+        return line_p;
     }
 
     double xmin = -0.9;
@@ -469,8 +469,7 @@ std::list<Poligono> Canvas::clipping_line(std::list<Ponto> line_p) {
 
     if ((p1 == 0 && q1 < 0) || (p3 == 0 && q3 < 0)) {
         // line parallel to window
-        std::list<Poligono> clipped_poly = {Poligono("clipped", clipped_dots)};
-        return clipped_poly;
+        return clipped_dots;
     }
 
     if(p1 != 0) {
@@ -502,8 +501,7 @@ std::list<Poligono> Canvas::clipping_line(std::list<Ponto> line_p) {
 
     if(max>min) {
         // linha fora do canvas
-        std::list<Poligono> clipped_poly = {Poligono("clipped", clipped_dots)};
-        return clipped_poly;
+        return clipped_dots;
     }
 
     if(!front_is_inside) {
@@ -526,8 +524,7 @@ std::list<Poligono> Canvas::clipping_line(std::list<Ponto> line_p) {
         clipped_dots.push_back(line_p.back());
     }
 
-    std::list<Poligono> clipped_poly = {Poligono("clipped", clipped_dots)};
-    return clipped_poly;
+    return clipped_dots;
 }
 
 /* Function Clipping Polygon
@@ -578,19 +575,41 @@ std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
         auto k = *p;
         auto l = *next;
 
-        if(!inside_view(k) && inside_view(l)) {
-            auto intersect = intersect2d(window_corners, k, l);
+        std::list<Ponto> line = {k,l};
+        std::list<Ponto> clipped_line = clipping_line(line);
 
-            entrances.push_back(intersect);
-            artificials.push_back(intersect);
-            poly_p.insert(next, intersect);
+        if(clipped_line.size() == 0) {// || line == clipped_line) {
+            continue;
+        }
+
+        if(!inside_view(k) && inside_view(l)) {
+            change_corners(window_corners, clipped_line.front());
+
+            entrances.push_back(clipped_line.front());
+            artificials.push_back(clipped_line.front());
+            poly_p.insert(next, clipped_line.front());
             p++;
 
         } else if(inside_view(k) && !inside_view(l)) {
-            auto intersect = intersect2d(window_corners, k, l);
+            change_corners(window_corners, clipped_line.back());
 
-            artificials.push_back(intersect);
-            poly_p.insert(next, intersect);
+            artificials.push_back(clipped_line.back());
+            poly_p.insert(next, clipped_line.back());
+            p++;
+
+        } else if(!inside_view(k) && !inside_view(l)) {
+            change_corners(window_corners, clipped_line.front());
+            change_corners(window_corners, clipped_line.back());
+
+            entrances.push_back(clipped_line.front());
+
+            artificials.push_back(clipped_line.front());
+            artificials.push_back(clipped_line.back());
+
+            poly_p.insert(next, clipped_line.back());
+            poly_p.insert(next, clipped_line.front());
+
+            p++;
             p++;
         }
     }
@@ -623,8 +642,8 @@ std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
         for (auto it = std::find(window_corners.begin(), window_corners.end(), hold.back());
              *it != *artificial_iterator;
              it++) {
-            if(it == poly_p.end()) {
-                it = poly_p.begin();
+            if(it == window_corners.end()) {
+                it = window_corners.begin();
             }
             hold.push_back(*it);
         }
@@ -636,6 +655,54 @@ std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
     }
 
     return clipped_poly;
+}
+
+void Canvas::change_corners(std::list<Ponto>& window_corners, Ponto k) {
+    double xmin = -0.9;
+    double ymin = -0.9;
+    double xmax = 0.9;
+    double ymax = 0.9;
+
+    Ponto top_left(-0.9, 0.9);
+    Ponto bottom_left(-0.9, -0.9);
+    Ponto bottom_right(0.9, -0.9);
+    Ponto top_right(0.9, 0.9);
+
+    if(k.get_x() == xmin) {
+        auto it = find(window_corners.begin(), window_corners.end(), bottom_left);
+        auto n = *it;
+        while(it != window_corners.end() && k.get_y() >= n.get_y()) {
+            it++;
+        }
+        window_corners.insert(it, k);
+    }
+
+    if(k.get_x() == xmax) {
+        auto it = find(window_corners.begin(), window_corners.end(), top_right);
+        auto n = *it;
+        while(it != window_corners.end() && k.get_y() <= n.get_y()) {
+            it++;
+        }
+        window_corners.insert(it, k);
+    }
+
+    if(k.get_y() == ymin) {
+        auto it = find(window_corners.begin(), window_corners.end(), bottom_right);
+        auto n = *it;
+        while(it != window_corners.end() && k.get_x() <= n.get_x()) {
+            it++;
+        }
+        window_corners.insert(it, k);
+    }
+
+    if(k.get_y() == ymax) {
+        auto it = find(window_corners.begin(), window_corners.end(), top_left);
+        auto n = *it;
+        while(it != window_corners.end() && k.get_x() >= n.get_x()) {
+            it++;
+        }
+        window_corners.insert(it, k);
+    }
 }
 
 bool Canvas::inside_view(Ponto p) {
