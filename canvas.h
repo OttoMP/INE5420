@@ -3,6 +3,7 @@
 #define _USE_MATH_DEFINE
 
 #include <math.h>
+#include <algorithm>
 #include <gtkmm/drawingarea.h>
 #include "poligono.h"
 #include <cairomm/context.h>
@@ -78,10 +79,10 @@ class Canvas : public Gtk::DrawingArea {
         Matriz scn_to_cart;
 
         //Clipping function
-        std::list<Ponto> clipping_line(std::list<Ponto> line_p);
+        std::list<Poligono> clipping_line(std::list<Ponto> line_p);
         std::list<Poligono> clipping_poly(std::list<Ponto> poly_p);
         bool inside_view(Ponto p);
-        double intersect2d(std::list<Ponto> window_corners, Ponto k, Ponto l);
+        Ponto intersect2d(std::list<Ponto>& window_corners, Ponto k, Ponto l);
 };
 
 #endif //CANVAS_H

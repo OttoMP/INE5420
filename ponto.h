@@ -12,15 +12,17 @@ public:
 
 	Ponto(double x, double y);
 
-	double get_x();
+	double get_x() const;
 
-	double get_y();
+	double get_y() const;
 
-	double get_z();
+	double get_z() const;
 
 	void calc_new_pos();
 
-	
+    bool operator==(const Ponto& a);
+
+    bool operator!=(const Ponto& a);
 };
 
 #endif //PONTO_H
