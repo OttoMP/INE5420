@@ -614,17 +614,22 @@ std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
         }
     }
 
-    for (auto e = entrances.begin(); e != entrances.end(); e++) {
+//    for (auto e = entrances.begin(); e != entrances.end(); e++) {
+
+    auto e = entrances.front();
+
+    do {
+        entrances.remove(e);
         std::list<Ponto> hold = {};
 
-        auto artificial_iterator = find(artificials.begin(), artificials.end(), *e);
+        auto artificial_iterator = find(artificials.begin(), artificials.end(), e);
 
         artificial_iterator++;
         if(artificial_iterator == artificials.end()) {
             artificial_iterator = artificials.begin();
         }
 
-        for (auto it = std::find(poly_p.begin(), poly_p.end(), *e);
+        for (auto it = std::find(poly_p.begin(), poly_p.end(), e);
              *it != *artificial_iterator;
              it++) {
             if(it == poly_p.end()) {
@@ -634,10 +639,14 @@ std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
         }
         hold.push_back(*artificial_iterator);
 
+        auto visited = *artificial_iterator;
+
         artificial_iterator++;
         if(artificial_iterator == artificials.end()) {
             artificial_iterator = artificials.begin();
         }
+
+        artificials.remove(visited);
 
         for (auto it = std::find(window_corners.begin(), window_corners.end(), hold.back());
              *it != *artificial_iterator;
@@ -647,12 +656,18 @@ std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
             }
             hold.push_back(*it);
         }
-        if(*artificial_iterator != *hold.begin()) {
-            hold.push_back(*artificial_iterator);
-        }
+        hold.push_back(*artificial_iterator);
 
-        clipped_poly.push_back(Poligono("cut", hold));
-    }
+        visited = *artificial_iterator;
+        artificials.remove(visited);
+
+        auto visited_entrance = find(entrances.begin(), entrances.end(), visited);
+        if(artificial_iterator != visited_entrance) {
+            clipped_poly.push_back(Poligono("cut", hold));
+        } else {
+            e = visited;
+        }
+    } while(entrances.size() != 0);
 
     return clipped_poly;
 }
