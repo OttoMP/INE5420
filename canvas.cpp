@@ -533,6 +533,7 @@ std::list<Ponto> Canvas::clipping_line(std::list<Ponto> line_p) {
  */
 std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
     std::list<Poligono> clipped_poly = {};
+    poly_p.pop_back();
 
     Ponto top_left(-0.9, 0.9);
     Ponto bottom_left(-0.9, -0.9);
@@ -587,15 +588,17 @@ std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
 
             entrances.push_back(clipped_line.front());
             artificials.push_back(clipped_line.front());
-            poly_p.insert(next, clipped_line.front());
             p++;
+            poly_p.insert(p, clipped_line.front());
+            p--;
 
         } else if(inside_view(k) && !inside_view(l)) {
             change_corners(window_corners, clipped_line.back());
 
             artificials.push_back(clipped_line.back());
-            poly_p.insert(next, clipped_line.back());
             p++;
+            poly_p.insert(p, clipped_line.back());
+            p--;
 
         } else if(!inside_view(k) && !inside_view(l)) {
             change_corners(window_corners, clipped_line.front());
@@ -606,11 +609,11 @@ std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
             artificials.push_back(clipped_line.front());
             artificials.push_back(clipped_line.back());
 
-            poly_p.insert(next, clipped_line.back());
-            poly_p.insert(next, clipped_line.front());
+            p++;
+            poly_p.insert(p, clipped_line.back());
+            poly_p.insert(p, clipped_line.front());
+            p--;
 
-            p++;
-            p++;
         }
     }
 
@@ -688,6 +691,7 @@ void Canvas::change_corners(std::list<Ponto>& window_corners, Ponto k) {
         auto n = *it;
         while(it != window_corners.end() && k.get_y() >= n.get_y()) {
             it++;
+            n = *it;
         }
         window_corners.insert(it, k);
     }
@@ -697,6 +701,7 @@ void Canvas::change_corners(std::list<Ponto>& window_corners, Ponto k) {
         auto n = *it;
         while(it != window_corners.end() && k.get_y() <= n.get_y()) {
             it++;
+            n = *it;
         }
         window_corners.insert(it, k);
     }
@@ -706,6 +711,7 @@ void Canvas::change_corners(std::list<Ponto>& window_corners, Ponto k) {
         auto n = *it;
         while(it != window_corners.end() && k.get_x() <= n.get_x()) {
             it++;
+            n = *it;
         }
         window_corners.insert(it, k);
     }
@@ -715,6 +721,7 @@ void Canvas::change_corners(std::list<Ponto>& window_corners, Ponto k) {
         auto n = *it;
         while(it != window_corners.end() && k.get_x() >= n.get_x()) {
             it++;
+            n = *it;
         }
         window_corners.insert(it, k);
     }
