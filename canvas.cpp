@@ -438,6 +438,10 @@ std::list<Ponto> Canvas::clipping_line(std::list<Ponto> line_p) {
         return line_p;
     }
 
+    if(!front_is_inside && !back_is_inside) {
+        return clipped_dots;
+    }
+
     double xmin = -0.9;
     double ymin = -0.9;
     double xmax = 0.9;
