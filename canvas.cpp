@@ -647,9 +647,10 @@ std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
     }
 
     auto e = entrances.front();
-    std::list<Ponto> hold = {};
+    std::list<Ponto> hold, visited_list;
     do {
         entrances.remove(e);
+        visited_list.push_back(e);
 
         auto artificial_iterator = find(artificials.begin(), artificials.end(), e);
 
@@ -666,36 +667,41 @@ std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
             }
             hold.push_back(*it);
         }
-        hold.push_back(*artificial_iterator);
 
-        auto visited = *artificial_iterator;
+        hold.push_back(*artificial_iterator);
+        visited_list.push_back(*artificial_iterator);
 
         artificial_iterator++;
         if(artificial_iterator == artificials.end()) {
             artificial_iterator = artificials.begin();
         }
 
-        artificials.remove(visited);
-
+        //artificials.remove(visited_list.back());
         for (auto it = std::find(window_corners.begin(), window_corners.end(), hold.back());
              *it != *artificial_iterator;
              it++) {
             if(it == window_corners.end()) {
                 it = window_corners.begin();
             }
+            if(inside_list(artificials, *it) && *it != hold.back()) {
+                artificial_iterator = find(artificials.begin(), artificials.end(), *it);
+                break;
+            }
             hold.push_back(*it);
         }
         hold.push_back(*artificial_iterator);
 
-        visited = *artificial_iterator;
-        artificials.remove(visited);
+        visited_list.push_back(*artificial_iterator);
+        //artificials.remove(*artificial_iterator);
 
-        auto visited_entrance = find(entrances.begin(), entrances.end(), visited);
-        if(*artificial_iterator != *visited_entrance) {
+        if(inside_list(entrances, visited_list.back())) {
+            e = visited_list.back();
+        } else {
             clipped_poly.push_back(Poligono("cut", hold));
             hold = {};
-        } else {
-            e = visited;
+            if(!entrances.empty()) {
+                e = entrances.front();
+            }
         }
     } while(entrances.size() != 0);
 
@@ -767,4 +773,16 @@ bool Canvas::inside_view(Ponto p) {
     } else {
         return false;
     }
+}
+
+bool Canvas::inside_list(std::list<Ponto> list, Ponto p) {
+
+    auto iterator = find(list.begin(), list.end(), p);
+
+    if(*iterator == p) {
+        return true;
+    } else {
+        return false;
+    }
+
 }

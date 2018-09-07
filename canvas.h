@@ -80,6 +80,7 @@ class Canvas : public Gtk::DrawingArea {
         std::list<Ponto> clipping_line(std::list<Ponto> line_p);
         std::list<Poligono> clipping_poly(std::list<Ponto> poly_p);
         bool inside_view(Ponto p);
+        bool inside_list(std::list<Ponto> list, Ponto p);
         void change_corners(std::list<Ponto>& window_corners, Ponto k);
 };
 
