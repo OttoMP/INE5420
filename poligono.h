@@ -33,6 +33,7 @@ public:
 
     std::list<Ponto> draw(double scale);
     std::list<Ponto> get_pontos();
+    std::list<Ponto> get_pontos_scn();
     void set_pontos(std::list<Ponto> pontos);
 
     double get_brush_size();

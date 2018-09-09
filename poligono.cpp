@@ -57,6 +57,10 @@ std::list<Ponto> Poligono:: get_pontos() {
     return this->pontos;
 }
 
+std::list<Ponto> Poligono:: get_pontos_scn() {
+    return this->pontos_scn;
+}
+
 void Poligono:: set_pontos(std::list<Ponto> pontos) {
     this->pontos = pontos;
 }

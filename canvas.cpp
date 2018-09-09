@@ -144,7 +144,7 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 
         // Analyzing what type of object we are drawing based in the number of
         // dots
-        std::list<Ponto> pontos = i->get_pontos();
+        std::list<Ponto> pontos = i->get_pontos_scn();
         if(pontos.size() == 1) {
             // Clipping Dots
             if(!inside_view(pontos.front())) {
