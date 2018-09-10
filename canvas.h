@@ -4,19 +4,22 @@
 
 #include <math.h>
 #include <algorithm>
+#include <iostream>
 #include <gtkmm/drawingarea.h>
 #include "poligono.h"
 #include <cairomm/context.h>
 #include "ponto.h"
 #include "poligono.h"
+#include "objeto.h"
 #include "matriz.h"
 #include "window.h"
+#include "curva2d.h"
 
 class Canvas : public Gtk::DrawingArea {
     public:
         Canvas();
         virtual ~Canvas();
-        Window screen;
+        
 
         // Funtion used in setting the id's of display_file's polygons
         int get_last_id();
@@ -44,13 +47,14 @@ class Canvas : public Gtk::DrawingArea {
 
         // Functions used to add or remove polygons from drawing area
         void add_poligono(Poligono pol);
-        void rm_poligono(int id);
+        void add_curva(Curva2D curva);
+        void rm_objeto(int id);
 
         // Return a specific polygon from display file
-        std::list<Poligono> get_display_file();
+        std::list<Objeto> get_display_file();
 
         // Load display file from read function
-        void load_display_file(std::list<Poligono> loaded_display_file);
+        void load_display_file(std::list<Objeto> loaded_display_file);
 
         // Mathematic functions
         double calc_distancia(Ponto a, Ponto b); // gets distance between two points
@@ -70,7 +74,9 @@ class Canvas : public Gtk::DrawingArea {
         // Parameter setting how much the view dislocate from the center in the y axis
         double y_dislocate;
         // List of all objects currently drawn in the canvas
-        std::list<Poligono> display_file;
+        std::list<Objeto> display_file;
+        // LIst of all curves drawn in the canvas
+        Window screen;
 
         // Conversion matrix for fast calculations
         Matriz cart_to_scn;

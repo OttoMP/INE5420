@@ -7,19 +7,20 @@ descritorObj::descritorObj(Gtk::TextView& text_log)
 
 descritorObj::~descritorObj() {}
 
-void descritorObj::write(std::list<Poligono> display_file, string name) {
+void descritorObj::write(std::list<Objeto> display_file, string name) {
     ofstream new_file;
     new_file.open (name+".obj");
 
-    for(auto i = display_file.begin(); i != display_file.end(); i++) {
-        new_file << "#nome " + i->get_nome() + "\n";
-        new_file << "#id " + to_string(i->get_id()) + "\n";
-        if(i->get_filled())
-            new_file << "#fill 1\n";
-        else
-            new_file << "#fill 0\n";
+    for(auto ptr = display_file.begin(); ptr != display_file.end(); ptr++) {
+        auto i = *ptr;
+        new_file << "#nome " + i.get_nome() + "\n";
+        new_file << "#id " + to_string(i.get_id()) + "\n";
+        //if(i.get_filled())
+        //    new_file << "#fill 1\n";
+        //else
+        //    new_file << "#fill 0\n";
 
-        std::list<Ponto> p_list = i->get_pontos();
+        std::list<Ponto> p_list = i.get_pontos();
 
 		new_file << "#number_of_vertex " + to_string(p_list.size()) + "\n";
         for(Ponto p : p_list) {
@@ -47,8 +48,8 @@ void descritorObj::write(std::list<Poligono> display_file, string name) {
     return;
 }
 
-std::list<Poligono> descritorObj::read(std::string file) {
-    std::list<Poligono> display_file;
+std::list<Objeto> descritorObj::read(std::string file) {
+    std::list<Objeto> display_file;
     string line, nome, id, filled, vertex, info;
     ifstream myfile(file+".obj");
 
@@ -83,7 +84,7 @@ std::list<Poligono> descritorObj::read(std::string file) {
 			}
 
 			getline(myfile, info);
-			display_file.push_back(poly);
+			display_file.push_back(Objeto(poly));
 		}
 		myfile.close();
     	text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()

@@ -19,7 +19,8 @@ Canvas::~Canvas()
  *  id of the currently last object. If the display_file ever empties after
  *  the start of the application the id count resets
  */
-int Canvas::get_last_id() {
+int Canvas::get_last_id()
+{
     if(display_file.empty())
         return display_file.size();
     else
@@ -29,7 +30,8 @@ int Canvas::get_last_id() {
 /*  Function Get Last Name
  *  Function used to display in the log the name of the polygon
  */
-std::string Canvas::get_last_name() {
+std::string Canvas::get_last_name()
+{
     if(display_file.empty())
         return "";
     else
@@ -40,14 +42,16 @@ std::string Canvas::get_last_name() {
  *  Function called when the application is going to save
  *  the current set of canvas. Used in the write function inside DescritorObj
  */
-std::list<Poligono> Canvas::get_display_file() {
+std::list<Objeto> Canvas::get_display_file()
+{
     return this->display_file;
 }
 
 /*  Function Load Display File
  *  Function called by the DescritorObj to set the canvas when reading a file
  */
-void Canvas::load_display_file(std::list<Poligono> loaded_display_file) {
+void Canvas::load_display_file(std::list<Objeto> loaded_display_file)
+{
     this->display_file = loaded_display_file;
     this->update_scn_coord();
     queue_draw();
@@ -57,19 +61,28 @@ void Canvas::load_display_file(std::list<Poligono> loaded_display_file) {
  *  Function used to add a new polygon to the display_file. It
  *  pushes the polygon sent as parameter to the end of the list
  */
-void Canvas::add_poligono(Poligono pol) {
+void Canvas::add_poligono(Poligono pol)
+{
     pol.exec_update_scn(this->cart_to_scn);
-    display_file.push_back(pol);
+    display_file.push_back(pol.to_objeto());
+    std::cin.get();
+}
+
+void Canvas::add_curva(Curva2D curva)
+{
+    curva.exec_update_scn(this->cart_to_scn);
+    display_file.push_back(curva.to_objeto());
     queue_draw();
 }
 
 /*  Function Remove Polygon
  *  Function used to remove the especified polygon from the display_file
  */
-void Canvas::rm_poligono(int id) {
-    Poligono p = Poligono("deletar");
-    p.set_id(id);
-    display_file.remove(p);
+void Canvas::rm_objeto(int id) 
+{
+    Objeto o = Objeto();
+    o.set_id(id);
+    display_file.remove(o);
     queue_draw();
 }
 
@@ -138,55 +151,13 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     cr->set_source_rgb(0.8, 0.0, 0.0);
     for (auto i = display_file.begin(); i != display_file.end(); i++)
     {
-        // Initialize a list of polygons to draw it will be needed in case the
-        // clipping_poly() creates more polygons
-        std::list<Poligono> to_draw_poly = {};
+        if (i->get_tipo() == 2)
+        {
+            Curva2D objeto = Curva2D(*i);
+            std::list<Ponto> pontos = objeto.draw(1,-0.9, 0.9, -0.9, 0.9); // pega os pontos pra desenhar da curva
 
-        // Analyzing what type of object we are drawing based in the number of
-        // dots
-        std::list<Ponto> pontos = i->get_pontos_scn();
-        if(pontos.size() == 1) {
-            // Clipping Dots
-            if(!inside_view(pontos.front())) {
-                continue;
-            } else {
-                to_draw_poly.push_back(Poligono("clip",i->draw(
-                                                          this->calc_distancia(
-                                                                 screen.get_v(),
-                                                                 Ponto(0,0)))));
-            }
-        } else
-        if(pontos.size() == 2) {
-            // Clipping Lines
-            std::list<Ponto> clipped_line = clipping_line(
-                                                i->draw(this->calc_distancia(
-                                                               screen.get_v(),
-                                                               Ponto(0,0))));
-            if(clipped_line.size() == 0) {
-                continue;
-            }
-            to_draw_poly.push_back(Poligono("clip", clipped_line));
-        } else {
-            // Clipping Polygons;
-            to_draw_poly = clipping_poly(
-                               i->draw(this->calc_distancia(
-                                              screen.get_v(),
-                                              Ponto(0,0))));
+            cr->set_line_width(objeto.get_brush_size()); 
 
-            if(to_draw_poly.size() == 0) {
-                continue;
-            }
-        }
-
-        // Drawing loop
-        cr->set_line_width(i->get_brush_size());
-        for(auto drawing_it = to_draw_poly.begin();
-            drawing_it != to_draw_poly.end();
-            drawing_it++) {
-
-            // We call get_pontos() instead of draw() because after the
-            // clipping the dots are already in window coordinates
-            pontos = drawing_it->get_pontos();
             cr->move_to(vp_transform_x(pontos.back().get_x(), width),
                         vp_transform_y(pontos.back().get_y(), height));
 
@@ -195,12 +166,75 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
                 cr->line_to(vp_transform_x(pt->get_x(), width),
                             vp_transform_y(pt->get_y(), height));
             }
-
-            // Fill the polygon if needed
-            if(i->get_filled()) {
-                cr->fill();
-            }
             cr->stroke();
+        }
+        else if(i->get_tipo() == 1)
+        {
+            Poligono objeto = Poligono(*i);
+            // Initialize a list of polygons to draw it will be needed in case the
+            // clipping_poly() creates more polygons
+            std::list<Poligono> to_draw_poly = {};
+
+            // Analyzing what type of object we are drawing based in the number of
+            // dots
+            std::list<Ponto> pontos = objeto.get_pontos();
+            if(pontos.size() == 1) {
+                // Clipping Dots
+                if(!inside_view(pontos.front())) {
+                    continue;
+                } else {
+                    to_draw_poly.push_back(Poligono("clip",objeto.draw(
+                                                              this->calc_distancia(
+                                                                     screen.get_v(),
+                                                                     Ponto(0,0)))));
+                }
+            } else
+            if(pontos.size() == 2) {
+                // Clipping Lines
+                std::list<Ponto> clipped_line = clipping_line(
+                                                    objeto.draw(this->calc_distancia(
+                                                                   screen.get_v(),
+                                                                   Ponto(0,0))));
+                if(clipped_line.size() == 0) {
+                    continue;
+                }
+                to_draw_poly.push_back(Poligono("clip", clipped_line));
+            } else {
+                // Clipping Polygons;
+                to_draw_poly = clipping_poly(
+                                   objeto.draw(this->calc_distancia(
+                                                  screen.get_v(),
+                                                  Ponto(0,0))));
+
+                if(to_draw_poly.size() == 0) {
+                    continue;
+                }
+            }
+
+            // Drawing loop
+            cr->set_line_width(objeto.get_brush_size());
+            for(auto drawing_it = to_draw_poly.begin();
+                drawing_it != to_draw_poly.end();
+                drawing_it++) {
+
+                // We call get_pontos() instead of draw() because after the
+                // clipping the dots are already in window coordinates
+                pontos = drawing_it->get_pontos();
+                cr->move_to(vp_transform_x(pontos.back().get_x(), width),
+                            vp_transform_y(pontos.back().get_y(), height));
+
+                for (auto pt = pontos.begin(); pt != pontos.end(); pt++)
+                {
+                    cr->line_to(vp_transform_x(pt->get_x(), width),
+                                vp_transform_y(pt->get_y(), height));
+                }
+
+                // Fill the polygon if needed
+                if(objeto.get_filled()) {
+                    cr->fill();
+                }
+                cr->stroke();
+            }
         }
 
     }
