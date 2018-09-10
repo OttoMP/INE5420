@@ -6,16 +6,26 @@ AddObjectDialog::AddObjectDialog(Canvas& drawing_area,
     : canvas(drawing_area),       // Receive reference from parameter
       log(text_log),              // Receive reference from parameter
       new_poly(""),
+      // new_bezier(""), new_spline(""),
       l_x("Coordenada x"),        // Initialize Label for Entry
       l_y("Coordenada y"),        // Initialize Label for Entry
       l_name("Nome do Objeto"),   // Initialize Label for Entry
       fill_button("Preencher Poligono"), // Initialize fill button
-      add_dot_button("Adicionar Ponto") // Initialize add button
+      add_dot_button("Adicionar Ponto"), // Initialize add button
+      tb_poly("Polígono"),
+      tb_bezier("Bezier"),
+      tb_spline("Spline")
 {
+    Gtk::Box* info_box = Gtk::manage(
+                                new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 10));
+    Gtk::Box* toggle_box = Gtk::manage(
+                                new Gtk::Box(Gtk::ORIENTATION_HORIZONTAL, 5));
+
   // Setting configurations for dialog
     set_title("Adicionar Objeto");
     set_border_width(0);
     set_size_request(350, 350);
+    get_content_area()->set_spacing(7);
 
   // Setting default texts for Entrys
     e_x.set_text("0");
@@ -23,24 +33,34 @@ AddObjectDialog::AddObjectDialog(Canvas& drawing_area,
     e_name.set_text("Novo Polígono");
 
   // Adding child widgets to internal box of dialog
-    get_content_area()->pack_start(l_x);
-    get_content_area()->pack_start(e_x);
-    get_content_area()->pack_start(l_y);
-    get_content_area()->pack_start(e_y);
-    get_content_area()->pack_start(l_name);
-    get_content_area()->pack_start(e_name);
+    get_content_area()->pack_start(*info_box);
+    get_content_area()->pack_start(*toggle_box);
+    info_box->pack_start(l_x);
+    info_box->pack_start(e_x);
+    info_box->pack_start(l_y);
+    info_box->pack_start(e_y);
+    info_box->pack_start(l_name);
+    info_box->pack_start(e_name);
+    info_box->pack_start(fill_button);
+    toggle_box->pack_start(tb_poly);
+    toggle_box->pack_start(tb_bezier);
+    toggle_box->pack_start(tb_spline);
     get_content_area()->pack_start(add_dot_button);
-    get_content_area()->pack_start(fill_button);
 
-    // Adding a "close" button to the bottom of the dialog
-    add_button("_Close", Gtk::RESPONSE_CLOSE);
+    // Adding a "close" and a "ok" button to the bottom of the dialog
+    add_button("_Close", Gtk::RESPONSE_DELETE_EVENT);
+    add_button("_OK", Gtk::RESPONSE_CLOSE);
     signal_response().connect(sigc::mem_fun(*this, &AddObjectDialog::on_dialog_response));
 
   // Setting Buttons function
     add_dot_button.signal_clicked().connect(
             sigc::mem_fun(*this, &AddObjectDialog::on_add_dot_button_clicked));
-    fill_button.signal_clicked().connect(
-            sigc::mem_fun(*this, &AddObjectDialog::on_fill_button_clicked));
+    tb_poly.signal_pressed().connect(
+            sigc::mem_fun(*this, &AddObjectDialog::poly_toggled));
+    tb_bezier.signal_pressed().connect(
+            sigc::mem_fun(*this, &AddObjectDialog::bezier_toggled));
+    tb_spline.signal_pressed().connect(
+            sigc::mem_fun(*this, &AddObjectDialog::spline_toggled));
 
   /* This makes it so the button is the default.
    * Simply hitting the "Enter" key will cause this button to activate. */
@@ -62,16 +82,49 @@ void AddObjectDialog::on_dialog_response(int response_id) {
     switch (response_id)
   {
   case Gtk::RESPONSE_CLOSE:
+      if(tb_poly.get_active()) {
+        new_poly.set_nome(e_name.get_text());
+        new_poly.set_id(canvas.get_last_id()+1);
+        if(fill_button.get_active()) {
+            new_poly.set_filled(true);
+        }
+        canvas.add_poligono(new_poly);
+        log.get_buffer()->set_text(log.get_buffer()->get_text()
+                                   +"Polígono '"
+                                   +new_poly.get_nome()
+                                   +"' adicionado\n");
+        hide();
+      } else if(tb_bezier.get_active()) {
+        new_poly.set_nome(e_name.get_text());
+        new_poly.set_id(canvas.get_last_id()+1);
+        canvas.add_poligono(new_poly);
+        log.get_buffer()->set_text(log.get_buffer()->get_text()
+                                   +"Curva de Bezier '"
+                                   +new_poly.get_nome()
+                                   +"' adicionada\n");
+        hide();
+      } else if(tb_spline.get_active()) {
+        new_poly.set_nome(e_name.get_text());
+        new_poly.set_id(canvas.get_last_id()+1);
+        canvas.add_poligono(new_poly);
+        log.get_buffer()->set_text(log.get_buffer()->get_text()
+                                   +"Spline '"
+                                   +new_poly.get_nome()
+                                   +"' adicionada\n");
+        hide();
+      } else {
+        log.get_buffer()->set_text(log.get_buffer()->get_text()
+                                   +"Tipo de objeto não especificado. "
+                                   +"Cancelando operação\n");
+      }
+    break;
+
   case Gtk::RESPONSE_DELETE_EVENT:
-    new_poly.set_nome(e_name.get_text());
-    new_poly.set_id(canvas.get_last_id()+1);
-    canvas.add_poligono(new_poly);
     log.get_buffer()->set_text(log.get_buffer()->get_text()
-                               +"Polígono '"
-                               +new_poly.get_nome()
-                               +"' adicionado\n");
+                               +"Adicionar Objeto cancelado\n");
     hide();
     break;
+
   default:
     std::cout << "Unexpected response_id=" << response_id << std::endl;
     break;
@@ -84,6 +137,9 @@ void AddObjectDialog::on_dialog_response(int response_id) {
  *  The log updates telling the user the coordinates recently added
  */
 void AddObjectDialog::on_add_dot_button_clicked() {
+    new_dots.push_back(Ponto(atof(e_x.get_text().c_str()),
+                       atof(e_y.get_text().c_str())));
+
     new_poly.add_ponto(Ponto(atof(e_x.get_text().c_str()),
                        atof(e_y.get_text().c_str())));
     log.get_buffer()->set_text(log.get_buffer()->get_text()
@@ -94,18 +150,17 @@ void AddObjectDialog::on_add_dot_button_clicked() {
                                +")\n");
 }
 
-/*  Fill Object function
- *  Set the attrbute filled from polygon
- */
-void AddObjectDialog::on_fill_button_clicked() {
-    if(new_poly.get_filled()) {
-        new_poly.set_filled(false);
-        log.get_buffer()->set_text(log.get_buffer()->get_text()
-                                   +"O Polígono não será preenchido\n");
-    }
-    else {
-        new_poly.set_filled(true);
-        log.get_buffer()->set_text(log.get_buffer()->get_text()
-                                   +"O Polígono será preenchido\n");
-    }
+void AddObjectDialog::poly_toggled() {
+    tb_spline.set_active(false);
+    tb_bezier.set_active(false);
+}
+
+void AddObjectDialog::bezier_toggled() {
+    tb_poly.set_active(false);
+    tb_spline.set_active(false);
+}
+
+void AddObjectDialog::spline_toggled() {
+    tb_poly.set_active(false);
+    tb_bezier.set_active(false);
 }

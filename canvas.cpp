@@ -151,7 +151,6 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     cr->set_source_rgb(0.8, 0.0, 0.0);
     for (auto i = display_file.begin(); i != display_file.end(); i++)
     {
-        
         if (i->get_tipo() == 2)
         {
             Curva2D objeto = Curva2D(*i);

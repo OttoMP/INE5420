@@ -1,5 +1,4 @@
 #include "object_menu.h"
-#include <iostream>
 
 ObjectMenu::ObjectMenu(const Glib::ustring& title,
        gint spacing,

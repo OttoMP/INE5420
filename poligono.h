@@ -22,10 +22,10 @@ public:
 	void add_ponto(double x, double y);
 	void add_ponto(double x, double y, double z);
 	
-    std::list<Ponto> draw(double scale);
-    
-    void set_filled(bool fill);
-    bool get_filled();
+  std::list<Ponto> draw(double scale);
+
+  void set_filled(bool fill);
+  bool get_filled();
 
 	Objeto to_objeto();
 

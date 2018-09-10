@@ -39,15 +39,17 @@ void ObjectViewer::on_add_objects_clicked() {
     int id = canvas_ref.get_last_id();
     std::string name = canvas_ref.get_last_name();
 
-    auto row = Gtk::manage(new Gtk::ListBoxRow);
-    auto label = Gtk::manage(new Gtk::Label);
-    label->set_text(std::to_string(id)+" "+name);
-    label->set_name(label->get_text());
-    row->add(*label);
-    row->show_all_children();
-    object_viewer.append(*row);
-    row->show();
-}	 	  	 	    	 	    		    	    	  	 	
+    if(id != 0) {
+        auto row = Gtk::manage(new Gtk::ListBoxRow);
+        auto label = Gtk::manage(new Gtk::Label);
+        label->set_text(std::to_string(id)+" "+name);
+        label->set_name(label->get_text());
+        row->add(*label);
+        row->show_all_children();
+        object_viewer.append(*row);
+        row->show();
+    }
+}
 
 void ObjectViewer::on_rm_objects_clicked() {
     if (object_viewer.get_selected_row() == nullptr) {
@@ -85,7 +87,7 @@ std::string ObjectViewer::get_selected_object_name() {
             full_name += info[i];
         else
             full_name += info[i]+" ";
-    }	 	  	 	    	 	    		    	    	  	 	
+    }
 
     return full_name;
 }
