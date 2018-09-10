@@ -1,16 +1,42 @@
-#import "objeto.h"
+#include "objeto.h"
+
+Objeto::Objeto()
+{
+    this->id = -1;
+    this->nome = "";
+}
 
 void Objeto::set_brush_size(double brush)
 {
     this->brush_size = brush;
 }
 
-std::list<Ponto> Objeto:: get_pontos() {
+std::list<Ponto> Objeto::get_pontos() {
     return this->pontos;
 }
 
-void Objeto:: set_pontos(std::list<Ponto> pontos) {
+
+std::list<Ponto> Objeto::get_pontos_scn()
+{
+    return this->pontos_scn;
+}
+
+void Objeto::set_pontos(std::list<Ponto> pontos) {
     this->pontos = pontos;
+}
+
+void Objeto::set_pontos_scn(std::list<Ponto> pontos_scn) {
+    this->pontos_scn = pontos_scn;
+}
+
+void Objeto::set_center(Ponto center)
+{
+    this->center = center;
+}
+
+void Objeto::set_tipo(int tipo)
+{
+    this->tipo = tipo;
 }
 
 int Objeto::get_size()
@@ -21,6 +47,11 @@ int Objeto::get_size()
 double Objeto::get_brush_size()
 {
     return this->brush_size;
+}
+
+int Objeto::get_tipo()
+{
+    return this->tipo;
 }
 
 string Objeto::get_nome()

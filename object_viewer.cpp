@@ -55,7 +55,7 @@ void ObjectViewer::on_rm_objects_clicked() {
                                    +"Nenhum objeto selecionado\n");
         return;
     }
-    canvas_ref.rm_poligono(get_selected_object_id());
+    canvas_ref.rm_objeto(get_selected_object_id());
     text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
                                        +"Polígono '"
                                        +get_selected_object_name()

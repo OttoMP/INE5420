@@ -2,26 +2,25 @@
 #define CURVA2D_H
 
 #include "window.h"
+#include "objeto.h"
+#include <list>
+#include <string>
+#include "ponto.h"
 #define PRECISION 10; // nivel de detalhamento da curva (quantidade inicial de pontos para uma curva, aumenta com o zoom)
 
 class Curva2D : public Objeto{
 
-private:
-	std::list<Ponto> pontos;
-	std::list<Ponto> pontos_scn;
-	Ponto center = Ponto(0, 0);
-	string nome;
-	double brush_size = 1;
-    int id = 0;
-
 public:
 	Curva2D(int id, string nome);
+	Curva2D(Objeto o);
 
-	void add_curva(Ponto p1, Ponto p4, Ponto r1, Ponto r4);
+	int add_curva(Ponto p1, Ponto p4, Ponto r1, Ponto r4);
 
-    std::list<Ponto> draw(double scale);
+    std::list<Ponto> draw(double scale, double wmin_x, double wmax_x, double wmin_y, double wmax_y);
 
 	int get_num_curvas();
+
+	Objeto to_objeto();
 
 };
 

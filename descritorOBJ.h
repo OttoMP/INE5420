@@ -20,8 +20,8 @@ class descritorObj {
         descritorObj(Gtk::TextView& text_log);
         ~descritorObj();
 
-        void write(std::list<Poligono> display_file, string name);
-        std::list<Poligono> read(std::string file);
+        void write(std::list<Objeto> display_file, string name);
+        std::list<Objeto> read(std::string file);
 
         template<typename Out>
         void split(const std::string &s, char delim, Out result);

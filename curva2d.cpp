@@ -6,6 +6,16 @@ Curva2D::Curva2D(int id, string nome)
     this->nome = nome;
 }
 
+Curva2D::Curva2D(Objeto o)
+{
+    this->id = o.get_id();
+    this->nome = o.get_nome();
+    this->pontos = o.get_pontos();
+    this->center = o.get_center();
+    this->brush_size = o.get_brush_size();
+    this->pontos_scn = o.get_pontos_scn();
+}
+
 int Curva2D::add_curva(Ponto p1, Ponto p2, Ponto p3, Ponto p4)
 {
     if (this->get_size() == 0)
@@ -55,8 +65,9 @@ std::list<Ponto> Curva2D::draw(double scale, double wmin_x, double wmax_x, doubl
             pt++;
             Ponto p4 = *pt;
             pt++;
-            int precision = PRECISON * (int)scale; 
-            for (int t = 0; t < precison; t++)
+            int precision = PRECISION; 
+            precision = precision*scale;
+            for (int t = 0; t < precision; t++)
             {
                 double t2 = pow(t,2);
                 double t3 = pow(t,3);
@@ -88,7 +99,20 @@ std::list<Ponto> Curva2D::draw(double scale, double wmin_x, double wmax_x, doubl
     return desenho;
 }
 
-int get_num_curvas() 
+int Curva2D::get_num_curvas() 
 {
-    return (int)(this->get_size()/4);
+    return (int)(this->pontos.size()/4);
+}
+
+Objeto Curva2D::to_objeto()
+{
+    Objeto o = Objeto();
+    o.set_id(this->id);
+    o.set_nome(this->nome);
+    o.set_pontos(this->pontos);
+    o.set_pontos_scn(this->pontos_scn);
+    o.set_brush_size(this->brush_size);
+    o.set_center(this->center);
+    o.set_tipo(this->tipo);
+    return o;
 }

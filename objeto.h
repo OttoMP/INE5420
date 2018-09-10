@@ -8,26 +8,31 @@ using std::string;
 #include "ponto.h"
 #include "matriz.h"
 
-class Objeto : public Objeto{
+class Objeto{
 
 protected:
 	std::list<Ponto> pontos;
 	std::list<Ponto> pontos_scn;
 	Ponto center = Ponto(0, 0);
-	string nome;
+	string nome = "";
 	double brush_size = 1;
     int id = 0;
+	int tipo = 0;
 
 public:
-
+	Objeto();
 	void set_brush_size(double brush);
 	//void set_color(double r, double g, double b);
 	void set_pontos(std::list<Ponto> pontos);
+	void set_pontos_scn(std::list<Ponto> pontos_scn);
 	void set_nome(string nome);
 	void set_id(int new_id);
+	void set_center(Ponto center);
+	void set_tipo(int tipo);
 
 
     std::list<Ponto> get_pontos();
+	std::list<Ponto> get_pontos_scn();
     double get_brush_size();
 	int get_tipo();
 	string get_nome();

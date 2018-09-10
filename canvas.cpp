@@ -42,7 +42,7 @@ std::string Canvas::get_last_name()
  *  Function called when the application is going to save
  *  the current set of canvas. Used in the write function inside DescritorObj
  */
-std::list<std::unique_ptr<Objeto>> Canvas::get_display_file()
+std::list<Objeto> Canvas::get_display_file()
 {
     return this->display_file;
 }
@@ -50,7 +50,7 @@ std::list<std::unique_ptr<Objeto>> Canvas::get_display_file()
 /*  Function Load Display File
  *  Function called by the DescritorObj to set the canvas when reading a file
  */
-void Canvas::load_display_file(std::list<std::unique_ptr<Objeto>> loaded_display_file)
+void Canvas::load_display_file(std::list<Objeto> loaded_display_file)
 {
     this->display_file = loaded_display_file;
     this->update_scn_coord();
@@ -64,23 +64,23 @@ void Canvas::load_display_file(std::list<std::unique_ptr<Objeto>> loaded_display
 void Canvas::add_poligono(Poligono pol)
 {
     pol.exec_update_scn(this->cart_to_scn);
-    display_file.push_back(std::unique_ptr<Poligono> (&pol));
-    queue_draw();
+    display_file.push_back(pol.to_objeto());
+    std::cin.get();
 }
 
 void Canvas::add_curva(Curva2D curva)
 {
     curva.exec_update_scn(this->cart_to_scn);
-    display_file.push_back(std::unique_ptr<Curva2D> (&curva));
+    display_file.push_back(curva.to_objeto());
     queue_draw();
 }
 
 /*  Function Remove Polygon
  *  Function used to remove the especified polygon from the display_file
  */
-void Canvas::rm_poligono(int id) //TODO
+void Canvas::rm_objeto(int id) 
 {
-    Objeto o = Objeto("deletar");
+    Objeto o = Objeto();
     o.set_id(id);
     display_file.remove(o);
     queue_draw();
@@ -151,10 +151,11 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     cr->set_source_rgb(0.8, 0.0, 0.0);
     for (auto i = display_file.begin(); i != display_file.end(); i++)
     {
-        objeto = *(*i);
-        if (typeid(objeto) == typeid(Curva2D))
+        
+        if (i->get_tipo() == 2)
         {
-            std::list<Ponto> pontos = objeto.draw(); // pega os pontos pra desenhar da curva
+            Curva2D objeto = Curva2D(*i);
+            std::list<Ponto> pontos = objeto.draw(1,-0.9, 0.9, -0.9, 0.9); // pega os pontos pra desenhar da curva
 
             cr->set_line_width(objeto.get_brush_size()); 
 
@@ -168,8 +169,9 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
             }
             cr->stroke();
         }
-        else if(typeid(objeto) == typeid(Poligono))
+        else if(i->get_tipo() == 1)
         {
+            Poligono objeto = Poligono(*i);
             // Initialize a list of polygons to draw it will be needed in case the
             // clipping_poly() creates more polygons
             std::list<Poligono> to_draw_poly = {};
@@ -332,9 +334,8 @@ void Canvas::rotate(double angle)
  */
 
 void Canvas::rotate_object(int id, double angle) {
-    for (auto ptr = display_file.begin(); ptr != display_file.end(); ptr++)
+    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
     {
-        auto pol = *ptr;
         if(pol->get_id() == id) {
            Matriz m = Matriz().rotate(angle, (*pol).get_center());
            pol->exec_transform(m);
@@ -350,9 +351,8 @@ void Canvas::rotate_object(int id, double angle) {
  */
 void Canvas::rotate_point(int id, double angle, Ponto centro) {
     Ponto novo_ponto = this->scn_to_cart.exec_transform(centro);
-    for (auto ptr = display_file.begin(); ptr != display_file.end(); ptr++)
+    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
     {
-        auto pol = *ptr;
         if(pol->get_id() == id) {
            Matriz m = Matriz().rotate(angle, novo_ponto);
            pol->exec_transform(m);
@@ -367,9 +367,8 @@ void Canvas::rotate_point(int id, double angle, Ponto centro) {
  *  Function used to rotate an object around the center of window
  */
 void Canvas::rotate_center(int id, double angle) {
-    for (auto ptr = display_file.begin(); ptr != display_file.end(); ptr++)
+    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
     {
-        auto pol = *ptr;
         if(pol->get_id() == id) {
            Matriz m = Matriz().rotate(angle, Ponto(0,0));
            pol->exec_transform(m);
@@ -386,9 +385,8 @@ void Canvas::rotate_center(int id, double angle) {
 
 void Canvas::move_object(int id, Ponto distancia) {
     Ponto novo_ponto = this->scn_to_cart.exec_transform(distancia);
-    for (auto ptr = display_file.begin(); ptr != display_file.end(); ptr++)
+    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
     {
-        auto pol = *ptr;
         if(pol->get_id() == id) {
            Matriz m = Matriz().translate(novo_ponto);
            pol->exec_transform(m);
@@ -404,9 +402,8 @@ void Canvas::move_object(int id, Ponto distancia) {
  */
 
 void Canvas::resize_object(int id, Ponto size) {
-    for (auto ptr = display_file.begin(); ptr != display_file.end(); ptr++)
+    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
     {
-        auto pol = *ptr;
         if(pol->get_id() == id) {
            Matriz m = Matriz().scale(size, pol->get_center());
            pol->exec_transform(m);
@@ -465,9 +462,8 @@ double Canvas::calc_distancia(Ponto a, Ponto b)
  */
 void Canvas::update_scn_coord()
 {
-    for (auto ptr = display_file.begin(); ptr != display_file.end(); ptr++)
+    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
     {
-        auto pol = *ptr;
         pol->exec_update_scn(this->cart_to_scn);
     }
 }

@@ -4,6 +4,7 @@
 
 #include <math.h>
 #include <algorithm>
+#include <iostream>
 #include <gtkmm/drawingarea.h>
 #include "poligono.h"
 #include <cairomm/context.h>
@@ -12,6 +13,7 @@
 #include "objeto.h"
 #include "matriz.h"
 #include "window.h"
+#include "curva2d.h"
 
 class Canvas : public Gtk::DrawingArea {
     public:
@@ -49,10 +51,10 @@ class Canvas : public Gtk::DrawingArea {
         void rm_objeto(int id);
 
         // Return a specific polygon from display file
-        std::list<std::unique_ptr<Objeto>> get_display_file();
+        std::list<Objeto> get_display_file();
 
         // Load display file from read function
-        void load_display_file(std::list<std::unique_ptr<Objeto>> loaded_display_file);
+        void load_display_file(std::list<Objeto> loaded_display_file);
 
         // Mathematic functions
         double calc_distancia(Ponto a, Ponto b); // gets distance between two points
@@ -72,7 +74,7 @@ class Canvas : public Gtk::DrawingArea {
         // Parameter setting how much the view dislocate from the center in the y axis
         double y_dislocate;
         // List of all objects currently drawn in the canvas
-        std::list<std::unique_ptr<Objeto>> display_file;
+        std::list<Objeto> display_file;
         // LIst of all curves drawn in the canvas
         Window screen;
 

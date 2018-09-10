@@ -184,7 +184,7 @@ void ObjectMenu::write_file() {
 }
 
 void ObjectMenu::read_file() {
-	std::list<std::unique_ptr<Objeto>> loaded_display_file = d_obj.read(e_file.get_text());
+	std::list<Objeto> loaded_display_file = d_obj.read(e_file.get_text());
 	if(loaded_display_file.size() != 0) {
 		window_ref.load_display_file(loaded_display_file);
 	}
