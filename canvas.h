@@ -9,6 +9,7 @@
 #include <cairomm/context.h>
 #include "ponto.h"
 #include "poligono.h"
+#include "objeto.h"
 #include "matriz.h"
 #include "window.h"
 

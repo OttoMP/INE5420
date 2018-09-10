@@ -10,6 +10,7 @@
 
 #include "canvas.h"
 #include "ponto.h"
+#include "objeto.h"
 #include "object_viewer.h"
 #include "descritorOBJ.h"
 
