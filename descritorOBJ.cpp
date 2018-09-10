@@ -11,7 +11,8 @@ void descritorObj::write(std::list<Poligono> display_file, string name) {
     ofstream new_file;
     new_file.open (name+".obj");
 
-    for(auto i = display_file.begin(); i != display_file.end(); i++) {
+    for(auto ptr = display_file.begin(); ptr != display_file.end(); ptr++) {
+        auto i = *ptr;
         new_file << "#nome " + i->get_nome() + "\n";
         new_file << "#id " + to_string(i->get_id()) + "\n";
         if(i->get_filled())
