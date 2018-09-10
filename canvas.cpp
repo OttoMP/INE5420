@@ -3,7 +3,7 @@
 Canvas::Canvas()
     : scale(1),       // scales starts at 1 to indicate normal zoom
       x_dislocate(0), // dislocate parameters starts at 0
-      y_dislocate(0),
+      y_dislocate(0), /**/
       screen(Ponto(0,0), Ponto(0,100), Ponto(100,0))//
 {
     this->update_conv_matrix();
@@ -19,7 +19,8 @@ Canvas::~Canvas()
  *  id of the currently last object. If the display_file ever empties after
  *  the start of the application the id count resets
  */
-int Canvas::get_last_id() {
+int Canvas::get_last_id()
+{
     if(display_file.empty())
         return display_file.size();
     else
@@ -29,7 +30,8 @@ int Canvas::get_last_id() {
 /*  Function Get Last Name
  *  Function used to display in the log the name of the polygon
  */
-std::string Canvas::get_last_name() {
+std::string Canvas::get_last_name()
+{
     if(display_file.empty())
         return "";
     else
@@ -37,16 +39,19 @@ std::string Canvas::get_last_name() {
 }
 
 /*  Function Get Display File
- *
+ *  Function called when the application is going to save
+ *  the current set of canvas. Used in the write function inside DescritorObj
  */
-std::list<Poligono> Canvas::get_display_file() {
+std::list<std::unique_ptr<Objeto>> Canvas::get_display_file()
+{
     return this->display_file;
 }
 
-/*
- *
+/*  Function Load Display File
+ *  Function called by the DescritorObj to set the canvas when reading a file
  */
-void Canvas::set_display_file(std::list<Poligono> loaded_display_file) {
+void Canvas::load_display_file(std::list<std::unique_ptr<Objeto>> loaded_display_file)
+{
     this->display_file = loaded_display_file;
     this->update_scn_coord();
     queue_draw();
@@ -56,25 +61,34 @@ void Canvas::set_display_file(std::list<Poligono> loaded_display_file) {
  *  Function used to add a new polygon to the display_file. It
  *  pushes the polygon sent as parameter to the end of the list
  */
-void Canvas::add_poligono(Poligono pol) {
+void Canvas::add_poligono(Poligono pol)
+{
     pol.exec_update_scn(this->cart_to_scn);
-    display_file.push_back(pol);
+    display_file.push_back(std::unique_ptr<Poligono> (&pol));
+    queue_draw();
+}
+
+void Canvas::add_curva(Curva2D curva)
+{
+    curva.exec_update_scn(this->cart_to_scn);
+    display_file.push_back(std::unique_ptr<Curva2D> (&curva));
     queue_draw();
 }
 
 /*  Function Remove Polygon
  *  Function used to remove the especified polygon from the display_file
  */
-void Canvas::rm_poligono(int id) {
-    Poligono p = Poligono("deletar");
-    p.set_id(id);
-    display_file.remove(p);
+void Canvas::rm_poligono(int id) //TODO
+{
+    Objeto o = Objeto("deletar");
+    o.set_id(id);
+    display_file.remove(o);
     queue_draw();
 }
 
 /*  Drawing function
- *  Function used to draw all objects in the display_file in the screen.
- *  It first reads the scale and dislocate parameters to set the view accordingly
+ *  Function used to draw all objects in the display_file on the screen.  It
+ *  first reads the scale and dislocate parameters to set the view accordingly
  *  then it iterates the display_file drawing each of the objects inside of it
  */
 bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
@@ -89,7 +103,8 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     yc = height / 2;
 
     cr->scale(scale, scale);
-    //drawing the coordinate lines
+// --------------Drawing the coordinate lines-------------
+
     cr->set_line_width(1);
     cr->set_source_rgb(0.0, 0.4, 0.8);
     Ponto p1 = this->cart_to_scn.exec_transform(Ponto(0,-1000));
@@ -111,7 +126,7 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
     cr->stroke();
 
 //--------------------CLIPPING----------------------------
-    // drawing subcanvas for clipping
+    // drawing subcanvas for clipping debugging
     cr->set_source_rgb(0.0, 0.8, 0.0);
 
     cr->move_to(vp_transform_x(-0.9, width),
@@ -130,45 +145,19 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
                 vp_transform_y(0.9, height));
 
     cr->stroke();
-//--------------------------------------------------------
+
+//-----------------Drawing display file--------------------
 
     cr->set_source_rgb(0.8, 0.0, 0.0);
     for (auto i = display_file.begin(); i != display_file.end(); i++)
     {
-        std::list<Poligono> to_draw_poly = {*i};
+        objeto = *(*i);
+        if (typeid(objeto) == typeid(Curva2D))
+        {
+            std::list<Ponto> pontos = objeto.draw(); // pega os pontos pra desenhar da curva
 
-        std::list<Ponto> pontos = i->draw(this->calc_distancia(screen.get_v(), Ponto(0,0)));
-        /*
-        if(pontos.size() == 1) {
-            // Clipping Dots
-            if(!inside_view(pontos.front(),
-                            top_left, bottom_right,
-                            height, width)) {
-                continue;
-            } else {
-                clipped_pontos = pontos;
-            }
-        } else */
-        if(pontos.size() == 2) {
-            // Clipping lines
-            std::list<Ponto> clipped_line = clipping_line(pontos);
-            if(clipped_line.size() == 0) {
-                continue;
-            }
-            to_draw_poly.push_back(Poligono("clip", clipped_line));
-        } else {
-            //clipping_poly();
-            to_draw_poly = clipping_poly(pontos);
+            cr->set_line_width(objeto.get_brush_size()); 
 
-            if(to_draw_poly.size() == 0) {
-                continue;
-            }
-        }
-
-        cr->set_line_width(i->get_brush_size());
-
-        for(auto drawing_it = to_draw_poly.begin(); drawing_it != to_draw_poly.end(); drawing_it++) {
-            pontos = drawing_it->get_pontos();
             cr->move_to(vp_transform_x(pontos.back().get_x(), width),
                         vp_transform_y(pontos.back().get_y(), height));
 
@@ -177,11 +166,74 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
                 cr->line_to(vp_transform_x(pt->get_x(), width),
                             vp_transform_y(pt->get_y(), height));
             }
-
-            if(i->get_filled()) {
-                cr->fill();
-            }
             cr->stroke();
+        }
+        else if(typeid(objeto) == typeid(Poligono))
+        {
+            // Initialize a list of polygons to draw it will be needed in case the
+            // clipping_poly() creates more polygons
+            std::list<Poligono> to_draw_poly = {};
+
+            // Analyzing what type of object we are drawing based in the number of
+            // dots
+            std::list<Ponto> pontos = objeto.get_pontos();
+            if(pontos.size() == 1) {
+                // Clipping Dots
+                if(!inside_view(pontos.front())) {
+                    continue;
+                } else {
+                    to_draw_poly.push_back(Poligono("clip",objeto.draw(
+                                                              this->calc_distancia(
+                                                                     screen.get_v(),
+                                                                     Ponto(0,0)))));
+                }
+            } else
+            if(pontos.size() == 2) {
+                // Clipping Lines
+                std::list<Ponto> clipped_line = clipping_line(
+                                                    objeto.draw(this->calc_distancia(
+                                                                   screen.get_v(),
+                                                                   Ponto(0,0))));
+                if(clipped_line.size() == 0) {
+                    continue;
+                }
+                to_draw_poly.push_back(Poligono("clip", clipped_line));
+            } else {
+                // Clipping Polygons;
+                to_draw_poly = clipping_poly(
+                                   objeto.draw(this->calc_distancia(
+                                                  screen.get_v(),
+                                                  Ponto(0,0))));
+
+                if(to_draw_poly.size() == 0) {
+                    continue;
+                }
+            }
+
+            // Drawing loop
+            cr->set_line_width(objeto.get_brush_size());
+            for(auto drawing_it = to_draw_poly.begin();
+                drawing_it != to_draw_poly.end();
+                drawing_it++) {
+
+                // We call get_pontos() instead of draw() because after the
+                // clipping the dots are already in window coordinates
+                pontos = drawing_it->get_pontos();
+                cr->move_to(vp_transform_x(pontos.back().get_x(), width),
+                            vp_transform_y(pontos.back().get_y(), height));
+
+                for (auto pt = pontos.begin(); pt != pontos.end(); pt++)
+                {
+                    cr->line_to(vp_transform_x(pt->get_x(), width),
+                                vp_transform_y(pt->get_y(), height));
+                }
+
+                // Fill the polygon if needed
+                if(objeto.get_filled()) {
+                    cr->fill();
+                }
+                cr->stroke();
+            }
         }
 
     }
@@ -264,8 +316,8 @@ void Canvas::move_left(double step) {
     queue_draw();
 }
 
-/*
- *
+/*  Rotate Window Function
+ *  Function called when rotating the viewport window
  */
 void Canvas::rotate(double angle)
 {
@@ -280,8 +332,9 @@ void Canvas::rotate(double angle)
  */
 
 void Canvas::rotate_object(int id, double angle) {
-    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
+    for (auto ptr = display_file.begin(); ptr != display_file.end(); ptr++)
     {
+        auto pol = *ptr;
         if(pol->get_id() == id) {
            Matriz m = Matriz().rotate(angle, (*pol).get_center());
            pol->exec_transform(m);
@@ -292,14 +345,14 @@ void Canvas::rotate_object(int id, double angle) {
     queue_draw();
 }
 
-/*  Rotate Function
- *  Function used to rotate an object around itself by some angle
+/*  Rotate Dot Function
+ *  Function used to rotate an object around an arbitrary Dot inside window
  */
-
 void Canvas::rotate_point(int id, double angle, Ponto centro) {
     Ponto novo_ponto = this->scn_to_cart.exec_transform(centro);
-    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
+    for (auto ptr = display_file.begin(); ptr != display_file.end(); ptr++)
     {
+        auto pol = *ptr;
         if(pol->get_id() == id) {
            Matriz m = Matriz().rotate(angle, novo_ponto);
            pol->exec_transform(m);
@@ -310,9 +363,13 @@ void Canvas::rotate_point(int id, double angle, Ponto centro) {
     queue_draw();
 }
 
+/*  Rotate Center Function
+ *  Function used to rotate an object around the center of window
+ */
 void Canvas::rotate_center(int id, double angle) {
-    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
+    for (auto ptr = display_file.begin(); ptr != display_file.end(); ptr++)
     {
+        auto pol = *ptr;
         if(pol->get_id() == id) {
            Matriz m = Matriz().rotate(angle, Ponto(0,0));
            pol->exec_transform(m);
@@ -329,8 +386,9 @@ void Canvas::rotate_center(int id, double angle) {
 
 void Canvas::move_object(int id, Ponto distancia) {
     Ponto novo_ponto = this->scn_to_cart.exec_transform(distancia);
-    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
+    for (auto ptr = display_file.begin(); ptr != display_file.end(); ptr++)
     {
+        auto pol = *ptr;
         if(pol->get_id() == id) {
            Matriz m = Matriz().translate(novo_ponto);
            pol->exec_transform(m);
@@ -346,8 +404,9 @@ void Canvas::move_object(int id, Ponto distancia) {
  */
 
 void Canvas::resize_object(int id, Ponto size) {
-    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
+    for (auto ptr = display_file.begin(); ptr != display_file.end(); ptr++)
     {
+        auto pol = *ptr;
         if(pol->get_id() == id) {
            Matriz m = Matriz().scale(size, pol->get_center());
            pol->exec_transform(m);
@@ -375,6 +434,9 @@ double Canvas::vp_transform_y(double y, double height){
     return (y - (1)) / (-1-(1)) * height;
 }
 
+/*
+ *
+ */
 double Canvas::calc_angulo(Ponto a, Ponto b) //só funciona quando b é vertical arrumar depois
 {
 
@@ -390,19 +452,29 @@ double Canvas::calc_angulo(Ponto a, Ponto b) //só funciona quando b é vertical
 
 }
 
+/*
+ *
+ */
 double Canvas::calc_distancia(Ponto a, Ponto b)
 {
     return sqrt(pow(a.get_x() - b.get_x(), 2) + pow(a.get_y() - b.get_y(), 2));
 }
 
+/*
+ *
+ */
 void Canvas::update_scn_coord()
 {
-    for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
+    for (auto ptr = display_file.begin(); ptr != display_file.end(); ptr++)
     {
+        auto pol = *ptr;
         pol->exec_update_scn(this->cart_to_scn);
     }
 }
 
+/*
+ *
+ */
 void Canvas::update_conv_matrix()
 {
     double angulo = this->calc_angulo(screen.get_v(), Ponto(0,1));
@@ -429,15 +501,19 @@ void Canvas::update_conv_matrix()
  */
 std::list<Ponto> Canvas::clipping_line(std::list<Ponto> line_p) {
 
+    // Initialize list to be returned
     std::list<Ponto> clipped_dots;
 
     bool front_is_inside = inside_view(line_p.front());
     bool back_is_inside = inside_view(line_p.back());
 
+    // Verify if both dots are inside window, if true no clipping is needed
     if(front_is_inside && back_is_inside) {
         return line_p;
     }
 
+    // Setting borders of window
+    // using 0.9 because of the subcanvas
     double xmin = -0.9;
     double ymin = -0.9;
     double xmax = 0.9;
@@ -467,9 +543,15 @@ std::list<Ponto> Canvas::clipping_line(std::list<Ponto> line_p) {
     u1.push_back(0);
     u2.push_back(1);
 
-    if ((p1 == 0 && q1 < 0) || (p3 == 0 && q3 < 0)) {
-        // line parallel to window
-        return clipped_dots;
+    // Verifying if line is parallel to window
+    if(p1 == 0) {
+        if(!front_is_inside && !back_is_inside) {
+            return clipped_dots;
+        }
+    } else if(p3 == 0) {
+        if(!front_is_inside && !back_is_inside) {
+            return clipped_dots;
+        }
     }
 
     if(p1 != 0) {
@@ -500,13 +582,11 @@ std::list<Ponto> Canvas::clipping_line(std::list<Ponto> line_p) {
     auto min = *std::min_element(u2.begin(), u2.end());
 
     if(max>min) {
-        // linha fora do canvas
+        // line outside canvas
         return clipped_dots;
     }
 
     if(!front_is_inside) {
-    //double new_x_out_in = line_p.front().get_x() + max*p2;
-    //double new_y_out_in = line_p.front().get_y() + max*p4;
         clipped_dots.push_back(Ponto(
                                line_p.front().get_x() + max*p2,
                                line_p.front().get_y() + max*p4));
@@ -515,8 +595,6 @@ std::list<Ponto> Canvas::clipping_line(std::list<Ponto> line_p) {
     }
 
     if(!back_is_inside) {
-    //double new_x_in_out = line_p.back().get_x() + max*p2;
-    //double new_y_in_out = line_p.back().get_y() + max*p4;
         clipped_dots.push_back(Ponto(
                                line_p.front().get_x() + min*p2,
                                line_p.front().get_y() + min*p4));
@@ -532,9 +610,12 @@ std::list<Ponto> Canvas::clipping_line(std::list<Ponto> line_p) {
  * It uses the Weiler-Atherton algorithm
  */
 std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
-    std::list<Poligono> clipped_poly = {};
+    std::list<Poligono> clipped_poly;
+    poly_p.pop_front();
     poly_p.pop_back();
 
+    // Setting window's borders
+    // using 0.9 because of the subcanvas
     Ponto top_left(-0.9, 0.9);
     Ponto bottom_left(-0.9, -0.9);
     Ponto bottom_right(0.9, -0.9);
@@ -542,29 +623,6 @@ std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
 
     std::list<Ponto> window_corners = {top_left, top_right, bottom_right, bottom_left};
     std::list<Ponto> entrances = {}, artificials = {};
-
-    bool all_inside = true, none_inside = true;
-
-    for (auto p = poly_p.begin(); p != poly_p.end(); p++) {
-        if(inside_view(*p)) {
-            none_inside = false;
-        } else {
-            all_inside = false;
-        }
-
-        if(!none_inside && !all_inside) {
-            break;
-        }
-    }
-
-    if(all_inside) {
-        clipped_poly.push_back(Poligono("cut", poly_p));
-        return clipped_poly;
-    }
-
-    if(none_inside) {
-        return clipped_poly;
-    }
 
     for (auto p = poly_p.begin(); p != poly_p.end(); p++) {
         auto next = p;
@@ -579,7 +637,7 @@ std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
         std::list<Ponto> line = {k,l};
         std::list<Ponto> clipped_line = clipping_line(line);
 
-        if(clipped_line.size() == 0) {// || line == clipped_line) {
+        if(clipped_line.size() == 0) {
             continue;
         }
 
@@ -617,13 +675,21 @@ std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
         }
     }
 
-//    for (auto e = entrances.begin(); e != entrances.end(); e++) {
+    // Verify if whole polygon is inside or outside window
+    if(entrances.size() == 0) {
+        if(!inside_view(poly_p.front())) {
+            return clipped_poly;
+        } else {
+            clipped_poly.push_back(Poligono("cut", poly_p));
+            return clipped_poly;
+        }
+    }
 
     auto e = entrances.front();
-
+    std::list<Ponto> hold, visited_list;
     do {
         entrances.remove(e);
-        std::list<Ponto> hold = {};
+        visited_list.push_back(e);
 
         auto artificial_iterator = find(artificials.begin(), artificials.end(), e);
 
@@ -640,35 +706,41 @@ std::list<Poligono> Canvas::clipping_poly(std::list<Ponto> poly_p) {
             }
             hold.push_back(*it);
         }
-        hold.push_back(*artificial_iterator);
 
-        auto visited = *artificial_iterator;
+        hold.push_back(*artificial_iterator);
+        visited_list.push_back(*artificial_iterator);
 
         artificial_iterator++;
         if(artificial_iterator == artificials.end()) {
             artificial_iterator = artificials.begin();
         }
 
-        artificials.remove(visited);
-
+        //artificials.remove(visited_list.back());
         for (auto it = std::find(window_corners.begin(), window_corners.end(), hold.back());
              *it != *artificial_iterator;
              it++) {
             if(it == window_corners.end()) {
                 it = window_corners.begin();
             }
+            if(inside_list(artificials, *it) && *it != hold.back()) {
+                artificial_iterator = find(artificials.begin(), artificials.end(), *it);
+                break;
+            }
             hold.push_back(*it);
         }
         hold.push_back(*artificial_iterator);
 
-        visited = *artificial_iterator;
-        artificials.remove(visited);
+        visited_list.push_back(*artificial_iterator);
+        //artificials.remove(*artificial_iterator);
 
-        auto visited_entrance = find(entrances.begin(), entrances.end(), visited);
-        if(artificial_iterator != visited_entrance) {
-            clipped_poly.push_back(Poligono("cut", hold));
+        if(inside_list(entrances, visited_list.back())) {
+            e = visited_list.back();
         } else {
-            e = visited;
+            clipped_poly.push_back(Poligono("cut", hold));
+            hold = {};
+            if(!entrances.empty()) {
+                e = entrances.front();
+            }
         }
     } while(entrances.size() != 0);
 
@@ -742,57 +814,14 @@ bool Canvas::inside_view(Ponto p) {
     }
 }
 
-Ponto Canvas::intersect2d(std::list<Ponto>& window_corners, Ponto k, Ponto l) {
-    double det, s, inter_x, inter_y;
-    double xmin = -0.9;
-    double ymin = -0.9;
-    double xmax = 0.9;
-    double ymax = 0.9;
+bool Canvas::inside_list(std::list<Ponto> list, Ponto p) {
 
-    for (auto i = window_corners.begin(); i != window_corners.end(); i++) {
-        auto j = i;
-        j++;
-        if(j == window_corners.end()) {
-            auto j = window_corners.begin();
-        }
+    auto iterator = find(list.begin(), list.end(), p);
 
-        auto n = *i;
-        auto m = *j;
-
-        if(n.get_x() != xmin && n.get_x() != xmax &&
-           n.get_y() != ymin && n.get_y() != ymax) {
-            continue;
-        }
-
-        det = (n.get_x() - m.get_x()) * (l.get_y() - k.get_y())
-            - (n.get_y() - m.get_y()) * (l.get_x() - k.get_x());
-
-        if (det != 0.0) {
-            s = ((n.get_x() - m.get_x()) * (m.get_y() - k.get_y())
-               - (n.get_y() - m.get_y()) * (m.get_x() - k.get_x()))
-               / det ;
-
-            auto inter_x = k.get_x() + (l.get_x() - k.get_x()) * s;
-            auto inter_y = k.get_y() + (l.get_y() - k.get_y()) * s;
-
-            Ponto intersect(inter_x, inter_y);
-
-            if((inter_x == xmin || inter_x == xmax) &&
-               (inter_y >= ymin && inter_y <= ymax)) {
-
-                    window_corners.insert(j, intersect);
-                    return intersect;
-
-            } else if((inter_y == ymin || inter_y == ymax) &&
-                      (inter_x >= xmin && inter_x <= xmax)) {
-
-                    window_corners.insert(j, intersect);
-                    return intersect;
-
-            }
-        }
+    if(*iterator == p) {
+        return true;
+    } else {
+        return false;
     }
 
-
-    return Ponto(0,0);
 }

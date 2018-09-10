@@ -82,7 +82,7 @@ ObjectMenu::ObjectMenu(const Glib::ustring& title,
 	grid->attach(button_write_file, 1, 5, 1, 1);
 	grid->attach(l_file, 0, 6, 1, 1);
 	grid->attach(e_file, 1, 6, 1, 1);
-}	 	  	 	    	 	    		    	    	  	 	
+}
 
 /*  Function called when button ROTATE is clicked
  *  calls function rotate_object from drawing window
@@ -184,8 +184,8 @@ void ObjectMenu::write_file() {
 }
 
 void ObjectMenu::read_file() {
-	std::list<Poligono> loaded_display_file = d_obj.read(e_file.get_text());
+	std::list<std::unique_ptr<Objeto>> loaded_display_file = d_obj.read(e_file.get_text());
 	if(loaded_display_file.size() != 0) {
-		window_ref.set_display_file(loaded_display_file);
+		window_ref.load_display_file(loaded_display_file);
 	}
 }

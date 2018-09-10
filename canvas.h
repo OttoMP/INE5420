@@ -9,6 +9,7 @@
 #include <cairomm/context.h>
 #include "ponto.h"
 #include "poligono.h"
+#include "objeto.h"
 #include "matriz.h"
 #include "window.h"
 
@@ -16,11 +17,11 @@ class Canvas : public Gtk::DrawingArea {
     public:
         Canvas();
         virtual ~Canvas();
+        
 
         // Funtion used in setting the id's of display_file's polygons
         int get_last_id();
         std::string get_last_name();
-        Window screen;
 
         // Navigation Functions
         void zoom_in(double factor);
@@ -44,11 +45,14 @@ class Canvas : public Gtk::DrawingArea {
 
         // Functions used to add or remove polygons from drawing area
         void add_poligono(Poligono pol);
-        void rm_poligono(int id);
+        void add_curva(Curva2D curva);
+        void rm_objeto(int id);
 
         // Return a specific polygon from display file
-        std::list<Poligono> get_display_file();
-        void set_display_file(std::list<Poligono> loaded_display_file);
+        std::list<std::unique_ptr<Objeto>> get_display_file();
+
+        // Load display file from read function
+        void load_display_file(std::list<std::unique_ptr<Objeto>> loaded_display_file);
 
         // Mathematic functions
         double calc_distancia(Ponto a, Ponto b); // gets distance between two points
@@ -60,19 +64,17 @@ class Canvas : public Gtk::DrawingArea {
         // Function used to draw all objects from display_file
         bool on_draw(const Cairo::RefPtr<Cairo::Context>& cr) override;
 
-        // Internal parameters
-
+        /* Internal parameters */
         // Parameter setting the zoom
         double scale;
-
         // Parameter setting how much the view dislocate from the center in the x axis
         double x_dislocate;
-
         // Parameter setting how much the view dislocate from the center in the y axis
         double y_dislocate;
-
         // List of all objects currently drawn in the canvas
-        std::list<Poligono> display_file;
+        std::list<std::unique_ptr<Objeto>> display_file;
+        // LIst of all curves drawn in the canvas
+        Window screen;
 
         // Conversion matrix for fast calculations
         Matriz cart_to_scn;
@@ -82,8 +84,8 @@ class Canvas : public Gtk::DrawingArea {
         std::list<Ponto> clipping_line(std::list<Ponto> line_p);
         std::list<Poligono> clipping_poly(std::list<Ponto> poly_p);
         bool inside_view(Ponto p);
+        bool inside_list(std::list<Ponto> list, Ponto p);
         void change_corners(std::list<Ponto>& window_corners, Ponto k);
-        Ponto intersect2d(std::list<Ponto>& window_corners, Ponto k, Ponto l);
 };
 
 #endif //CANVAS_H

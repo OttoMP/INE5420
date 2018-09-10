@@ -2,6 +2,7 @@
 #define DESCRITOR_OBJ_H
 
 #include "poligono.h"
+#include "objeto.h"
 #include <gtkmm/textview.h>
 
 #include <list>

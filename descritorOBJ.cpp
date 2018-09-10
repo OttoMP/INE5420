@@ -11,7 +11,8 @@ void descritorObj::write(std::list<Poligono> display_file, string name) {
     ofstream new_file;
     new_file.open (name+".obj");
 
-    for(auto i = display_file.begin(); i != display_file.end(); i++) {
+    for(auto ptr = display_file.begin(); ptr != display_file.end(); ptr++) {
+        auto i = *ptr;
         new_file << "#nome " + i->get_nome() + "\n";
         new_file << "#id " + to_string(i->get_id()) + "\n";
         if(i->get_filled())
@@ -48,7 +49,7 @@ void descritorObj::write(std::list<Poligono> display_file, string name) {
 }
 
 std::list<Poligono> descritorObj::read(std::string file) {
-    std::list<Poligono> display_file;
+    std::list<std::unique_ptr<Objeto>> display_file;
     string line, nome, id, filled, vertex, info;
     ifstream myfile(file+".obj");
 
@@ -83,7 +84,7 @@ std::list<Poligono> descritorObj::read(std::string file) {
 			}
 
 			getline(myfile, info);
-			display_file.push_back(poly);
+			display_file.push_back(&poly);
 		}
 		myfile.close();
     	text_log_ref.get_buffer()->set_text(text_log_ref.get_buffer()->get_text()
