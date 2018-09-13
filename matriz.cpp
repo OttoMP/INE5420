@@ -7,11 +7,14 @@ Matriz::Matriz()
 
 Matriz Matriz::translate(Ponto vector)
 {
-    this->matriz[0][0] = 1;
-    this->matriz[1][1] = 1;
-	this->matriz[2][0] = vector.get_x();
-	this->matriz[2][1] = vector.get_y();
+	this->matriz[0][0] = 1;
+	this->matriz[1][1] = 1;
 	this->matriz[2][2] = 1;
+	this->matriz[3][3] = 1;
+	this->matriz[3][0] = vector.get_x();
+	this->matriz[3][1] = vector.get_y();
+	this->matriz[3][2] = vector.get_z();
+	
 	return *this;
 }
 
@@ -32,7 +35,8 @@ Matriz Matriz::scale(Ponto scale, Ponto center)
 {
 	this->matriz[0][0] = scale.get_x();
 	this->matriz[1][1] = scale.get_y();
-	this->matriz[2][2] = 1;
+	this->matriz[2][2] = scale.get_z();
+	this->matriz[3][3] = 1;
     Matriz m = Matriz().translate(Ponto(-center.get_x(),-center.get_y()))
 	    .multiplication(*this)
 	    .multiplication(Matriz().translate(Ponto(center.get_x(),center.get_y())));
