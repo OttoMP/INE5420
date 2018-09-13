@@ -86,14 +86,6 @@ std::list<Ponto> Poligono::draw(double scale)
     return d;
 }
 
-void Poligono::set_filled(bool fill) {
-    this->filled = fill;
-}
-
-bool Poligono::get_filled() {
-    return this->filled;
-}
-
 Objeto Poligono::to_objeto()
 {
     Objeto o = Objeto();
