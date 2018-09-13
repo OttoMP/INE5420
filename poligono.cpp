@@ -22,15 +22,19 @@ Poligono::Poligono(string nome, int id, bool filled, std::list<Ponto> pontos)
 	this->nome = nome;
     this->id = id;
     this->filled = filled;
-    this->pontos = pontos;
+    for(auto i = pontos.begin(); i != pontos.end(); i++) {
+        add_ponto(*i);
+    }
     this->tipo = 1;
 }
 
 Poligono::Poligono(string nome, std::list<Ponto> pontos)
 {
     this->nome = nome;
-    this->pontos = pontos;
     this->tipo = 1;
+    for(auto i = pontos.begin(); i != pontos.end(); i++) {
+        add_ponto(*i);
+    }
 }
 
 void Poligono::add_ponto(Ponto p)

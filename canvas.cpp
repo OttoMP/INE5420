@@ -65,7 +65,7 @@ void Canvas::add_poligono(Poligono pol)
 {
     pol.exec_update_scn(this->cart_to_scn);
     display_file.push_back(pol.to_objeto());
-    std::cin.get();
+    queue_draw();
 }
 
 void Canvas::add_curva(Curva2D curva)
@@ -78,7 +78,7 @@ void Canvas::add_curva(Curva2D curva)
 /*  Function Remove Polygon
  *  Function used to remove the especified polygon from the display_file
  */
-void Canvas::rm_objeto(int id) 
+void Canvas::rm_objeto(int id)
 {
     Objeto o = Objeto();
     o.set_id(id);
@@ -156,7 +156,7 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
             Curva2D objeto = Curva2D(*i);
             std::list<Ponto> pontos = objeto.draw(1,-0.9, 0.9, -0.9, 0.9); // pega os pontos pra desenhar da curva
 
-            cr->set_line_width(objeto.get_brush_size()); 
+            cr->set_line_width(objeto.get_brush_size());
 
             cr->move_to(vp_transform_x(pontos.back().get_x(), width),
                         vp_transform_y(pontos.back().get_y(), height));
@@ -178,34 +178,27 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
             // Analyzing what type of object we are drawing based in the number of
             // dots
             std::list<Ponto> pontos = objeto.get_pontos();
+            auto drawing_dots = objeto.draw(this->calc_distancia(
+                                                screen.get_v(),
+                                                Ponto(0,0)));
             if(pontos.size() == 1) {
                 // Clipping Dots
-                if(!inside_view(pontos.front())) {
+                if(!inside_view(drawing_dots.front())) {
                     continue;
                 } else {
-                    to_draw_poly.push_back(Poligono("clip",objeto.draw(
-                                                              this->calc_distancia(
-                                                                     screen.get_v(),
-                                                                     Ponto(0,0)))));
+                    to_draw_poly.push_back(Poligono("clip", drawing_dots));
                 }
             } else
             if(pontos.size() == 2) {
                 // Clipping Lines
-                std::list<Ponto> clipped_line = clipping_line(
-                                                    objeto.draw(this->calc_distancia(
-                                                                   screen.get_v(),
-                                                                   Ponto(0,0))));
+                std::list<Ponto> clipped_line = clipping_line(drawing_dots);
                 if(clipped_line.size() == 0) {
                     continue;
                 }
                 to_draw_poly.push_back(Poligono("clip", clipped_line));
             } else {
                 // Clipping Polygons;
-                to_draw_poly = clipping_poly(
-                                   objeto.draw(this->calc_distancia(
-                                                  screen.get_v(),
-                                                  Ponto(0,0))));
-
+                to_draw_poly = clipping_poly(drawing_dots);
                 if(to_draw_poly.size() == 0) {
                     continue;
                 }
