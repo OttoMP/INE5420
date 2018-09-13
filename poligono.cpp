@@ -34,7 +34,7 @@ Poligono::Poligono(string nome, std::list<Ponto> pontos)
 }
 
 void Poligono::add_ponto(Ponto p)
-{
+{	 	  	 	    	 	    		    	    	  	 	
     if (this->get_size() == 0)
     {
         this->center = p;
@@ -72,7 +72,7 @@ std::list<Ponto> Poligono::draw(double scale)
          this->pontos_scn.back().get_z());
        d.push_back(p);
        d.push_front(p);
-    }
+    }	 	  	 	    	 	    		    	    	  	 	
     else if (this->get_size() == 1)
     {
         d.push_back(Ponto(this->pontos_scn.front().get_x(), this->pontos_scn.front().get_y()
@@ -80,14 +80,6 @@ std::list<Ponto> Poligono::draw(double scale)
     }
 
     return d;
-}
-
-void Poligono::set_filled(bool fill) {
-    this->filled = fill;
-}
-
-bool Poligono::get_filled() {
-    return this->filled;
 }
 
 Objeto Poligono::to_objeto()
@@ -100,5 +92,6 @@ Objeto Poligono::to_objeto()
     o.set_brush_size(this->brush_size);
     o.set_center(this->center);
     o.set_tipo(this->tipo);
+    o.set_filled(this->filled);
     return o;
 }

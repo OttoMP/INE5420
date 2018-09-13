@@ -81,7 +81,7 @@ ObjectMenu::ObjectMenu(const Glib::ustring& title,
 	grid->attach(button_write_file, 1, 5, 1, 1);
 	grid->attach(l_file, 0, 6, 1, 1);
 	grid->attach(e_file, 1, 6, 1, 1);
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 /*  Function called when button ROTATE is clicked
  *  calls function rotate_object from drawing window
@@ -122,7 +122,7 @@ void ObjectMenu::rotate_dot_clicked() {
                                        +std::to_string(dot.get_y())
                                        +")\n");
 
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 //-----------------------------------
 /*  Function called when button ROTATE REF DOT is clicked
@@ -160,7 +160,7 @@ void ObjectMenu::move_clicked() {
                                        +", "
                                        +std::to_string(y)
                                        +")\n");
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 /*  Function called when button RESIZE is clicked
  *  calls function resize_object from drawing window
@@ -188,3 +188,4 @@ void ObjectMenu::read_file() {
 		window_ref.load_display_file(loaded_display_file);
 	}
 }
+	 	  	 	    	 	    		    	    	  	 	

@@ -67,7 +67,7 @@ AddObjectDialog::AddObjectDialog(Canvas& drawing_area,
     set_default_response(Gtk::RESPONSE_CLOSE);
 
     show_all_children();
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 AddObjectDialog::~AddObjectDialog()
 {
@@ -95,22 +95,34 @@ void AddObjectDialog::on_dialog_response(int response_id) {
                                    +"' adicionado\n");
         hide();
       } else if(tb_bezier.get_active()) {
-        new_poly.set_nome(e_name.get_text());
-        new_poly.set_id(canvas.get_last_id()+1);
-        canvas.add_poligono(new_poly);
-        log.get_buffer()->set_text(log.get_buffer()->get_text()
-                                   +"Curva de Bezier '"
-                                   +new_poly.get_nome()
+        if (new_dots.size()%4 == 0)
+        {
+            Curva2D nova_curva = Curva2D(canvas.get_last_id()+1, e_name.get_text());
+            nova_curva.set_pontos(new_dots);
+            canvas.add_curva(nova_curva);
+            log.get_buffer()->set_text(log.get_buffer()->get_text()
+                                   +"Spline '"
+                                   +nova_curva.get_nome()
                                    +"' adicionada\n");
+        } else {	 	  	 	    	 	    		    	    	  	 	
+            log.get_buffer()->set_text(log.get_buffer()->get_text()
+                                   +"Numero de pontos inadequado \n");
+        }
         hide();
       } else if(tb_spline.get_active()) {
-        new_poly.set_nome(e_name.get_text());
-        new_poly.set_id(canvas.get_last_id()+1);
-        canvas.add_poligono(new_poly);
-        log.get_buffer()->set_text(log.get_buffer()->get_text()
+        if (new_dots.size()>=4)
+        {
+            Curva2D nova_curva = Curva2D(canvas.get_last_id()+1, e_name.get_text());
+            nova_curva.set_pontos(new_dots);
+            canvas.add_curva(nova_curva);
+            log.get_buffer()->set_text(log.get_buffer()->get_text()
                                    +"Spline '"
-                                   +new_poly.get_nome()
+                                   +nova_curva.get_nome()
                                    +"' adicionada\n");
+        } else {
+            log.get_buffer()->set_text(log.get_buffer()->get_text()
+                                   +"Numero de pontos inadequado \n");
+        }
         hide();
       } else {
         log.get_buffer()->set_text(log.get_buffer()->get_text()
@@ -129,7 +141,7 @@ void AddObjectDialog::on_dialog_response(int response_id) {
     std::cout << "Unexpected response_id=" << response_id << std::endl;
     break;
   };
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 /*  Add Object function
  *  Read the text from entries and call function add_ponto from Poligono
@@ -164,3 +176,4 @@ void AddObjectDialog::spline_toggled() {
     tb_poly.set_active(false);
     tb_bezier.set_active(false);
 }
+	 	  	 	    	 	    		    	    	  	 	
