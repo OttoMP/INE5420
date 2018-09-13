@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 #include "canvas.h"
 
 Canvas::Canvas()

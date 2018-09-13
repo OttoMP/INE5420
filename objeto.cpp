@@ -35,7 +35,7 @@ void Objeto::set_center(Ponto center)
 }
 
 void Objeto::set_tipo(int tipo)
-{
+{	 	  	 	    	 	    		    	    	  	 	
     this->tipo = tipo;
 }
 
@@ -72,8 +72,16 @@ void Objeto::set_id(int new_id) {
 }
 
 Ponto Objeto::get_center()
-{
+{	 	  	 	    	 	    		    	    	  	 	
     return this->center;
+}
+
+void Objeto::set_filled(bool fill) {
+    this->filled = fill;
+}
+
+bool Objeto::get_filled() {
+    return this->filled;
 }
 
 void Objeto::exec_transform(Matriz transform)
@@ -99,3 +107,4 @@ void Objeto::exec_update_scn(Matriz transform)
 bool Objeto::operator==(const Objeto& a) {
     return this->get_id() == a.get_id();
 }
+	 	  	 	    	 	    		    	    	  	 	

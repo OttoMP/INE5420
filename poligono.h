@@ -8,9 +8,6 @@
 
 class Poligono : public Objeto{
 
-protected:
-    bool filled = false;
-
 public:
 	Poligono(Objeto o);
 	Poligono(string nome);
@@ -24,11 +21,11 @@ public:
 	
   std::list<Ponto> draw(double scale);
 
-  void set_filled(bool fill);
-  bool get_filled();
+
 
 	Objeto to_objeto();
 
 };
 
 #endif //POLIGONO_H
+	 	  	 	    	 	    		    	    	  	 	

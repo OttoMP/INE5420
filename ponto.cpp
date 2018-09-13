@@ -35,7 +35,7 @@ bool Ponto::operator==(const Ponto& a) {
     return (std::fabs(this->coord[0] - a.get_x()) <= epsilon) &&
            (std::fabs(this->coord[1] - a.get_y()) <= epsilon) &&
            (std::fabs(this->coord[2] - a.get_z()) <= epsilon);
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 bool Ponto::operator!=(const Ponto& a) {
     auto epsilon = std::numeric_limits<double>::epsilon();
