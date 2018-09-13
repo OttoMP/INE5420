@@ -18,6 +18,7 @@ protected:
 	double brush_size = 1;
     int id = 0;
 	int tipo = 0;
+	bool filled = false;
 
 public:
 	Objeto();
@@ -29,7 +30,7 @@ public:
 	void set_id(int new_id);
 	void set_center(Ponto center);
 	void set_tipo(int tipo);
-
+    void set_filled(bool fill);
 
     std::list<Ponto> get_pontos();
 	std::list<Ponto> get_pontos_scn();
@@ -39,6 +40,7 @@ public:
 	int get_size();
     int get_id() const;
     Ponto get_center();
+    bool get_filled();
 
     void exec_transform(Matriz transform);
     void exec_update_scn(Matriz transform);
@@ -47,3 +49,4 @@ public:
 };
 
 #endif //OBJETO_H
+	 	  	 	    	 	    		    	    	  	 	
