@@ -11,7 +11,7 @@
 class Matriz{
 
 public:
-	double matriz[3][3] = {};
+	double matriz[4][4] = {};
 
 	Matriz();
 
