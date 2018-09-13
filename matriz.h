@@ -1,7 +1,7 @@
 #ifndef MATRIZ_H
 #define MATRIZ_H
 
-#define DIMENSOES 3
+#define DIMENSOES 4
 #define PI 3.14159265
 #define _USE_MATH_DEFINES
 
