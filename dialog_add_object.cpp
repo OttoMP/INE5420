@@ -92,14 +92,14 @@ void AddObjectDialog::on_dialog_response(int response_id) {
                                    +"' adicionado\n");
         hide();
       } else if(tb_bezier.get_active()) {
-        Poligono polygon(e_name.get_text(), new_dots);
-        polygon.set_id(canvas.get_last_id()+1);
-        polygon.set_filled(fill_button.get_active());
+        Curva2D bezier(e_name.get_text(), new_dots);
+        bezier.set_id(canvas.get_last_id()+1);
+        bezier.set_filled(fill_button.get_active());
 
-        canvas.add_poligono(polygon);
+        canvas.add_curva(bezier);
         log.get_buffer()->set_text(log.get_buffer()->get_text()
                                    +"Curva Bezier '"
-                                   +polygon.get_nome()
+                                   +bezier.get_nome()
                                    +"' adicionada\n");
         hide();
       } else if(tb_spline.get_active()) {

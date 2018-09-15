@@ -7,6 +7,13 @@ Curva2D::Curva2D(int id, string nome)
     this->tipo = 2;
 }
 
+Curva2D::Curva2D(string nome, std::list<Ponto> pontos)
+{
+    this->nome = nome;
+    this->tipo = 2;
+    this->set_pontos(pontos);
+}
+
 Curva2D::Curva2D(Objeto o)
 {
     this->id = o.get_id();
@@ -29,7 +36,7 @@ int Curva2D::add_curva(Ponto p1, Ponto p2, Ponto p3, Ponto p4)
         this->center = Ponto((p1.get_x()+p2.get_x() + p3.get_x() + p4.get_x())/4,
             (p1.get_y()+p2.get_y() + p3.get_y() + p4.get_y())/4);
     }
-    else 
+    else
     {
         if (this->pontos.back() == p1){
             this->pontos.push_back(p1);
@@ -38,8 +45,8 @@ int Curva2D::add_curva(Ponto p1, Ponto p2, Ponto p3, Ponto p4)
             this->pontos.push_back(p4);
             this->center = Ponto((p1.get_x()+p2.get_x() + p3.get_x() + p4.get_x() + this->center.get_x()*this->get_size())/(this->get_size()+4),
                 (p1.get_y()+p2.get_y() + p3.get_y() + p4.get_y() + this->center.get_y()*this->get_size())/(this->get_size()+4));
-        }	 	  	 	    	 	    		    	    	  	 	
-        else 
+        }
+        else
         {
             return -1;
         }
@@ -76,7 +83,7 @@ std::list<Ponto> Curva2D::draw(double scale, double wmin_x, double wmax_x, doubl
     std::list<Ponto> desenho;
     auto pt = this->pontos_scn.begin();
     if (this->get_size() % 4 == 0)
-    {	 	  	 	    	 	    		    	    	  	 	
+    {
         for (int i = 0; i < this->get_num_curvas(); i++)
         {
             Ponto p1 = Ponto(pt->get_x(), pt->get_y(), pt->get_z());
@@ -96,19 +103,19 @@ std::list<Ponto> Curva2D::draw(double scale, double wmin_x, double wmax_x, doubl
             bool clipping = true;
             for (int z = 0; z <= precisao; z++)
             {
-                
+
                 t = ((double)z) /((double)precisao);
                 t2 = pow(t,2);
                 t3 = pow(t,3);
                 x = 0;
                 y = 0;
                 double x = (-1*t3 + 3*t2 - 3*t + 1) * p1.get_x()
-                    + (3*t3 - 6*t2 + 3*t) * p2.get_x() 
-                    + (-3*t3 + 3*t2) * p3.get_x() 
+                    + (3*t3 - 6*t2 + 3*t) * p2.get_x()
+                    + (-3*t3 + 3*t2) * p3.get_x()
                     + (t3) * p4.get_x();
                 double y = (-1*t3 + 3*t2 - 3*t + 1) * p1.get_y()
-                    + (3*t3 - 6*t2 + 3*t) * p2.get_y() 
-                    + (-3*t3 + 3*t2) * p3.get_y() 
+                    + (3*t3 - 6*t2 + 3*t) * p2.get_y()
+                    + (-3*t3 + 3*t2) * p3.get_y()
                     + (t3) * p4.get_y();
                     /*
                 x += ((((-1)*t3) + (3*t2) - (3*t) + 1) * 0.1);
@@ -116,12 +123,12 @@ std::list<Ponto> Curva2D::draw(double scale, double wmin_x, double wmax_x, doubl
                 x += ((((-3)*t3) + (3*t2)) * 0.3);
                 x += ((t3) * 0.4);
                 double y = (((((-1)*t3) + (3*t2) - (3*t) + 1) * 0.3)
-                    + (((3*t3) - (6*t2) + (3*t)) * 0.1) 
+                    + (((3*t3) - (6*t2) + (3*t)) * 0.1)
                     + ((((-3)*t3) + (3*t2)) * 0.3)
                     + ((t3) * 0.2));
                     */
                 if (x > wmin_x && x < wmax_x && y > wmin_y && y < wmax_y)
-                {	 	  	 	    	 	    		    	    	  	 	
+                {
                     desenho.push_back(Ponto(x,y));
                     clipping = false;
                 }
@@ -131,7 +138,7 @@ std::list<Ponto> Curva2D::draw(double scale, double wmin_x, double wmax_x, doubl
                     {
                         x = wmin_x;
                     }
-                    
+
                     if (x > wmax_x)
                     {
                         x = wmax_x;
@@ -140,7 +147,7 @@ std::list<Ponto> Curva2D::draw(double scale, double wmin_x, double wmax_x, doubl
                     {
                         y = wmin_y;
                     }
-                    
+
                     if (y > wmax_y)
                     {
                         y = wmax_y;
@@ -149,7 +156,7 @@ std::list<Ponto> Curva2D::draw(double scale, double wmin_x, double wmax_x, doubl
                     clipping = true;
                 }
             }
-            
+
         }
     }
     else
@@ -157,9 +164,9 @@ std::list<Ponto> Curva2D::draw(double scale, double wmin_x, double wmax_x, doubl
         //nao tem pelo menos 4 pontos
     }
     return desenho;
-}	 	  	 	    	 	    		    	    	  	 	
+}
 
-int Curva2D::get_num_curvas() 
+int Curva2D::get_num_curvas()
 {
     return (int)(this->pontos.size()/4);
 }

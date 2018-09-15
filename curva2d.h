@@ -11,6 +11,7 @@ class Curva2D : public Objeto{
 
 public:
 	Curva2D(int id, string nome);
+    Curva2D(string nome, std::list<Ponto> pontos);
 	Curva2D(Objeto o);
 
 	int add_curva(Ponto p1, Ponto p4, Ponto r1, Ponto r4);
@@ -24,4 +25,4 @@ public:
 };
 
 #endif //CURVA2D_H
-	 	  	 	    	 	    		    	    	  	 	
+
