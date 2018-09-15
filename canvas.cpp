@@ -154,7 +154,7 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
         if (i->get_tipo() == 2)
         {
             Curva2D objeto = Curva2D(*i);
-            std::list<Ponto> pontos = objeto.draw(1,-0.9, 0.9, -0.9, 0.9); // pega os pontos pra desenhar da curva
+            std::list<Ponto> pontos = objeto.draw(1); // pega os pontos pra desenhar da curva
 
             cr->set_line_width(objeto.get_brush_size());
 

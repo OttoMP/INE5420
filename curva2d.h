@@ -16,7 +16,7 @@ public:
 
 	int add_curva(Ponto p1, Ponto p4, Ponto r1, Ponto r4);
     void set_pontos(std::list<Ponto> pontos);
-    std::list<Ponto> draw(double scale, double wmin_x, double wmax_x, double wmin_y, double wmax_y);
+    std::list<Ponto> draw(double scale);
 
 	int get_num_curvas();
 

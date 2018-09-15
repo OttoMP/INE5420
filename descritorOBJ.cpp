@@ -71,6 +71,8 @@ std::list<Objeto> descritorObj::read(std::string file) {
 
             Objeto obj;
 
+            obj.set_nome(nome_tokens[1]);
+            obj.set_tipo(stoi(tipo_tokens[1]));
 			obj.set_id(stoi(id_tokens[1]));
             if(filled_tokens[1].compare("1"))
                 obj.set_filled(true);
@@ -78,38 +80,20 @@ std::list<Objeto> descritorObj::read(std::string file) {
 			getline(myfile,vertex);
 			vector<string> vertex_tokens = split(vertex, ' ');
 
-            auto type_obj = stoi(tipo_tokens[1]);
-			if (type_obj == 1) {
-                auto poly = Poligono(obj);
-
-                auto nvertex = stoi(vertex_tokens[1]);
-                for(auto i = 0; i < nvertex; i++) {
-                    getline(myfile,line);
-                    vector<string> tokens = split(line, ' ');
-                    poly.add_ponto(Ponto(
-                                    stof(tokens[1]),
-                                    stof(tokens[2]),
-                                    stof(tokens[3])));
-                }
-			    display_file.push_back(poly);
-            } else if (type_obj == 2) {
-                auto bezier = Curva2D(obj);
-                std::list<Ponto> pontos;
-
-                auto nvertex = stoi(vertex_tokens[1]);
-                for(auto i = 0; i < nvertex; i++) {
-                    getline(myfile,line);
-                    vector<string> tokens = split(line, ' ');
-                    pontos.push_back(Ponto(
-                                    stof(tokens[1]),
-                                    stof(tokens[2]),
-                                    stof(tokens[3])));
-                }
-                bezier.set_pontos(pontos);
-			    display_file.push_back(bezier);
-
-            //} else if (type_obje == 3) {
+            std::list<Ponto> recover_dots;
+            auto nvertex = stoi(vertex_tokens[1]);
+            for(auto i = 0; i < nvertex; i++) {
+                getline(myfile,line);
+                vector<string> tokens = split(line, ' ');
+                recover_dots.push_back(Ponto(
+                                            stof(tokens[1]),
+                                            stof(tokens[2]),
+                                            stof(tokens[3])));
             }
+            obj.set_pontos(recover_dots);
+
+    	    display_file.push_back(obj);
+
 
         // Get extra useless line
 			getline(myfile, info);

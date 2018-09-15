@@ -19,6 +19,7 @@ class ObjectViewer : public Gtk::Box {
 
         std::string get_selected_object_name();
         int get_selected_object_id();
+        void refresh_view();
 
     protected:
         void on_add_objects_clicked();
@@ -36,4 +37,4 @@ class ObjectViewer : public Gtk::Box {
 };
 
 #endif
-	 	  	 	    	 	    		    	    	  	 	
+

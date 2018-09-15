@@ -23,6 +23,9 @@ std::list<Ponto> Objeto::get_pontos_scn()
 
 void Objeto::set_pontos(std::list<Ponto> pontos) {
     this->pontos = pontos;
+    for (auto i = pontos.begin(); i != pontos.end(); i++) {
+        this->pontos_scn.push_back(Ponto(0,0));
+    }
 }
 
 void Objeto::set_pontos_scn(std::list<Ponto> pontos_scn) {
@@ -35,7 +38,7 @@ void Objeto::set_center(Ponto center)
 }
 
 void Objeto::set_tipo(int tipo)
-{	 	  	 	    	 	    		    	    	  	 	
+{
     this->tipo = tipo;
 }
 
@@ -72,7 +75,7 @@ void Objeto::set_id(int new_id) {
 }
 
 Ponto Objeto::get_center()
-{	 	  	 	    	 	    		    	    	  	 	
+{
     return this->center;
 }
 
@@ -107,4 +110,4 @@ void Objeto::exec_update_scn(Matriz transform)
 bool Objeto::operator==(const Objeto& a) {
     return this->get_id() == a.get_id();
 }
-	 	  	 	    	 	    		    	    	  	 	
+

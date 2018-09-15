@@ -34,13 +34,13 @@ public:
 
     std::list<Ponto> get_pontos();
 	std::list<Ponto> get_pontos_scn();
-    double get_brush_size();
-	int get_tipo();
-	string get_nome();
-	int get_size();
-    int get_id() const;
-    Ponto get_center();
-    bool get_filled();
+    double           get_brush_size();
+	int              get_tipo();
+	string           get_nome();
+	int              get_size();
+    int              get_id() const;
+    Ponto            get_center();
+    bool             get_filled();
 
     void exec_transform(Matriz transform);
     void exec_update_scn(Matriz transform);
@@ -49,4 +49,4 @@ public:
 };
 
 #endif //OBJETO_H
-	 	  	 	    	 	    		    	    	  	 	
+
