@@ -78,8 +78,12 @@ void Curva2D::set_pontos(std::list<Ponto> pontos)
     }
 }
 
-std::list<Ponto> Curva2D::draw(double scale, double wmin_x, double wmax_x, double wmin_y, double wmax_y)
+std::list<Ponto> Curva2D::draw(double scale)
 {
+    double wmin_x = -0.9;
+    double wmax_x =  0.9;
+    double wmin_y = -0.9;
+    double wmax_y =  0.9;
     std::list<Ponto> desenho;
     auto pt = this->pontos_scn.begin();
     if (this->get_size() % 4 == 0)
