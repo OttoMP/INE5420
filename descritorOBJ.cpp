@@ -74,7 +74,7 @@ std::list<Objeto> descritorObj::read(std::string file) {
             obj.set_nome(nome_tokens[1]);
             obj.set_tipo(stoi(tipo_tokens[1]));
 			obj.set_id(stoi(id_tokens[1]));
-            if(filled_tokens[1].compare("1"))
+            if(filled_tokens[1] == "1")
                 obj.set_filled(true);
 
 			getline(myfile,vertex);

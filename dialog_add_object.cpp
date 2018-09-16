@@ -83,7 +83,10 @@ void AddObjectDialog::on_dialog_response(int response_id) {
       if(tb_poly.get_active()) {
         Poligono polygon(e_name.get_text(), new_dots);
         polygon.set_id(canvas.get_last_id()+1);
-        polygon.set_filled(fill_button.get_active());
+
+        if(fill_button.get_active()) {
+            polygon.set_filled(true);
+        }
 
         canvas.add_poligono(polygon);
         log.get_buffer()->set_text(log.get_buffer()->get_text()
@@ -94,7 +97,6 @@ void AddObjectDialog::on_dialog_response(int response_id) {
       } else if(tb_bezier.get_active()) {
         Curva2D bezier(e_name.get_text(), new_dots);
         bezier.set_id(canvas.get_last_id()+1);
-        bezier.set_filled(fill_button.get_active());
 
         canvas.add_curva(bezier);
         log.get_buffer()->set_text(log.get_buffer()->get_text()

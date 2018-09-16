@@ -158,8 +158,8 @@ bool Canvas::on_draw(const Cairo::RefPtr<Cairo::Context>& cr)
 
             cr->set_line_width(objeto.get_brush_size());
 
-            cr->move_to(vp_transform_x(pontos.back().get_x(), width),
-                        vp_transform_y(pontos.back().get_y(), height));
+            cr->move_to(vp_transform_x(pontos.front().get_x(), width),
+                        vp_transform_y(pontos.front().get_y(), height));
 
             for (auto pt = pontos.begin(); pt != pontos.end(); pt++)
             {

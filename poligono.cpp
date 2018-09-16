@@ -8,6 +8,7 @@ Poligono::Poligono(Objeto o)
     this->center = o.get_center();
     this->brush_size = o.get_brush_size();
     this->pontos_scn = o.get_pontos_scn();
+    this->filled = o.get_filled();
     this->tipo = 1;
 }
 
@@ -96,5 +97,6 @@ Objeto Poligono::to_objeto()
     o.set_brush_size(this->brush_size);
     o.set_center(this->center);
     o.set_tipo(this->tipo);
+    o.set_filled(this->filled);
     return o;
 }
