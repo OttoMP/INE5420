@@ -5,8 +5,6 @@ AddObjectDialog::AddObjectDialog(Canvas& drawing_area,
                                  Gtk::TextView& text_log)
     : canvas(drawing_area),       // Receive reference from parameter
       log(text_log),              // Receive reference from parameter
-      new_poly(""),
-      // new_bezier(""), new_spline(""),
       l_x("Coordenada x"),        // Initialize Label for Entry
       l_y("Coordenada y"),        // Initialize Label for Entry
       l_name("Nome do Objeto"),   // Initialize Label for Entry
@@ -55,11 +53,11 @@ AddObjectDialog::AddObjectDialog(Canvas& drawing_area,
   // Setting Buttons function
     add_dot_button.signal_clicked().connect(
             sigc::mem_fun(*this, &AddObjectDialog::on_add_dot_button_clicked));
-    tb_poly.signal_pressed().connect(
+    tb_poly.signal_clicked().connect(
             sigc::mem_fun(*this, &AddObjectDialog::poly_toggled));
-    tb_bezier.signal_pressed().connect(
+    tb_bezier.signal_clicked().connect(
             sigc::mem_fun(*this, &AddObjectDialog::bezier_toggled));
-    tb_spline.signal_pressed().connect(
+    tb_spline.signal_clicked().connect(
             sigc::mem_fun(*this, &AddObjectDialog::spline_toggled));
 
   /* This makes it so the button is the default.
@@ -67,7 +65,7 @@ AddObjectDialog::AddObjectDialog(Canvas& drawing_area,
     set_default_response(Gtk::RESPONSE_CLOSE);
 
     show_all_children();
-}	 	  	 	    	 	    		    	    	  	 	
+}
 
 AddObjectDialog::~AddObjectDialog()
 {
@@ -83,51 +81,45 @@ void AddObjectDialog::on_dialog_response(int response_id) {
   {
   case Gtk::RESPONSE_CLOSE:
       if(tb_poly.get_active()) {
-        new_poly.set_nome(e_name.get_text());
-        new_poly.set_id(canvas.get_last_id()+1);
+        Poligono polygon(e_name.get_text(), new_dots);
+        polygon.set_id(canvas.get_last_id()+1);
+
         if(fill_button.get_active()) {
-            new_poly.set_filled(true);
+            polygon.set_filled(true);
         }
-        canvas.add_poligono(new_poly);
+
+        canvas.add_poligono(polygon);
         log.get_buffer()->set_text(log.get_buffer()->get_text()
                                    +"Polígono '"
-                                   +new_poly.get_nome()
+                                   +polygon.get_nome()
                                    +"' adicionado\n");
         hide();
       } else if(tb_bezier.get_active()) {
-        if (new_dots.size()%4 == 0)
-        {
-            Curva2D nova_curva = Curva2D(canvas.get_last_id()+1, e_name.get_text());
-            nova_curva.set_pontos(new_dots);
-            canvas.add_curva(nova_curva);
-            log.get_buffer()->set_text(log.get_buffer()->get_text()
-                                   +"Spline '"
-                                   +nova_curva.get_nome()
+        Curva2D bezier(e_name.get_text(), new_dots);
+        bezier.set_id(canvas.get_last_id()+1);
+
+        canvas.add_curva(bezier);
+        log.get_buffer()->set_text(log.get_buffer()->get_text()
+                                   +"Curva Bezier '"
+                                   +bezier.get_nome()
                                    +"' adicionada\n");
-        } else {	 	  	 	    	 	    		    	    	  	 	
-            log.get_buffer()->set_text(log.get_buffer()->get_text()
-                                   +"Numero de pontos inadequado \n");
-        }
         hide();
       } else if(tb_spline.get_active()) {
-        if (new_dots.size()>=4)
-        {
-            Curva2D nova_curva = Curva2D(canvas.get_last_id()+1, e_name.get_text());
-            nova_curva.set_pontos(new_dots);
-            canvas.add_curva(nova_curva);
-            log.get_buffer()->set_text(log.get_buffer()->get_text()
-                                   +"Spline '"
-                                   +nova_curva.get_nome()
+        Poligono polygon(e_name.get_text(), new_dots);
+        polygon.set_id(canvas.get_last_id()+1);
+        polygon.set_filled(fill_button.get_active());
+
+        canvas.add_poligono(polygon);
+        log.get_buffer()->set_text(log.get_buffer()->get_text()
+                                   +"Curva Spline '"
+                                   +polygon.get_nome()
                                    +"' adicionada\n");
-        } else {
-            log.get_buffer()->set_text(log.get_buffer()->get_text()
-                                   +"Numero de pontos inadequado \n");
-        }
         hide();
       } else {
         log.get_buffer()->set_text(log.get_buffer()->get_text()
                                    +"Tipo de objeto não especificado. "
                                    +"Cancelando operação\n");
+        hide();
       }
     break;
 
@@ -141,7 +133,7 @@ void AddObjectDialog::on_dialog_response(int response_id) {
     std::cout << "Unexpected response_id=" << response_id << std::endl;
     break;
   };
-}	 	  	 	    	 	    		    	    	  	 	
+}
 
 /*  Add Object function
  *  Read the text from entries and call function add_ponto from Poligono
@@ -150,10 +142,8 @@ void AddObjectDialog::on_dialog_response(int response_id) {
  */
 void AddObjectDialog::on_add_dot_button_clicked() {
     new_dots.push_back(Ponto(atof(e_x.get_text().c_str()),
-                       atof(e_y.get_text().c_str())));
+                             atof(e_y.get_text().c_str())));
 
-    new_poly.add_ponto(Ponto(atof(e_x.get_text().c_str()),
-                       atof(e_y.get_text().c_str())));
     log.get_buffer()->set_text(log.get_buffer()->get_text()
                                +"Ponto adicionado na coordenada ("
                                +e_x.get_text()
@@ -163,17 +153,22 @@ void AddObjectDialog::on_add_dot_button_clicked() {
 }
 
 void AddObjectDialog::poly_toggled() {
-    tb_spline.set_active(false);
-    tb_bezier.set_active(false);
+    if (tb_poly.get_active()) {
+        tb_spline.set_active(false);
+        tb_bezier.set_active(false);
+    }
 }
 
 void AddObjectDialog::bezier_toggled() {
-    tb_poly.set_active(false);
-    tb_spline.set_active(false);
+    if (tb_bezier.get_active()) {
+        tb_poly.set_active(false);
+        tb_spline.set_active(false);
+    }
 }
 
 void AddObjectDialog::spline_toggled() {
-    tb_poly.set_active(false);
-    tb_bezier.set_active(false);
+    if (tb_spline.get_active()) {
+        tb_poly.set_active(false);
+        tb_bezier.set_active(false);
+    }
 }
-	 	  	 	    	 	    		    	    	  	 	

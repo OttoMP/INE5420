@@ -2,6 +2,7 @@
 #define DESCRITOR_OBJ_H
 
 #include "poligono.h"
+#include "curva2d.h"
 #include "objeto.h"
 #include <gtkmm/textview.h>
 
@@ -32,4 +33,4 @@ class descritorObj {
 };
 
 #endif // DESCRITOR_OBJ_H
-	 	  	 	    	 	    		    	    	  	 	
+

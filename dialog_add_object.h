@@ -26,9 +26,6 @@ protected:
   // List of Dots to be used in the object
     std::list<Ponto> new_dots;
 
-  // Polygon being created by the dialog
-    Poligono new_poly;
-
   //Signal handlers:
     void on_dialog_response(int response_id);
     void on_add_dot_button_clicked();
@@ -44,4 +41,3 @@ protected:
 };
 
 #endif //DIALOG_ADD_OBJECT_H
-	 	  	 	    	 	    		    	    	  	 	
