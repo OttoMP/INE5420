@@ -34,8 +34,8 @@ protected:
     void spline_toggled();
 
   //Child widgets: l_ indicates a Label and e_ indicates an Entry
-    Gtk::Label  l_x, l_y, l_name;
-    Gtk::Entry  e_x, e_y, e_name;
+    Gtk::Label  l_x, l_y, l_z, l_name;
+    Gtk::Entry  e_x, e_y, e_z, e_name;
     Gtk::Button add_dot_button;
     Gtk::ToggleButton tb_poly, tb_bezier, tb_spline, fill_button;
 };
