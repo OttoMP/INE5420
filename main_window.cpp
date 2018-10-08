@@ -12,12 +12,6 @@ MainWindow::MainWindow()
     b_view(Gtk::ORIENTATION_VERTICAL),
     b_application_menu(Gtk::ORIENTATION_VERTICAL),
     f_view("Viewport"),
-    b_view_changes(Gtk::ORIENTATION_HORIZONTAL),
-    view_rb_parallel("Parallel"),
-    view_rb_perspective("Perspective"),
-    slider_adjustment(Gtk::Adjustment::create(120.0, 60.0, 151.0,
-                                                0.1,  1.0,   1.0)),
-    slider_angle(slider_adjustment, Gtk::ORIENTATION_HORIZONTAL),
     f_log("Log"),
     b_window_menu(Gtk::ORIENTATION_VERTICAL)
 {
@@ -44,7 +38,6 @@ MainWindow::MainWindow()
 
   // Include child widgets in right area
     b_view.pack_start(f_view, Gtk::PACK_EXPAND_WIDGET, 10);
-    b_view.pack_start(b_view_changes, Gtk::PACK_EXPAND_WIDGET, 10);
     b_view.pack_start(f_log, Gtk::PACK_EXPAND_WIDGET, 10);
 
   // Button functions
@@ -52,7 +45,7 @@ MainWindow::MainWindow()
   // The final step is to display this newly created widget
     show_all_children();
 
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 MainWindow::~MainWindow() {}
 
@@ -80,15 +73,6 @@ void MainWindow::create_viewport() {
   // Include canvas in viewport
     f_view.set_border_width(10);
     f_view.add(canvas);
-
-    view_rb_perspective.join_group(view_rb_parallel);
-
-    view_rb_parallel.set_active();
-
-    b_view_changes.set_spacing(5);
-    b_view_changes.pack_start(view_rb_parallel, Gtk::PACK_EXPAND_WIDGET, 10);
-    b_view_changes.pack_start(view_rb_perspective, Gtk::PACK_EXPAND_WIDGET, 10);
-    b_view_changes.pack_start(slider_angle, Gtk::PACK_EXPAND_WIDGET, 10);
 }
 
 void MainWindow::create_log() {
@@ -101,7 +85,7 @@ void MainWindow::create_log() {
     text_log.set_editable(false);
 
     text_log.get_buffer()->set_text("Waiting for instructions...\n");
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 
 // ---------BUTTONS CLICKED FUNCTIONS-------

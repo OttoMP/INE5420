@@ -35,36 +35,10 @@ Poligono::Poligono(string nome, std::list<Ponto> pontos)
     this->tipo = 1;
     for(auto i = pontos.begin(); i != pontos.end(); i++) {
         add_ponto(*i);
-    }
+    }	 	  	 	    	 	    		    	    	  	 	
 }
 
-void Poligono::add_ponto(Ponto p)
-{
-    if (this->get_size() == 0)
-    {
-        this->center = p;
-    }
-    else
-    {
-        this->center =
-            Ponto((this->center.get_x()*this->get_size() + p.get_x())/(this->get_size()+1),
-                  (this->center.get_y()*this->get_size() + p.get_y())/(this->get_size()+1));
-    }
-    this->pontos.push_back(p);
-    this->pontos_scn.push_back(Ponto(0,0));
-}
 
-void Poligono::add_ponto(double x, double y)
-{
-	Ponto p(x,y);
-  this->add_ponto(p);
-}
-
-void Poligono::add_ponto(double x, double y, double z)
-{
-	Ponto p(x,y,z);
-  this->add_ponto(p);
-}
 
 std::list<Ponto> Poligono::draw(double scale)
 {
@@ -74,7 +48,7 @@ std::list<Ponto> Poligono::draw(double scale)
     {
         Ponto p((this->pontos_scn.front().get_x() + this->pontos_scn.back().get_x())/2,
         (this->pontos_scn.front().get_y() + this->pontos_scn.back().get_y())/2,
-         this->pontos_scn.back().get_z());
+        (this->pontos_scn.front().get_z() + this->pontos_scn.back().get_z())/2);
        d.push_back(p);
        d.push_front(p);
     }
@@ -99,4 +73,4 @@ Objeto Poligono::to_objeto()
     o.set_tipo(this->tipo);
     o.set_filled(this->filled);
     return o;
-}
+}	 	  	 	    	 	    		    	    	  	 	

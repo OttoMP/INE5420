@@ -7,7 +7,6 @@ AddObjectDialog::AddObjectDialog(Canvas& drawing_area,
       log(text_log),              // Receive reference from parameter
       l_x("Coordenada x"),        // Initialize Label for Entry
       l_y("Coordenada y"),        // Initialize Label for Entry
-      l_z("Coordenada z"),        // Initialize Label for Entry
       l_name("Nome do Objeto"),   // Initialize Label for Entry
       fill_button("Preencher Poligono"), // Initialize fill button
       add_dot_button("Adicionar Ponto"), // Initialize add button
@@ -29,7 +28,6 @@ AddObjectDialog::AddObjectDialog(Canvas& drawing_area,
   // Setting default texts for Entrys
     e_x.set_text("0");
     e_y.set_text("0");
-    e_z.set_text("0");
     e_name.set_text("Novo Polígono");
 
   // Adding child widgets to internal box of dialog
@@ -39,8 +37,6 @@ AddObjectDialog::AddObjectDialog(Canvas& drawing_area,
     info_box->pack_start(e_x);
     info_box->pack_start(l_y);
     info_box->pack_start(e_y);
-    info_box->pack_start(l_z);
-    info_box->pack_start(e_z);
     info_box->pack_start(l_name);
     info_box->pack_start(e_name);
     info_box->pack_start(fill_button);
@@ -69,7 +65,7 @@ AddObjectDialog::AddObjectDialog(Canvas& drawing_area,
     set_default_response(Gtk::RESPONSE_CLOSE);
 
     show_all_children();
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 AddObjectDialog::~AddObjectDialog()
 {
@@ -108,7 +104,7 @@ void AddObjectDialog::on_dialog_response(int response_id) {
                                    +bezier.get_nome()
                                    +"' adicionada\n");
         hide();
-      } else if(tb_spline.get_active()) {
+      } else if(tb_spline.get_active()) {	 	  	 	    	 	    		    	    	  	 	
         Poligono polygon(e_name.get_text(), new_dots);
         polygon.set_id(canvas.get_last_id()+1);
         polygon.set_filled(fill_button.get_active());
@@ -144,18 +140,15 @@ void AddObjectDialog::on_dialog_response(int response_id) {
  *  sending coordinates x and y collected by the entries as parameters.
  *  The log updates telling the user the coordinates recently added
  */
-void AddObjectDialog::on_add_dot_button_clicked() {
+void AddObjectDialog::on_add_dot_button_clicked() {	 	  	 	    	 	    		    	    	  	 	
     new_dots.push_back(Ponto(atof(e_x.get_text().c_str()),
-                             atof(e_y.get_text().c_str()),
-                             atof(e_z.get_text().c_str())));
+                             atof(e_y.get_text().c_str())));
 
     log.get_buffer()->set_text(log.get_buffer()->get_text()
                                +"Ponto adicionado na coordenada ("
                                +e_x.get_text()
                                +","
                                +e_y.get_text()
-                               +","
-                               +e_z.get_text()
                                +")\n");
 }
 
@@ -179,3 +172,4 @@ void AddObjectDialog::spline_toggled() {
         tb_bezier.set_active(false);
     }
 }
+	 	  	 	    	 	    		    	    	  	 	

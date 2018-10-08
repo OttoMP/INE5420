@@ -27,11 +27,7 @@ class MainWindow : public Gtk::Window {
       // Viewport
         void create_viewport();
         Gtk::Frame                          f_view;
-        Gtk::Box                            b_view_changes;
         Canvas                              canvas;
-        Gtk::RadioButton                    view_rb_parallel, view_rb_perspective;
-        Glib::RefPtr<Gtk::Adjustment>        slider_adjustment;
-        Gtk::Scale                          slider_angle;
 
       // Log
         void create_log();
@@ -42,4 +38,4 @@ class MainWindow : public Gtk::Window {
 
 #endif // MAIN_WINDOW_H
 
-
+	 	  	 	    	 	    		    	    	  	 	

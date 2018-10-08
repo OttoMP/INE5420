@@ -1,7 +1,7 @@
 #ifndef MATRIZ_H
 #define MATRIZ_H
 
-#define DIMENSOES 3
+#define DIMENSOES 4
 #define PI 3.14159265
 #define _USE_MATH_DEFINES
 
@@ -11,18 +11,28 @@
 class Matriz{
 
 public:
-	double matriz[3][3] = {};
+	double matriz[DIMENSOES][DIMENSOES] = {};
 
 	Matriz();
+	
+    void set_matriz(double matriz[DIMENSOES][DIMENSOES]);
+    void set_matriz_delta(double delta);
+    
+    double get_pos(int x, int y);
+    void get_matriz(double matriz[DIMENSOES][DIMENSOES]);
 
     Matriz translate(Ponto vector);
     Matriz rotate(double angle, Ponto rotation_center);
     Matriz scale(Ponto scale, Ponto center);
 
     Matriz multiplication(Matriz m);
+    Matriz multiplication(double c);
     
     Ponto exec_transform(Ponto p);
+    
+    void transpose();
 
 };
 
 #endif //MATRIZ_H
+	 	  	 	    	 	    		    	    	  	 	
