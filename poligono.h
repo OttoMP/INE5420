@@ -15,11 +15,9 @@ public:
 	Poligono(string nome, std::list<Ponto> pontos);
 
 
-	void add_ponto(Ponto p);
-	void add_ponto(double x, double y);
-	void add_ponto(double x, double y, double z);
+
 	
-  std::list<Ponto> draw(double scale);
+    std::list<Ponto> draw(double scale);
 
 
 
