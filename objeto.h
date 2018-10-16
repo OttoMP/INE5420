@@ -22,6 +22,7 @@ protected:
 
 public:
 	Objeto();
+	void add_ponto(Ponto p);
 	void set_brush_size(double brush);
 	//void set_color(double r, double g, double b);
 	void set_pontos(std::list<Ponto> pontos);
@@ -50,3 +51,4 @@ public:
 
 #endif //OBJETO_H
 
+	 	  	 	    	 	    		    	    	  	 	

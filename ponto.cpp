@@ -6,6 +6,7 @@ Ponto::Ponto(double x, double y, double z)
 	this->coord[0] = x;
 	this->coord[1] = y;
 	this->coord[2] = z;
+	this->coord[3] = 1;
 }
 
 Ponto::Ponto(double x, double y)
@@ -13,6 +14,7 @@ Ponto::Ponto(double x, double y)
 	this->coord[0] = x;
 	this->coord[1] = y;
 	this->coord[2] = 1;
+	this->coord[3] = 1;
 }
 
 double Ponto::get_x() const

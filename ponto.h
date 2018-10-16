@@ -7,7 +7,7 @@
 class Ponto{
 
 private:
-	double coord[3];
+	double coord[4];
 
 public:
 	Ponto(double x, double y, double z);

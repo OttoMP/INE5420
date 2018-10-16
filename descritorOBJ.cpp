@@ -35,7 +35,7 @@ void descritorObj::write(std::list<Objeto> display_file, string name) {
             new_file << "p -1\n";
         } else if(p_list.size() == 2) {
             new_file << "l -2 -1\n";
-        } else {
+        } else {	 	  	 	    	 	    		    	    	  	 	
             new_file << "f";
             for(auto i = p_list.size(); i > 0; i--) {
                new_file << " -" + to_string(i);
@@ -82,7 +82,7 @@ std::list<Objeto> descritorObj::read(std::string file) {
 
             std::list<Ponto> recover_dots;
             auto nvertex = stoi(vertex_tokens[1]);
-            for(auto i = 0; i < nvertex; i++) {
+            for(auto i = 0; i < nvertex; i++) {	 	  	 	    	 	    		    	    	  	 	
                 getline(myfile,line);
                 vector<string> tokens = split(line, ' ');
                 recover_dots.push_back(Ponto(
@@ -118,7 +118,7 @@ template<typename Out>
 void descritorObj::split(const std::string &s, char delim, Out result) {
     std::stringstream ss(s);
     std::string item;
-    while (std::getline(ss, item, delim)) {
+    while (std::getline(ss, item, delim)) {	 	  	 	    	 	    		    	    	  	 	
         *(result++) = item;
     }
 }

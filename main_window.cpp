@@ -52,7 +52,7 @@ MainWindow::MainWindow()
   // The final step is to display this newly created widget
     show_all_children();
 
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 MainWindow::~MainWindow() {}
 
@@ -89,7 +89,7 @@ void MainWindow::create_viewport() {
     b_view_changes.pack_start(view_rb_parallel, Gtk::PACK_EXPAND_WIDGET, 10);
     b_view_changes.pack_start(view_rb_perspective, Gtk::PACK_EXPAND_WIDGET, 10);
     b_view_changes.pack_start(slider_angle, Gtk::PACK_EXPAND_WIDGET, 10);
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 void MainWindow::create_log() {
   // Log Configurations

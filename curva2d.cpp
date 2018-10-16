@@ -35,7 +35,7 @@ int Curva2D::add_curva(Ponto p1, Ponto p2, Ponto p3, Ponto p4)
         this->pontos.push_back(p4);
         this->center = Ponto((p1.get_x()+p2.get_x() + p3.get_x() + p4.get_x())/4,
             (p1.get_y()+p2.get_y() + p3.get_y() + p4.get_y())/4);
-    }
+    }	 	  	 	    	 	    		    	    	  	 	
     else
     {
         if (this->pontos.back() == p1){
@@ -74,7 +74,7 @@ void Curva2D::set_pontos(std::list<Ponto> pontos)
             Ponto p4 = *pt;
             pt++;
             this->add_curva(p1,p2,p3,p4);
-        }
+        }	 	  	 	    	 	    		    	    	  	 	
     }
 }
 
@@ -132,7 +132,7 @@ std::list<Ponto> Curva2D::draw(double scale)
                     + ((t3) * 0.2));
                     */
                 if (x > wmin_x && x < wmax_x && y > wmin_y && y < wmax_y)
-                {
+                {	 	  	 	    	 	    		    	    	  	 	
                     desenho.push_back(Ponto(x,y));
                     clipping = false;
                 }
@@ -168,7 +168,7 @@ std::list<Ponto> Curva2D::draw(double scale)
         //nao tem pelo menos 4 pontos
     }
     return desenho;
-}
+}	 	  	 	    	 	    		    	    	  	 	
 
 int Curva2D::get_num_curvas()
 {

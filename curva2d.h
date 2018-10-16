@@ -26,3 +26,4 @@ public:
 
 #endif //CURVA2D_H
 
+	 	  	 	    	 	    		    	    	  	 	
