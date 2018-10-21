@@ -24,11 +24,11 @@ Ponto Window::get_wc()
 
 void Window::rotate(double angle)
 {
-    Matriz m = Matriz().rotate(angle, Ponto(0,0));
+    Matriz m = Matriz().rotate(angle, Ponto(0,0), Ponto(0, 0, 1));
     this->v = m.exec_transform(this->v);
     this->u = m.exec_transform(this->u);
     
-    m = Matriz().rotate(angle,Ponto(0,0));
+    m = Matriz().rotate(angle,Ponto(0,0), Ponto(0, 0, 1));
     this->wc = m.exec_transform(this->wc);
 }
 

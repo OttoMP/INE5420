@@ -20,13 +20,14 @@ Matriz Matriz::translate(Ponto vector)
 
 Matriz Matriz::rotate(double angle, Ponto center, Ponto eixo)
 {
-	Matriz r1 = Matriz().get_rotation_matriz(calc_angulo(eixo, Ponto(1, 0, 0)), 0)
-	Matriz r2 = Matriz().get_rotation_matriz(calc_angulo(eixo, Ponto(0, 0, 1)), 2)
-	Matriz r3 = Matriz().get_rotation_matriz(angle, 1)
-	Matriz r1n = Matriz().get_rotation_matriz(-calc_angulo(eixo, Ponto(1, 0, 0)), 0)
-	Matriz r2n = Matriz().get_rotation_matriz(-calc_angulo(eixo, Ponto(0, 0, 1)), 2)
+    double anglex = calc_angulo(eixo.get_x(), eixo.get_z(), 1, 0);
+    double anglez = calc_angulo(eixo.get_y(), eixo.get_x(), 1, 0);
+	Matriz r1 = Matriz().get_rotation_matriz(anglex, 0);//x
+	Matriz r2 = Matriz().get_rotation_matriz(anglez, 2);//z
+	Matriz r3 = Matriz().get_rotation_matriz(angle, 1);
+	Matriz r1n = Matriz().get_rotation_matriz(-anglex, 0);//x
+	Matriz r2n = Matriz().get_rotation_matriz(-anglez, 2);//z
     Matriz m = Matriz().translate(Ponto(-center.get_x(),-center.get_y(), -center.get_z()))
-	   .multiplication(*this)
 	   .multiplication(r1)
 	   .multiplication(r2)
 	   .multiplication(r3)
@@ -174,9 +175,9 @@ void Matriz::transpose()
     }
 }
 
-Matriz Matriz::get_rotation_matrix(double angle, int eixo)
+Matriz Matriz::get_rotation_matriz(double angle, int eixo)
 {
-    if (eixo == 0)
+    if (eixo == 0)//eixo x
     {
     	this->matriz[0][0] = 1;
     	this->matriz[1][1] = cos(angle*M_PI/180);
@@ -184,16 +185,16 @@ Matriz Matriz::get_rotation_matrix(double angle, int eixo)
     	this->matriz[2][1] = sin(angle*M_PI/180);
     	this->matriz[1][2] = -sin(angle*M_PI/180);
     	this->matriz[3][3] = 1;
-    } else if (eixo == 1)
+    } else if (eixo == 1)//eixo y
     {
         this->matriz[0][0] = cos(angle*M_PI/180);
     	this->matriz[2][2] = cos(angle*M_PI/180);
-    	this->matriz[2][0] = sin(angle*M_PI/180);
-    	this->matriz[0][2] = -sin(angle*M_PI/180);
+    	this->matriz[2][0] = -sin(angle*M_PI/180);
+    	this->matriz[0][2] = sin(angle*M_PI/180);
     	this->matriz[1][1] = 1;
     	this->matriz[3][3] = 1;
         
-    }else{
+    }else{//eixo z
         this->matriz[0][0] = cos(angle*M_PI/180);
     	this->matriz[1][1] = cos(angle*M_PI/180);
     	this->matriz[1][0] = sin(angle*M_PI/180);
@@ -205,17 +206,27 @@ Matriz Matriz::get_rotation_matrix(double angle, int eixo)
 	return *this;
 }
 
-double Matriz::calc_angulo(Ponto a, Ponto b) //só funciona quando b é vertical arrumar depois
+double Matriz::calc_angulo(double x1, double y1, double x2, double y2) //só funciona quando b é vertical arrumar depois
 {
 
-    double cima = a.get_x()*b.get_x() + a.get_y()*b.get_y();
-    double baixo = sqrt(pow(a.get_x(),2) + pow(a.get_y(),2))*
-        sqrt(pow(b.get_x(),2)+pow(b.get_y(),2));
+    double cima = x1*x2 + y1*y2;
+    double baixo = sqrt(pow(x1,2) + pow(y1,2))*
+        sqrt(pow(x2,2)+pow(y2,2));
     double temp = cima/baixo;
-    if (a.get_x() >=0 && a.get_y() <0 || a.get_x()>0 && a.get_y()>0){
-        return -abs(acos(temp)*180/M_PI);
-    } else {
-        return abs(acos(temp)*180/M_PI);
+    if (x1 == 0 && y1 == 0)
+    {
+        return (double)0;
+    }
+    else if ((x1 == 0 && y2 == 0 && x2 != 0 && y1 != 0)||(x1 != 0 && y2 != 0 && x2 == 0 && y1 == 0))
+    {
+        return (double)90;
+    }
+    else if (x1 >=0 && y1 <0 || x1>0 && y1>0)
+    {
+        return -std::abs(acos(temp)*180/M_PI);
+    } else 
+    {
+        return std::abs(acos(temp)*180/M_PI);
     }
 
 }

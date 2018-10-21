@@ -331,7 +331,7 @@ void Canvas::rotate_object(int id, double angle) {
     for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
     {
         if(pol->get_id() == id) {
-           Matriz m = Matriz().rotate(angle, (*pol).get_center());
+           Matriz m = Matriz().rotate(angle, (*pol).get_center(), Ponto(0, 0, 1));
            pol->exec_transform(m);
            pol->exec_update_scn(this->cart_to_scn);
            break;
@@ -348,7 +348,7 @@ void Canvas::rotate_point(int id, double angle, Ponto centro) {
     for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
     {
         if(pol->get_id() == id) {
-           Matriz m = Matriz().rotate(angle, novo_ponto);
+           Matriz m = Matriz().rotate(angle, novo_ponto, Ponto(0, 0, 1));
            pol->exec_transform(m);
            pol->exec_update_scn(this->cart_to_scn);
            break;
@@ -364,7 +364,7 @@ void Canvas::rotate_center(int id, double angle) {
     for (auto pol = display_file.begin(); pol != display_file.end(); pol++)
     {
         if(pol->get_id() == id) {
-           Matriz m = Matriz().rotate(angle, Ponto(0,0));
+           Matriz m = Matriz().rotate(angle, Ponto(0,0), Ponto(0, 0, 1));
            pol->exec_transform(m);
            pol->exec_update_scn(this->cart_to_scn);
            break;
@@ -472,7 +472,7 @@ void Canvas::update_conv_matrix()
                                            Ponto(
                                                  -screen.get_wc().get_x(),
                                                  -screen.get_wc().get_y()))
-        .multiplication(Matriz().rotate(-angulo, Ponto(0,0)))
+        .multiplication(Matriz().rotate(-angulo, Ponto(0,0), Ponto(0, 0, 1)))
         .multiplication(Matriz().scale(
                                        Ponto(
                                              1/this->calc_distancia(screen.get_v(),Ponto(0,0)),

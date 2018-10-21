@@ -6,6 +6,7 @@
 #define _USE_MATH_DEFINES
 
 #include <math.h>
+#include <cmath>
 #include "ponto.h"
 
 class Matriz{
@@ -22,7 +23,7 @@ public:
     void get_matriz(double matriz[DIMENSOES][DIMENSOES]);
 
     Matriz translate(Ponto vector);
-    Matriz rotate(double angle, Ponto rotation_center);
+    Matriz rotate(double angle, Ponto rotation_center, Ponto eixo);
     Matriz scale(Ponto scale, Ponto center);
 
     Matriz multiplication(Matriz m);
@@ -31,8 +32,8 @@ public:
     Ponto exec_transform(Ponto p);
     
     void transpose();
-    Matriz get_rotation_matrix(double angle, int eixo);
-    double calc_angulo(Ponto a, Ponto b);
+    Matriz get_rotation_matriz(double angle, int eixo);
+    double calc_angulo(double x1, double y1, double x2, double y2);
 
 };
 
