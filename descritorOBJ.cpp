@@ -13,9 +13,7 @@ void descritorObj::write(std::list<Objeto> display_file, string name) {
 
     for(auto ptr = display_file.begin(); ptr != display_file.end(); ptr++) {
         auto i = *ptr;
-        new_file << "#nome " + i.get_nome() + "\n";
-        new_file << "#tipo " + to_string(i.get_tipo()) + "\n";
-        new_file << "#id " + to_string(i.get_id()) + "\n";
+        new_file << "o " + i.get_nome() + "\n";
         if(i.get_filled())
             new_file << "#fill 1\n";
         else
@@ -30,7 +28,32 @@ void descritorObj::write(std::list<Objeto> display_file, string name) {
                        + to_string(p.get_y()) + " "
                        + to_string(p.get_z()) + "\n";
         }
+/*
+        if(i.get_tipo == bezier) {
+            new_file << "cstype bezier\n";
+            new_file << "deg " + get.degrees + "\n";
+            new_file << "curv";
+            new_file << " u0";
+            new_file << " u1";
+            for(auto i = p_list.size(); i > 0; i--) {
+               new_file << " -" + to_string(i);
+            }
+            new_file << "\n";
+            new_file << "parm u";
 
+        } else if(i.get_tipo == bspline) {
+            new_file << "cstype bspline\n";
+            new_file << "deg " + get.degrees + "\n";
+            new_file << "curv";
+            new_file << " u0";
+            new_file << " u1";
+            for(auto i = p_list.size(); i > 0; i--) {
+               new_file << " -" + to_string(i);
+            }
+            new_file << "\n";
+            new_file << "parm u";
+        }
+*/
         if(p_list.size() == 1) {
             new_file << "p -1\n";
         } else if(p_list.size() == 2) {
