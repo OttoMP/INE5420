@@ -28,11 +28,11 @@ class ObjectMenu : public Gtk::Frame {
         Gtk::Button button_rotate_center, button_rotate_dot;
 
         // Entries slots for button functions
-        Gtk::Entry  e_move_x, e_move_y, e_scale, e_angle;
+        Gtk::Entry  e_move_x, e_move_y, e_move_z, e_angle;
         Gtk::Entry  e_file;
 
         // Labels for entries
-        Gtk::Label l_angle, l_dot, l_scale;
+        Gtk::Label l_angle, l_dot;
         Gtk::Label l_file;
 
         // Reference to drawing area
@@ -61,4 +61,4 @@ class ObjectMenu : public Gtk::Frame {
 };
 
 #endif //GTKMM_OBJECTMENU_H
-	 	  	 	    	 	    		    	    	  	 	
+

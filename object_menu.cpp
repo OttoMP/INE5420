@@ -8,7 +8,7 @@ ObjectMenu::ObjectMenu(const Glib::ustring& title,
   : Gtk::Frame(title),       // initialize parent widget
     button_rotate_poly("ROTATE"),              /* creates buttons             */
     button_rotate_center("ROTATE REF CENTER"), /* with its respectives labels.*/
-    button_rotate_dot("ROTATE REF DOT"),       /**/
+    button_rotate_dot("ROTATE REF COORD"),       /**/
     button_move("MOVE USING REFERENCE"),       /**/
     button_resize("RESIZE"),                   /**/
     button_read_file("Load Display File"),             /**/
@@ -30,14 +30,13 @@ ObjectMenu::ObjectMenu(const Glib::ustring& title,
   // Setting default texts for entries
     e_move_x.set_text("0");
     e_move_y.set_text("0");
-    e_scale.set_text("1");
+    e_move_z.set_text("0");
     e_angle.set_text("90");
-    l_angle.set_text("Angle");
+    l_angle.set_text("Angle of Rotation");
     l_dot.set_text("Reference Coordinates");
-    l_scale.set_text("Factor");
 
 	e_file.set_text("filename");
-	l_file.set_text("Nome do Arquivo");
+	l_file.set_text("File's Name");
 
   // Setting the appearance of th Grid
     grid->set_border_width(5);
@@ -61,27 +60,26 @@ ObjectMenu::ObjectMenu(const Glib::ustring& title,
               sigc::mem_fun(*this, &ObjectMenu::write_file));
 
   // Add buttons to Grid
-    grid->attach(button_rotate_poly, 0, 0, 1, 1);
-    grid->attach(button_rotate_center, 1, 0, 1, 1);
-    grid->attach(button_rotate_dot, 2, 0, 1, 1);
+    grid->attach(l_dot, 0, 0, 1, 1);
+    grid->attach(e_move_x, 1, 0, 1, 1);
+    grid->attach(e_move_y, 2, 0, 1, 1);
+    grid->attach(e_move_z, 3, 0, 1, 1);
+
     grid->attach(l_angle, 0, 1, 1, 1);
     grid->attach(e_angle, 1, 1, 1, 1);
 
-    grid->attach(l_dot, 0, 2, 1, 1);
-    grid->attach(e_move_x, 1, 2, 1, 1);
-    grid->attach(e_move_y, 2, 2, 1, 1);
+    grid->attach(button_rotate_poly, 0, 2, 1, 1);
+    grid->attach(button_rotate_center, 1, 2, 1, 1);
+    grid->attach(button_rotate_dot, 2, 2, 1, 1);
 
     grid->attach(button_move, 0, 3, 2, 1);
+    grid->attach(button_resize, 2, 3, 2, 1);
 
-    grid->attach(button_resize, 0, 4, 1, 1);
-    grid->attach(l_scale, 1, 4, 1, 1);
-    grid->attach(e_scale, 2, 4, 1, 1);
-
-	grid->attach(button_read_file, 0, 5, 1, 1);
-	grid->attach(button_write_file, 1, 5, 1, 1);
-	grid->attach(l_file, 0, 6, 1, 1);
-	grid->attach(e_file, 1, 6, 1, 1);
-}	 	  	 	    	 	    		    	    	  	 	
+	grid->attach(button_read_file, 0, 4, 1, 1);
+	grid->attach(button_write_file, 1, 4, 1, 1);
+	grid->attach(l_file, 2, 4, 1, 1);
+	grid->attach(e_file, 3, 4, 1, 1);
+}
 
 /*  Function called when button ROTATE is clicked
  *  calls function rotate_object from drawing window
@@ -107,6 +105,9 @@ void ObjectMenu::rotate_dot_clicked() {
     int id = object_viewer_ref.get_selected_object_id();
     if(id == 0) return;
     double angle = atof(e_angle.get_text().c_str());
+    /* Adicionar eixo Z
+     *
+     */
     double x = atof(e_move_x.get_text().c_str());
     double y = atof(e_move_y.get_text().c_str());
     Ponto dot(x,y);
@@ -122,7 +123,7 @@ void ObjectMenu::rotate_dot_clicked() {
                                        +std::to_string(dot.get_y())
                                        +")\n");
 
-}	 	  	 	    	 	    		    	    	  	 	
+}
 
 //-----------------------------------
 /*  Function called when button ROTATE REF DOT is clicked
@@ -149,6 +150,9 @@ void ObjectMenu::rotate_center_clicked() {
 void ObjectMenu::move_clicked() {
     int id = object_viewer_ref.get_selected_object_id();
     if(id == 0) return;
+    /* Adicionar eixo z
+     *
+     */
     double x = atof(e_move_x.get_text().c_str());
     double y = atof(e_move_y.get_text().c_str());
     window_ref.move_object(id, Ponto(x, y));
@@ -160,12 +164,14 @@ void ObjectMenu::move_clicked() {
                                        +", "
                                        +std::to_string(y)
                                        +")\n");
-}	 	  	 	    	 	    		    	    	  	 	
+}
 
 /*  Function called when button RESIZE is clicked
  *  calls function resize_object from drawing window
  */
 void ObjectMenu::resize_clicked() {
+    /* Refazer função recebendo 3 coordenadas
+     *
     int id = object_viewer_ref.get_selected_object_id();
     if(id == 0) return;
     double scale = atof(e_scale.get_text().c_str());
@@ -176,6 +182,7 @@ void ObjectMenu::resize_clicked() {
                                        +"' aumentado em "
                                        +std::to_string(scale)
                                        +" vezes\n");
+     */
 }
 
 void ObjectMenu::write_file() {
@@ -190,4 +197,4 @@ void ObjectMenu::read_file() {
     object_viewer_ref.refresh_view();
 }
 
-	 	  	 	    	 	    		    	    	  	 	
+
